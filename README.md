@@ -1,2 +1,1 @@
-# Documentation of hatchery (Raspberry Pi)
-
+# Documentation
