@@ -24,7 +24,7 @@ with open(filename, 'w') as file:
     file.write("signal(SIGHUP, safe_exit)\n\t\t")
     file.write("while True:\n\t\t\t")
     file.write("# your code goes here\n\t")
-    file.write("except KeyboardInterrupt as ex\n\t\t")
+    file.write("except KeyboardInterrupt as ex:\n\t\t")
     file.write("print(ex)\n\t")
     file.write("finally:\n\t\t")
     file.write("gpio.cleanup()\n\n\n")
