@@ -61,5 +61,14 @@ def turn_off_all_led():
     return jsonify(status_code_200)
 
 
+@app.route("/get-temp-hum", methods=['GET'])
+def get_temperature_and_humidity_from_sensor():
+    os.system("./py-part/temp_hum_sensor.py &")
+    with open("temp_hum.txt", 'r') as file:
+        temp = file.readline()
+        hum = file.readline()
+        return jsonify({"temp": temp, "hum": hum})
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)

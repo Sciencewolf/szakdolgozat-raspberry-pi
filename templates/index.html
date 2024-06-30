@@ -40,6 +40,8 @@
     const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led")
     const checkboxOnOffBlueLed = document.getElementById("checkbox-on-off-blue-led")
     const checkboxOnOffAllLed = document.getElementById("checkbox-on-off-all-led")
+    const temperature = document.getElementById("temp")
+    const humidity = document.getElementById("hum")
 
     checkboxOnOffRedLed.addEventListener('click', async () => {
         if(checkboxOnOffRedLed.checked) {
@@ -116,6 +118,15 @@
             console.log(response)
         }
     })
+
+    document.addEventListener("load", async () => {
+        setTimeout(async () => {
+            const getTemperatureAndHumidity = await fetch("http://192.168.1.46:8080/get-temp-hum")
+            const response = await getTemperatureAndHumidity.json()
+            temperature.innerHTML = response.temp
+            humidity.innerHTML = response.hum
+        }, 20000)
+    })
 </script>
 
 <body>
@@ -138,6 +149,10 @@
         <div class="item turn-on-off-all-led">
             <h3>Turn on/off all led</h3>
             <input type="checkbox" id="checkbox-on-off-all-led"/>
+        </div>
+        <div class="item temp-hum">
+            <h3>Temperature: <span id="temp"></span></h3>
+            <h3>Humidity: <span id="hum"></span></h3>
         </div>
     </main>
 
