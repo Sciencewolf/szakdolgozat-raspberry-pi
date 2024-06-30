@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+import time
 
 from flask import Flask, jsonify
+import os
 
 app = Flask(__name__)
 
@@ -39,7 +41,7 @@ def get_health():
 @app.route("/get/summary")
 def get_summary():
     """ Get all info about rpi. Needed in home page android app """
-    return jsonify({"temp": 30, 
+    return jsonify({"temp": 30,
                     "hum": 60,
                     "health": "ok | average | bad",
                     "other": None,
@@ -57,6 +59,11 @@ def set_temp():
 def set_hum():
     """ Set humidity """
     return jsonify({"status_code": 200})
+
+
+@app.route("/red-led")
+def turn_on_red_led():
+    os.system("./py-part/blink-rgb-red.py &")
 
 
 app.run(host="0.0.0.0", port=8080)
