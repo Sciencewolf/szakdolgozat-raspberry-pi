@@ -28,11 +28,14 @@
     }
 
     input[type="checkbox"] {
-        
+        scale: 1.5;
     }
 </style>
 <script defer async type="module">
     const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
+    const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led")
+    const checkboxOnOffBlueLed = document.getElementById("checkbox-on-off-blue-led")
+
     checkboxOnOffRedLed.addEventListener('click', async () => {
         if(checkboxOnOffRedLed.checked) {
             const onRedLed = await fetch("http://192.168.1.46:8080/on-red-led")
@@ -45,6 +48,32 @@
             console.log(response)
         }
     })
+
+    checkboxOnOffGreenLed.addEventListener('click', async () => {
+        if(checkboxOnOffGreenLed.checked) {
+            const onGreenLed = await fetch("http://192.168.1.46:8080/on-green-led")
+            const response = await onGreenLed.json()
+            console.log(response)
+        }
+        else {
+            const offGreenLed = await fetch("http://192.168.1.46:8080/off-green-led")
+            const response = await offGreenLed.json()
+            console.log(response)
+        }
+    })
+
+    checkboxOnOffBlueLed.addEventListener('click', async () => {
+        if(checkboxOnOffBlueLed.checked) {
+            const onBlueLed = await fetch("http://192.168.1.46:8080/on-blue-led")
+            const response = await onBlueLed.json()
+            console.log(response)
+        }
+        else {
+            const offBlueLed = await fetch("http://192.168.1.46:8080/off-blue-led")
+            const response = await offBlueLed.json()
+            console.log(response)
+        }
+    })
 </script>
 <body>
     <div class="header">
@@ -54,6 +83,14 @@
         <div class="item turn-on-off-red-led">
             <h3>Turn on/off red led</h3>
             <input type="checkbox" id="checkbox-on-off-red-led"/>
+        </div>
+        <div class="item turn-on-off-green-led">
+            <h3>Turn on/off green led</h3>
+            <input type="checkbox" id="checkbox-on-off-green-led"/>
+        </div>
+        <div class="item turn-on-off-blue-led">
+            <h3>Turn on/off blue led</h3>
+            <input type="checkbox" id="checkbox-on-off-blue-led"/>
         </div>
     </main>
 
