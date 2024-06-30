@@ -1,4 +1,3 @@
-import time
 import board
 import adafruit_ahtx0
 
@@ -7,5 +6,9 @@ i2c = board.I2C()  # uses board.SCL and board.SDA
 
 sensor = adafruit_ahtx0.AHTx0(i2c)
 
-print("%0.1f C" % sensor.temperature)
-print("%0.1f %%" % sensor.relative_humidity)
+temp = "%0.1f C" % sensor.temperature
+hum = "%0.1f %%" % sensor.relative_humidity
+
+with open('../temp_hum.txt', 'w') as file:
+    file.write(temp + '\n')
+    file.write(hum)
