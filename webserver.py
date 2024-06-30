@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import time
-
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import os
 
 app = Flask(__name__)
@@ -9,12 +8,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return jsonify({"status_code": 200,
-                    "desc": "default response",
-                    "routes": ["/get/temp", "/get/hum", "/get/health", "/get/summary"]})
+    return render_template("index.html")
 
 
-@app.route("/get/temp")
+@app.route("/get/temp", methods=['GET'])
 def get_temp():
     """ Get temperature from sensor """
     return jsonify({"temp": 30,
@@ -22,7 +19,7 @@ def get_temp():
                     "desc": "response from /get-temp"})
 
 
-@app.route("/get/hum")
+@app.route("/get/hum", methods=['GET'])
 def get_hum():
     """ Get humidity from sensor """
     return jsonify({"hum": 60,
@@ -30,7 +27,7 @@ def get_hum():
                     "desc": "response from /get-hum"})
 
 
-@app.route("/get/health")
+@app.route("/get/health", methods=['GET'])
 def get_health():
     """ Get state of rpi """
     return jsonify({"health": "ok | average | bad",
@@ -38,7 +35,7 @@ def get_health():
                     "desc": "response from /health"})
 
 
-@app.route("/get/summary")
+@app.route("/get/summary", methods=['GET'])
 def get_summary():
     """ Get all info about rpi. Needed in home page android app """
     return jsonify({"temp": 30,
@@ -49,21 +46,29 @@ def get_summary():
                     "desc": "response from /summary"})
 
 
-@app.route("/set/temp")
+@app.route("/set/temp", methods=['POST'])
 def set_temp():
     """ Set temperature """
     return jsonify({"status_code": 200})
 
 
-@app.route("/set/hum")
+@app.route("/set/hum", methods=['POST'])
 def set_hum():
     """ Set humidity """
     return jsonify({"status_code": 200})
 
 
-@app.route("/red-led")
+@app.route("/on-red-led", methods=['POST'])
 def turn_on_red_led():
     os.system("./py-part/blink-rgb-red.py &")
+    return jsonify({"status_code": 200})
 
 
-app.run(host="0.0.0.0", port=8080)
+@app.route("/off-red-led", methods=['POST'])
+def turn_off_red_led():
+    os.system("pkill -f 'rgb_led.py'")
+    return jsonify({"status_code": 200})
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)

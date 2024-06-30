@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Csibekeltető</title>
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        background-color: #001;
+        color: white;
+    }
+
+    main {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<script defer>
+    const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
+    if(checkboxOnOffRedLed.checked) {
+        const onRedLed = await fetch("http://localhost:8080/on-red-led")
+        const response = await onRedLed.json()
+        console.log(response)
+    }
+    else {
+        const offRedLed = await fetch("http://localhost:8080/off-red-led")
+        const response = await offRedLed.json()
+        console.log(response)
+    }
+</script>
+<body>
+    <div class="header">
+        <h2>Csibekeltető</h2>
+    </div>
+    <main>
+        <h3>Turn on/off red led</h3>
+        <input type="checkbox" id="checkbox-on-off-red-led"/>
+    </main>
+
+</body>
+</html>
