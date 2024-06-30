@@ -49,5 +49,17 @@ def turn_off_blue_led():
     return jsonify(status_code_200)
 
 
+@app.route("/on-all-led", methods=['GET'])
+def turn_on_all_led():
+    os.system("./py-part/rgb_led.py &")
+    return jsonify(status_code_200)
+
+
+@app.route("/off-all-led", methods=['GET'])
+def turn_off_all_led():
+    os.system("pkill -f 'py-part/rgb_led.py'")
+    return jsonify(status_code_200)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
