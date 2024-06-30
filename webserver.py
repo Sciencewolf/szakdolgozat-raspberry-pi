@@ -58,15 +58,15 @@ def set_hum():
     return jsonify({"status_code": 200})
 
 
-@app.route("/on-red-led", methods=['POST'])
+@app.route("/on-red-led", methods=['GET'])
 def turn_on_red_led():
     os.system("./py-part/blink-rgb-red.py &")
     return jsonify({"status_code": 200})
 
 
-@app.route("/off-red-led", methods=['POST'])
+@app.route("/off-red-led", methods=['GET'])
 def turn_off_red_led():
-    os.system("pkill -f 'rgb_led.py'")
+    os.system("pkill -f 'py-part/blink-rgb-red.py'")
     return jsonify({"status_code": 200})
 
 
