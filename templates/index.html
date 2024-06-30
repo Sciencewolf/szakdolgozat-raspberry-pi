@@ -19,27 +19,42 @@
         display: flex;
         justify-content: center;
     }
+
+    .item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1em;
+    }
+
+    input[type="checkbox"] {
+        
+    }
 </style>
-<script defer>
+<script defer async type="module">
     const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
-    if(checkboxOnOffRedLed.checked) {
-        const onRedLed = await fetch("http://localhost:8080/on-red-led")
-        const response = await onRedLed.json()
-        console.log(response)
-    }
-    else {
-        const offRedLed = await fetch("http://localhost:8080/off-red-led")
-        const response = await offRedLed.json()
-        console.log(response)
-    }
+    checkboxOnOffRedLed.addEventListener('click', async () => {
+        if(checkboxOnOffRedLed.checked) {
+            const onRedLed = await fetch("http://192.168.1.46:8080/on-red-led")
+            const response = await onRedLed.json()
+            console.log(response)
+        }
+        else {
+            const offRedLed = await fetch("http://192.168.1.46:8080/off-red-led")
+            const response = await offRedLed.json()
+            console.log(response)
+        }
+    })
 </script>
 <body>
     <div class="header">
         <h2>Csibekeltető</h2>
     </div>
     <main>
-        <h3>Turn on/off red led</h3>
-        <input type="checkbox" id="checkbox-on-off-red-led"/>
+        <div class="item turn-on-off-red-led">
+            <h3>Turn on/off red led</h3>
+            <input type="checkbox" id="checkbox-on-off-red-led"/>
+        </div>
     </main>
 
 </body>
