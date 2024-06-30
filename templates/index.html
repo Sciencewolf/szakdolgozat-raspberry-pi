@@ -43,6 +43,14 @@
     const temperature = document.getElementById("temp")
     const humidity = document.getElementById("hum")
 
+    window.addEventListener("load", async () => {
+        const getTemperatureAndHumidity = await fetch("http://192.168.1.46:8080/get-temp-hum")
+        const response = await getTemperatureAndHumidity.json()
+        console.log(response)
+        temperature.innerHTML = response.temp
+        humidity.innerHTML = response.hum
+    })
+
     checkboxOnOffRedLed.addEventListener('click', async () => {
         if(checkboxOnOffRedLed.checked) {
             checkboxOnOffGreenLed.disabled = true
@@ -117,15 +125,6 @@
             const response = await offAllLed.json()
             console.log(response)
         }
-    })
-
-    document.addEventListener("load", async () => {
-        setTimeout(async () => {
-            const getTemperatureAndHumidity = await fetch("http://192.168.1.46:8080/get-temp-hum")
-            const response = await getTemperatureAndHumidity.json()
-            temperature.innerHTML = response.temp
-            humidity.innerHTML = response.hum
-        }, 20000)
     })
 </script>
 

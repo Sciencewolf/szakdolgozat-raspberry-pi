@@ -1,3 +1,5 @@
+import sys
+
 import board
 import adafruit_ahtx0
 
@@ -13,5 +15,7 @@ try:
     with open('../temp_hum.txt', 'w') as file:
         file.write(temp + '\n')
         file.write(hum)
+
+    sys.exit(1)
 except Exception as ex:
     print(ex)
