@@ -1,4 +1,5 @@
 import sys
+import datetime
 
 import board
 import adafruit_ahtx0
@@ -14,7 +15,8 @@ try:
 
     with open('../temp_hum.txt', 'w') as file:
         file.write(temp + '\n')
-        file.write(hum)
+        file.write(hum + '\n')
+        file.write(datetime.datetime.now().__str__() + '\n')
 
     sys.exit(1)
 except Exception as ex:

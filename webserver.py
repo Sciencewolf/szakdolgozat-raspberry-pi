@@ -67,7 +67,8 @@ def get_temperature_and_humidity_from_sensor():
     with open("temp_hum.txt", 'r') as file:
         temp = file.readline()
         hum = file.readline()
-        return jsonify({"temp": temp, "hum": hum})
+        
+    return jsonify({"temp": temp, "hum": hum})
 
 
 if __name__ == "__main__":
