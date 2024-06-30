@@ -1,11 +1,14 @@
+#!/usr/bin/env python
+
 import sys
 import datetime
+import os
 
 import board
 import adafruit_ahtx0
 
-# Create sensor object, communicating over the board's default I2C bus
 try:
+    # Create sensor object, communicating over the board's default I2C
     i2c = board.I2C()  # uses board.SCL and board.SDA
 
     sensor = adafruit_ahtx0.AHTx0(i2c)
@@ -13,11 +16,19 @@ try:
     temp = "%0.1f C" % sensor.temperature
     hum = "%0.1f %%" % sensor.relative_humidity
 
-    with open('../temp_hum.txt', 'w') as file:
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the path to the temp_hum.txt file
+    temp_hum_file = os.path.join(script_dir, "../temp_hum.txt")
+
+    with open(temp_hum_file, 'w') as file:
         file.write(temp + '\n')
         file.write(hum + '\n')
         file.write(datetime.datetime.now().__str__() + '\n')
+except Exception as e:
+    error_log_file = os.path.join(script_dir, "../temp_hum_error.log")
+    with open(error_log_file, 'w') as file:
+        file.write(str(e) + '\n')
 
-    sys.exit(1)
-except Exception as ex:
-    print(ex)
+sys.exit(0)
