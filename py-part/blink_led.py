@@ -8,7 +8,7 @@ GPIO_PIN_NUM: int = 21
 
 gpio.setmode(gpio.BCM)
 
-gpio.setup(GPIO_PIN_NUM, gpio.OUT, initial=GPIO.LOW)
+gpio.setup(GPIO_PIN_NUM, gpio.OUT, initial=gpio.LOW)
 
 def main() -> None:
     try:

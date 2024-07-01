@@ -12,7 +12,7 @@ GPIO_RED_PIN_NUM: int = 13
 gpio.setmode(gpio.BCM)
 
 # setup
-gpio.setup(GPIO_RED_PIN_NUM, gpio.OUT, initial=GPIO.LOW)
+gpio.setup(GPIO_RED_PIN_NUM, gpio.OUT, initial=gpio.LOW)
 
 #time
 SLEEP: float = .4

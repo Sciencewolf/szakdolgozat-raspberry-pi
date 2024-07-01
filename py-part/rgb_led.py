@@ -12,9 +12,9 @@ SLEEP: float = 0.4
 
 gpio.setmode(gpio.BCM)
 
-gpio.setup(GPIO_PIN_G_NUM, gpio.OUT, initial=GPIO.LOW)
-gpio.setup(GPIO_PIN_R_NUM, gpio.OUT, initial=GPIO.LOW)
-gpio.setup(GPIO_PIN_B_NUM, gpio.OUT, initial=GPIO.LOW)
+gpio.setup(GPIO_PIN_G_NUM, gpio.OUT, initial=gpio.LOW)
+gpio.setup(GPIO_PIN_R_NUM, gpio.OUT, initial=gpio.LOW)
+gpio.setup(GPIO_PIN_B_NUM, gpio.OUT, initial=gpio.LOW)
 
 def main() -> None:
     try:
