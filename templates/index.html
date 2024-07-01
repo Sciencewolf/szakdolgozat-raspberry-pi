@@ -34,6 +34,16 @@
         scale: 1.5;
     }
 
+    #shutdown-btn {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+    }
+
+    #shutdown-btn:hover {
+        cursor: pointer;
+    }
+
 </style>
 <script defer async type="module">
     const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
@@ -42,6 +52,7 @@
     const checkboxOnOffAllLed = document.getElementById("checkbox-on-off-all-led")
     const temperature = document.getElementById("temp")
     const humidity = document.getElementById("hum")
+    const shutdownButton = document.getElementById("shutdown-btn")
 
     window.addEventListener("load", async () => {
         const getTemperatureAndHumidity = await fetch("http://192.168.1.46:8080/get-temp-hum")
@@ -49,6 +60,12 @@
         console.log(response)
         temperature.innerHTML = response.temp
         humidity.innerHTML = response.hum
+    })
+
+    shutdownButton.addEventListener('click', async () => {
+        const shutdown = await fetch("http://192.168.1.46:8080/shutdown")
+        const response = await shutdown.json() // will be empty
+        window.location.reload()
     })
 
     checkboxOnOffRedLed.addEventListener('click', async () => {
@@ -132,6 +149,9 @@
     <div class="header">
         <h2>Csibekeltető</h2>
     </div>
+    <button type="button" id="shutdown-btn">
+        <img src="/images/shutdown.png" width="48" height="48" alt="shutdown-icon" />
+    </button>
     <main>
         <div class="item turn-on-off-red-led">
             <h3>Turn on/off red led</h3>

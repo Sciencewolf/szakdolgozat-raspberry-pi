@@ -84,5 +84,10 @@ def get_temperature_and_humidity_from_sensor():
     return jsonify({"temp": temp, "hum": hum, "timestamp": timestamp})
 
 
+@app.route("/shutdown", methods=['GET'])
+def shutdown_raspberry_pi():
+    os.system("sudo shutdown -h now")
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
