@@ -10,9 +10,9 @@ BLUE_PIN = 6
 GPIO.setmode(GPIO.BCM)
 
 # Setup pins for PWM output
-GPIO.setup(RED_PIN, GPIO.OUT)
-GPIO.setup(GREEN_PIN, GPIO.OUT)
-GPIO.setup(BLUE_PIN, GPIO.OUT)
+GPIO.setup(RED_PIN, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(GREEN_PIN, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(BLUE_PIN, GPIO.OUT, initial=GPIO.LOW)
 
 # Initialize PWM objects
 red_pwm = GPIO.PWM(RED_PIN, 100)    # 100 Hz frequency

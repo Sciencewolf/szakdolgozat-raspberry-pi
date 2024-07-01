@@ -12,7 +12,7 @@ GPIO_BLUE_PIN_NUM: int = 6
 gpio.setmode(gpio.BCM)
 
 # setup
-gpio.setup(GPIO_BLUE_PIN_NUM, gpio.OUT)
+gpio.setup(GPIO_BLUE_PIN_NUM, gpio.OUT, initial=GPIO.LOW)
 
 # time
 SLEEP: float = .4
