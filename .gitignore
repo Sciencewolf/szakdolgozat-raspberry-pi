@@ -4,3 +4,4 @@ test.py
 cred.txt
 .env
 temp_hum.txt
+log/
