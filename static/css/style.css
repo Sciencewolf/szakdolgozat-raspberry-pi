@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    background-color: #001;
+    color: white;
+}
+
+main {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1em;
+}
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+input[type="checkbox"] {
+    scale: 1.5;
+}
+
+#shutdown-btn {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
+#shutdown-btn:hover {
+    cursor: pointer;
+}
