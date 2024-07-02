@@ -2,17 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#303841" id="meta-theme">
+    <meta name="keywords" content="Csibekeltető, szakdolgozat">
+    
     <title>Csibekeltető</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer async type="module"></script>
+
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> -->
+    <!-- <script src="{{ url_for('static', filename='js/main.js') }}" defer async type="module"></script> -->
+    <link rel="stylesheet" href="../static/css/style.css">
 </head>
+<style>
+
+    @media screen and (max-width: 768px) {
+        .stats {
+            background-color: transparent;
+        }
+    }
+
+</style>
 <body>
     <div class="header">
         <h2>Csibekeltető</h2>
     </div>
 
     <div class="stats" >
-        <h2>Overall</h2>
         <h3>CPU: </h3>
         <h3>RAM: </h3>
     </div>
@@ -20,25 +34,49 @@
     <main>
         <div class="item turn-on-off-red-led">
             <h3>Red LED</h3>
-            <input type="checkbox" id="checkbox-on-off-red-led"/>
+            <label class="toggle-switch">
+                <input type="checkbox" id="checkbox-on-off-red-led">
+                <div class="toggle-switch-background">
+                    <div class="toggle-switch-handle"></div>
+                </div>
+            </label>
         </div>
         <div class="item turn-on-off-green-led">
             <h3>Green LED</h3>
-            <input type="checkbox" id="checkbox-on-off-green-led"/>
+            <label class="toggle-switch">
+                <input type="checkbox" id="checkbox-on-off-green-led">
+                <div class="toggle-switch-background">
+                    <div class="toggle-switch-handle"></div>
+                </div>
+            </label>
         </div>
         <div class="item turn-on-off-blue-led">
             <h3>Blue LED</h3>
-            <input type="checkbox" id="checkbox-on-off-blue-led"/>
+            <label class="toggle-switch">
+                <input type="checkbox" id="checkbox-on-off-blue-led">
+                <div class="toggle-switch-background">
+                    <div class="toggle-switch-handle"></div>
+                </div>
+            </label>
         </div>
         <div class="item turn-on-off-all-led">
             <h3>All LED</h3>
-            <input type="checkbox" id="checkbox-on-off-all-led"/>
+            <label class="toggle-switch">
+                <input type="checkbox" id="checkbox-on-off-all-led">
+                <div class="toggle-switch-background">
+                    <div class="toggle-switch-handle"></div>
+                </div>
+            </label>
         </div>
         <div class="item temp-hum">
             <h3>Temperature: <span id="temp"></span></h3>
             <h3>Humidity: <span id="hum"></span></h3>
         </div>
     </main>
+
+    <footer class="footer">
+        <span>V2024.07.02</span>
+    </footer>
 
 </body>
 </html>
