@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 
 
 class Logger:
@@ -16,6 +17,8 @@ class Logger:
             debugger = file.readline().split("=")[1].rstrip()
             if debugger == "on":
                 self.logger_debug = "on"
+
+        os.mkdir("log")
 
     def info(self, *args: str | Exception | None):
         if self.logger_writer == "on":
