@@ -3,11 +3,15 @@
 import sys
 import datetime
 import os
-
 import board
 import adafruit_ahtx0
 
+import logger
+
+logger = logger.Logger("hardware-t-h-sensor-")
+
 try:
+    logger.info("trying read the sensor")
     # Create sensor object, communicating over the board's default I2C
     i2c = board.I2C()  # uses board.SCL and board.SDA
 
@@ -26,9 +30,10 @@ try:
         file.write(temp + '\n')
         file.write(hum + '\n')
         file.write(datetime.datetime.now().__str__() + '\n')
-except Exception as e:
-    error_log_file = os.path.join(script_dir, "../temp_hum_error.log")
-    with open(error_log_file, 'w') as file:
-        file.write(str(e) + '\n')
 
-sys.exit(0)
+    logger.info("looks good")
+except Exception as ex:
+    logger.error("error while reading the sensor", ex.__str__())
+finally:
+    logger.warn("exiting...")
+    sys.exit(0)
