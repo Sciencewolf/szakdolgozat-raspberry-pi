@@ -4,7 +4,7 @@ const checkboxOnOffBlueLed = document.getElementById("checkbox-on-off-blue-led")
 const checkboxOnOffAllLed = document.getElementById("checkbox-on-off-all-led")
 const temperature = document.getElementById("temp")
 const humidity = document.getElementById("hum")
-const baseUrl = window.location.hostname
+const baseUrl = "http://192.168.1.46"
 
 window.addEventListener("load", async () => {
     const getTemperatureAndHumidity = await fetch(`${baseUrl}:8080/get-temp-hum`)
