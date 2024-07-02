@@ -2,10 +2,12 @@
 import datetime
 import time
 from flask import Flask, jsonify, render_template
+from flask_cors import CORS
 import subprocess
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 status_code_200: dict = {"status_code": 200}
 
