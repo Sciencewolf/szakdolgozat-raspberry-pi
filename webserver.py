@@ -5,6 +5,10 @@ from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 import subprocess
 import os
+import sys
+
+sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
+
 import logger
 
 app = Flask(__name__)

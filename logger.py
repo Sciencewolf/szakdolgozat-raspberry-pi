@@ -5,39 +5,48 @@ import os
 class Logger:
     def __init__(self, filetype: str):
         self.filetype = filetype
-        self.logger_writer = "off"
-        self.logger_debug = "off"
 
-        with open("settings.txt", "r") as file:
+        # private field's
+        self.__main_path = "/home/aron/szakdolgozat-raspberry-pi"
+        self.__logger_writer = "off"
+        self.__logger_debug = "off"
+        self.__logger_level = "off"  # info, warn, error, debug, all, off
+
+        with open(f"{self.__main_path}/settings.txt", "r") as file:
             """ in future find better way to read settings file """
             writer = file.readline().split("=")[1].rstrip()
             if writer == "on":
-                self.logger_writer = "on"
+                self.__logger_writer = writer
 
             debugger = file.readline().split("=")[1].rstrip()
             if debugger == "on":
-                self.logger_debug = "on"
+                self.__logger_debug = debugger
 
-        os.mkdir("log")
+            level = file.readline().split("=")[1].rstrip()
+            if level != "off":
+                self.__logger_level = level
+
+        if not os.path.isdir(f"{self.__main_path}/log"):
+            os.mkdir(f"{self.__main_path}/log")
 
     def info(self, *args: str | Exception | None):
-        if self.logger_writer == "on":
-            with open(f"log/{self.filetype}info.txt", "a+") as file:
+        if self.__logger_writer == "on" and self.__logger_level in ["info", "all"]:
+            with open(f"{self.__main_path}/log/{self.filetype}info.txt", "a+") as file:
                 for arg in args:
                     file.write(f"INFO: [{datetime.now()}] {arg} ! \n")
 
     def warn(self, *args: str | Exception | None):
-        if self.logger_writer == "on":
-            with open(f"log/{self.filetype}warn.txt", "a+") as file:
+        if self.__logger_writer == "on" and self.__logger_level in ["warn", "all"]:
+            with open(f"{self.__main_path}/log/{self.filetype}warn.txt", "a+") as file:
                 for arg in args:
                     file.write(f"WARN: [{datetime.now()}] {arg} ! \n")
 
     def error(self, *args: str | Exception | None):
-        if self.logger_writer == "on":
-            with open(f"log/{self.filetype}error.txt", "a+") as file:
+        if self.__logger_writer == "on" and self.__logger_level in ["error", "all"]:
+            with open(f"{self.__main_path}/log/{self.filetype}error.txt", "a+") as file:
                 for arg in args:
                     file.write(f"ERROR: [{datetime.now()}] {arg} ! \n")
 
     def debug(self, *args: str | Exception | None):
-        if self.logger_debug == "on":
+        if self.__logger_debug == "on" and self.__logger_level in ["debug", "all"]:
             print(args)

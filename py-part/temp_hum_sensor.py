@@ -5,7 +5,6 @@ import datetime
 import os
 import board
 import adafruit_ahtx0
-sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
 
 from logger import Logger
 
