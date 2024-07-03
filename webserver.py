@@ -108,12 +108,9 @@ def get_temperature_and_humidity_from_sensor():
     return jsonify({"temp": temp, "hum": hum, "timestamp": timestamp})
 
 
-@app.route("/shutdown", methods=['GET'])
-def shutdown_raspberry_pi():
-    logger.warn("Raspberry Pi shutdown")
-    os.system("sudo shutdown -h now")
-
-
 if __name__ == "__main__":
     logger.info("webserver is on", os.path.abspath(__file__))
-    app.run(host="0.0.0.0", port=8080)
+    try:
+        app.run(host="0.0.0.0", port=8080)
+    except KeyboardInterrupt as ki:
+        logger.close(ki.__str__())

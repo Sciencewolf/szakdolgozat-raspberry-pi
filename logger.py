@@ -58,3 +58,17 @@ class Logger:
     def debug(self, *args: str | Exception | None):
         if self.__logger_debug == "on" and self.__logger_level in ["debug", "all"]:
             print(f"DEBUG: [{datetime.now()}] {args} \n")
+
+    def close(self, value: str | Exception | None):
+        if not self.__is_log_removed:
+            file_info = open(f"{self.__main_path}/log/{self.filetype}info.txt", "a+")
+            file_info.write("---End of session---\n")
+            file_info.close()
+            file_warn = open(f"{self.__main_path}/log/{self.filetype}warn.txt", "a+")
+            file_warn.write("---End of session---\n")
+            file_warn.close()
+            file_error = open(f"{self.__main_path}/log/{self.filetype}error.txt", "a+")
+            file_error.write("---End of session---\n")
+            file_error.close()
+
+        print(value)
