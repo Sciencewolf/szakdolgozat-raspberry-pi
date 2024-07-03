@@ -4,6 +4,9 @@ import RPi.GPIO as gpio
 import time
 from signal import signal, SIGTERM, SIGHUP
 import os
+import sys
+sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
+
 import logger
 
 # define gpio pin's

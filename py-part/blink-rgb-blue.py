@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-import os.path
+import sys
+sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
+import os
 
 import RPi.GPIO as gpio
 import time

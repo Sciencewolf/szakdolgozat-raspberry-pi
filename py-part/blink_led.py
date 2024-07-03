@@ -3,6 +3,9 @@
 import RPi.GPIO as gpio
 import time
 from signal import signal, SIGTERM, SIGHUP
+import sys
+sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
+
 
 GPIO_PIN_NUM: int = 21
 
