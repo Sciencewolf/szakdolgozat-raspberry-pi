@@ -66,5 +66,5 @@ class Logger:
         txt_files = glob.glob(f"{self.__main_path}/log/*.txt")
         if not self.__is_log_removed:
             for file in txt_files:
-                with open(file) as f:
-                    f.write("--- End of session ---\n")
+                with open(file, 'a+') as f:
+                    f.write(f"--- End of session --- @ {datetime.now()}\n")
