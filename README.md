@@ -1,1 +1,1 @@
-# Documentation
+# Szakdolgozat Raspberry Pi(Hardware) része
