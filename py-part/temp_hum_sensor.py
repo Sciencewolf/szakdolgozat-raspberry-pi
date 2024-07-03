@@ -5,10 +5,12 @@ import datetime
 import os
 import board
 import adafruit_ahtx0
+sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
 
-import logger
+from logger import Logger
 
-logger = logger.Logger("hardware-t-h-sensor-")
+
+logger = Logger("hardware-t-h-sensor-")
 
 try:
     logger.info("trying read the sensor")
