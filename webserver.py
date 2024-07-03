@@ -113,4 +113,8 @@ if __name__ == "__main__":
     try:
         app.run(host="0.0.0.0", port=8080)
     except KeyboardInterrupt as ki:
-        logger.close(ki.__str__())
+        print("e")
+        logger.close()
+    finally:
+        print("f")
+        logger.close()

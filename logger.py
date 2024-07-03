@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
 import shutil
+import glob
 
 
 class Logger:
@@ -59,16 +60,11 @@ class Logger:
         if self.__logger_debug == "on" and self.__logger_level in ["debug", "all"]:
             print(f"DEBUG: [{datetime.now()}] {args} \n")
 
-    def close(self, value: str | Exception | None):
-        if not self.__is_log_removed:
-            file_info = open(f"{self.__main_path}/log/{self.filetype}info.txt", "a+")
-            file_info.write("---End of session---\n")
-            file_info.close()
-            file_warn = open(f"{self.__main_path}/log/{self.filetype}warn.txt", "a+")
-            file_warn.write("---End of session---\n")
-            file_warn.close()
-            file_error = open(f"{self.__main_path}/log/{self.filetype}error.txt", "a+")
-            file_error.write("---End of session---\n")
-            file_error.close()
+    def close(self):
+        """ Close logger with writing 'end of session' """
 
-        print(value)
+        txt_files = glob.glob(f"{self.__main_path}/log/*.txt")
+        if not self.__is_log_removed:
+            for file in txt_files:
+                with open(file) as f:
+                    f.write("--- End of session ---\n")
