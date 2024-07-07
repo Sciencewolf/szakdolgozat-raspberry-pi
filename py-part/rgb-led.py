@@ -10,9 +10,9 @@ sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
 import logger
 
 
-GPIO_PIN_R_NUM: int = 13 # red led
-GPIO_PIN_G_NUM: int = 5 # green led 
-GPIO_PIN_B_NUM: int = 6 # blue leb
+GPIO_PIN_R_NUM: int = 21 # red led
+GPIO_PIN_G_NUM: int = 16 # green led 
+GPIO_PIN_B_NUM: int = 20 # blue leb
 
 SLEEP: float = 0.4
 

@@ -7,7 +7,7 @@ import sys
 sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
 
 
-GPIO_PIN_NUM: int = 21
+GPIO_PIN_NUM: int = # 21
 
 gpio.setmode(gpio.BCM)
 

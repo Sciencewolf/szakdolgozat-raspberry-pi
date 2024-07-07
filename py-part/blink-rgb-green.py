@@ -10,7 +10,7 @@ sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
 import logger
 
 # define gpio pin's
-GPIO_GREEN_PIN_NUM: int = 5
+GPIO_GREEN_PIN_NUM: int = 16
 
 # setmode
 gpio.setmode(gpio.BCM)

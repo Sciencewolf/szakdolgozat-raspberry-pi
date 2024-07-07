@@ -9,7 +9,7 @@ from signal import signal, SIGTERM, SIGHUP
 import logger
 
 # define gpio pin's
-GPIO_BLUE_PIN_NUM: int = 6
+GPIO_BLUE_PIN_NUM: int = 20
 
 # setmode
 gpio.setmode(gpio.BCM)

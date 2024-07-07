@@ -2,9 +2,9 @@ import RPi.GPIO as GPIO
 import time
 
 # Define GPIO pins
-RED_PIN = 13
-GREEN_PIN = 5
-BLUE_PIN = 6
+RED_PIN = 21
+GREEN_PIN = 16
+BLUE_PIN = 20
 
 # Set GPIO numbering mode
 GPIO.setmode(GPIO.BCM)
