@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 echo off
 /usr/bin/python /home/aron/szakdolgozat-raspberry-pi/webserver.py &
