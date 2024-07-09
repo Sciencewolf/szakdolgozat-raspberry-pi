@@ -5,12 +5,16 @@ const checkboxOnOffAllLed = document.getElementById("checkbox-on-off-all-led")
 const temperature = document.getElementById("temp")
 const humidity = document.getElementById("hum")
 
-window.addEventListener("load", async () => {
+const tempHumSensor = async () => {
     const getTemperatureAndHumidity = await fetch("https://hippo-immense-plainly.ngrok-free.app/get-temp-hum")
     const response = await getTemperatureAndHumidity.json()
     console.log(response)
     temperature.innerHTML = response.temp
     humidity.innerHTML = response.hum
+}
+
+window.addEventListener("load", async () => {
+    await tempHumSensor()
 })
 
 checkboxOnOffRedLed.addEventListener('click', async () => {
@@ -88,3 +92,8 @@ checkboxOnOffAllLed.addEventListener('click', async () => {
         console.log(response)
     }
 })
+
+setInterval(async () => {
+    await tempHumSensor()
+    console.log("interval")
+}, 10000)
