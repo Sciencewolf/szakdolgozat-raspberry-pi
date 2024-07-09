@@ -93,7 +93,4 @@ checkboxOnOffAllLed.addEventListener('click', async () => {
     }
 })
 
-setInterval(async () => {
-    await tempHumSensor()
-    console.log("interval")
-}, 10000)
+setInterval(async () => { await tempHumSensor() }, 10000)
