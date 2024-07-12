@@ -1,12 +1,18 @@
+# Folder/Credentials
+
 .idea
 __pycache__/
-test.py
-cred.txt
-.env
-temp_hum.txt
 log/
-shut.sh
-asair-dht20.pdf
-see.sh
 node_modules
+.env
+
+# Script
+test.py
+shut.sh
+see.sh
 update.sh
+
+# Else
+cred.txt
+temp_hum.txt
+asair-dht20.pdf
