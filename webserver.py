@@ -7,14 +7,17 @@ import subprocess
 import os
 import sys
 
-sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
+# the next 3 line for adding the parent directory into PATH
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
 
 import logger
 
 app = Flask(__name__)
 CORS(app)
 
-logger = logger.Logger("webserver-")
+logger = logger.Logger("webserver-", remove_log=True)
 
 status_code_200: dict = {"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()}
 status_code_404: dict = {"status_code": 404, "content": "not found response", "timestamp": datetime.datetime.now()}

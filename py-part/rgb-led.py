@@ -5,7 +5,11 @@ import time
 from signal import signal, SIGTERM, SIGHUP
 import os
 import sys
-sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
+
+# the next 3 line for adding the parent directory into PATH
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
 
 import logger
 

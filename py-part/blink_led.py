@@ -4,7 +4,11 @@ import RPi.GPIO as gpio
 import time
 from signal import signal, SIGTERM, SIGHUP
 import sys
-sys.path.append("/home/aron/szakdolgozat-raspberry-pi/")
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+
+sys.path.append(parent_dir)
 
 
 GPIO_PIN_NUM: int = # 21
