@@ -21,6 +21,7 @@ try:
 
     temp = "%0.1f C" % sensor.temperature
     hum = "%0.1f %%" % sensor.relative_humidity
+    logger.debug(temp, hum)
 
     # Get the directory where this script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))

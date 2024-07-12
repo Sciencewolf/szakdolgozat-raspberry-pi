@@ -32,8 +32,10 @@ def main() -> None:
 		while True:
 			gpio.output(GPIO_RED_PIN_NUM, gpio.HIGH)
 			time.sleep(SLEEP)
+			logger.debug("red led on")
 			gpio.output(GPIO_RED_PIN_NUM, gpio.LOW)
 			time.sleep(SLEEP)
+			logger.debug("red led off")
 	except KeyboardInterrupt as ex:
 		logger.warn("keyboard interrupt", ex.__str__())
 	finally:

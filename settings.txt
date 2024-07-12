@@ -1,3 +1,2 @@
 logger_writer=on
-logger_debug=on
-logger_level=all
+logger_level=debug

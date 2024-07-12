@@ -31,8 +31,10 @@ def main() -> None:
         while True:
             gpio.output(GPIO_BLUE_PIN_NUM, gpio.HIGH)
             time.sleep(SLEEP)
+            logger.debug("blue led on")
             gpio.output(GPIO_BLUE_PIN_NUM, gpio.LOW)
             time.sleep(SLEEP)
+            logger.debug("blue led off")
     except KeyboardInterrupt as ex:
         logger.warn("keyboard interrupt", ex.__str__())
     finally:

@@ -34,18 +34,24 @@ def main() -> None:
             # blink red
             gpio.output(GPIO_PIN_R_NUM, gpio.HIGH)
             time.sleep(SLEEP)
+            logger.debug("red led on")
             gpio.output(GPIO_PIN_R_NUM, gpio.LOW)
             time.sleep(SLEEP)
+            logger.debug("red led off")
             # blink green
             gpio.output(GPIO_PIN_G_NUM, gpio.HIGH)
             time.sleep(SLEEP)
+            logger.debug("green led on")
             gpio.output(GPIO_PIN_G_NUM, gpio.LOW)
             time.sleep(SLEEP)
+            logger.debug("green led off")
             # blink blue
             gpio.output(GPIO_PIN_B_NUM, gpio.HIGH)
             time.sleep(SLEEP)
+            logger.debug("blue led on")
             gpio.output(GPIO_PIN_B_NUM, gpio.LOW)
             time.sleep(SLEEP)
+            logger.debug("blue led off")
     except KeyboardInterrupt as ex:
         logger.warn("keyboard interrupt", ex.__str__())
     finally:
