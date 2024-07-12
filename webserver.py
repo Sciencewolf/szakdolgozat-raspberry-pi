@@ -27,8 +27,14 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 @app.route("/")
+def root():
+    logger.info("accessing root route")
+    return status_code_200
+
+
+@app.route("/home")
 def home():
-    logger.info("accessing base url, homepage")
+    logger.info("loading home")
     return render_template("index.html")
 
 
