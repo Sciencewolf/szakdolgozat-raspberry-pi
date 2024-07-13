@@ -7,7 +7,7 @@ import subprocess
 import os
 import sys
 
-# the next 3 line for adding the parent directory into PATH
+# the next 3 line for adding the parent directory into PATH for the logger
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)

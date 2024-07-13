@@ -17,7 +17,7 @@ docker build -t webapp .
 docker run -it -p 8080:8080 webapp
 ```
 
-> Visit ```http://<raspberry_pi_ip_address>:8080/```
+* Visit ```http://<raspberry_pi_ip_address>:8080/```
 
 ## RGB LED and AHT20 wiring
 
