@@ -7,7 +7,7 @@ COPY py-part/ ./py-part
 COPY static/ ./
 COPY templates/ ./
 COPY settings.txt ./
-COPY requirements.txt ./
+COPY stuff/requirements.txt ./
 
 RUN pip install -r requirements.txt
 
