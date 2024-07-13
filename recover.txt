@@ -1,0 +1,20 @@
+ssh error
+
+ssh-keygen.exe -R raspberrypi
+ssh-keygen.exe -R <ip>
+
+
+git 
+
+sudo apt install git
+git config --global credential.helper store
+
+
+pip
+
+pip3 install --upgrade adafruit-python-shell --break-system-packages
+wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+sudo apt-get install -y i2c-tools libgpiod-dev python3-libgpiod
+pip3 install --upgrade RPi.GPIO --break-system-packages 
+pip3 install --upgrade adafruit-blinka --break-system-packages
+sudo pip3 install adafruit-circuitpython-ahtx0 --break-system-packages
