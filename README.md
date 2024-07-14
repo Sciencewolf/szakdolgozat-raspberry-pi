@@ -1,28 +1,28 @@
 # Szakdolgozat Raspberry Pi(Hardware) part
 
-## Getting Started
-
-```shell
-git clone https://github.com/Sciencewolf/szakdolgozat-raspberry-pi.git
-```
-
-```shell
-cd szakdolgozat-raspberry-pi
-docker build -t webapp .
-```
-
-- Wait to install all dependencies
-
-```shell
-docker run -it -p 8080:8080 webapp
-```
-
-* Visit ```http://<raspberry_pi_ip_address>:8080/```
+<!-- ## Getting Started -->
+<!--  -->
+<!-- ```shell -->
+<!-- git clone https://github.com/Sciencewolf/szakdolgozat-raspberry-pi.git -->
+<!-- ``` -->
+<!--  -->
+<!-- ```shell -->
+<!-- cd szakdolgozat-raspberry-pi -->
+<!-- docker build -t webapp . -->
+<!-- ``` -->
+<!--  -->
+<!-- - Wait to install all dependencies -->
+<!--  -->
+<!-- ```shell -->
+<!-- docker run -it -p 8080:8080 webapp -->
+<!-- ``` -->
+<!--  -->
+<!-- * Visit ```http://<raspberry_pi_ip_address>:8080/``` -->
 
 ## RGB LED and AHT20 wiring
 
 > [!NOTE]
-> Hardware used in breadboard
+> Required hardware
 
 > - Raspberry Pi 4 model B
 > - Breadboard
