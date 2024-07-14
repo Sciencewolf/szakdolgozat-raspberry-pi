@@ -32,25 +32,25 @@ class Logger:
         if not os.path.isdir(f"{self.__main_path}/log"):
             os.mkdir(f"{self.__main_path}/log")
 
-    def info(self, *args: str | Exception | None) -> None:
+    def info(self, *args: Union[str, Exception, None]) -> None:
         if self.__logger_writer == "on" and self.__logger_level in ["info", "all"]:
             with open(f"{self.__main_path}/log/{self.filetype}info.txt", "a+") as file:
                 for arg in args:
                     file.write(f"INFO: [{datetime.now()}] {arg}  \n")
 
-    def warn(self, *args: str | Exception | None) -> None:
+    def warn(self, *args: Union[str, Exception, None]) -> None:
         if self.__logger_writer == "on" and self.__logger_level in ["warn", "all"]:
             with open(f"{self.__main_path}/log/{self.filetype}warn.txt", "a+") as file:
                 for arg in args:
                     file.write(f"WARN: [{datetime.now()}] {arg}  \n")
 
-    def error(self, *args: str | Exception | None) -> None:
+    def error(self, *args: Union[str, Exception, None]) -> None:
         if self.__logger_writer == "on" and self.__logger_level in ["error", "all"]:
             with open(f"{self.__main_path}/log/{self.filetype}error.txt", "a+") as file:
                 for arg in args:
                     file.write(f"ERROR: [{datetime.now()}] {arg}  \n")
 
-    def debug(self, *args: str | Exception | None) -> None:
+    def debug(self, *args: Union[str, Exception, None]) -> None:
         """ print's out *args to sys.stdout """
         if self.__logger_level in ["debug", "all"]:
             print(f"DEBUG: [{datetime.now()}] {args} \n")
