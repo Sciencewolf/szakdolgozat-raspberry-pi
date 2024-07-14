@@ -10,7 +10,7 @@ class Logger:
         self.remove_log = remove_log
 
         # private field's
-        self.__main_path = '/home/aron/szakdolgozat-raspberry-pi'
+        self.__main_path = os.getcwd()  # raspi, docker
         print(self.__main_path)
         self.__logger_writer = "off"
         self.__logger_level = "off"  # info, warn, error, debug, all, off

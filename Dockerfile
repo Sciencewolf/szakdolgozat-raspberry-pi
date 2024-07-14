@@ -6,13 +6,11 @@ COPY *.py ./
 COPY py-part/ ./py-part
 COPY static/ ./
 COPY templates/ ./
-COPY settings.txt ./
-COPY stuff/requirements.txt ./
+COPY stuff/ ./stuff
+COPY requirements.txt ./
 
 RUN pip install -r requirements.txt
 
 EXPOSE 8080
 
-ENTRYPOINT ["python"] 
-
-CMD ["webserver.py"]
+CMD ["python", "webserver.py"]
