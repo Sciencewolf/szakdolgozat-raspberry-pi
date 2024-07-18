@@ -27,12 +27,6 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 @app.route("/")
-def root():
-    logger.info("accessing root route")
-    return status_code_200
-
-
-@app.route("/home")
 def home():
     logger.info("loading home")
     return render_template("index.html")
@@ -40,56 +34,56 @@ def home():
 
 @app.route("/on-red-led", methods=['GET'])
 def turn_on_red_led():
-    subprocess.Popen([os.path.join(base_dir, "py-part/blink-rgb-red.py")])
+    subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_red.py")])
     logger.info("turning on red led")
     return jsonify(status_code_200)
 
 
 @app.route("/off-red-led", methods=['GET'])
 def turn_off_red_led():
-    subprocess.run(["pkill", "-f", "py-part/blink-rgb-red.py"])
+    subprocess.run(["pkill", "-f", "py-part/blink_rgb_red.py"])
     logger.info("turning off red led")
     return jsonify(status_code_200)
 
 
 @app.route("/on-green-led", methods=['GET'])
 def turn_on_green_led():
-    subprocess.Popen([os.path.join(base_dir, "py-part/blink-rgb-green.py")])
+    subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_green.py")])
     logger.info("turning on green led")
     return jsonify(status_code_200)
 
 
 @app.route("/off-green-led", methods=['GET'])
 def turn_off_green_led():
-    subprocess.run(["pkill", "-f", "py-part/blink-rgb-green.py"])
+    subprocess.run(["pkill", "-f", "py-part/blink_rgb_green.py"])
     logger.info("turning off green led")
     return jsonify(status_code_200)
 
 
 @app.route("/on-blue-led", methods=['GET'])
 def turn_on_blue_led():
-    subprocess.Popen([os.path.join(base_dir, "py-part/blink-rgb-blue.py")])
+    subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_blue.py")])
     logger.info("turning on blue led")
     return jsonify(status_code_200)
 
 
 @app.route("/off-blue-led", methods=['GET'])
 def turn_off_blue_led():
-    subprocess.run(["pkill", "-f", "py-part/blink-rgb-blue.py"])
+    subprocess.run(["pkill", "-f", "py-part/blink_rgb_blue.py"])
     logger.info("turning off blue led")
     return jsonify(status_code_200)
 
 
 @app.route("/on-all-led", methods=['GET'])
 def turn_on_all_led():
-    subprocess.Popen([os.path.join(base_dir, "py-part/rgb-led.py")])
+    subprocess.Popen([os.path.join(base_dir, "py-part/rgb_led.py")])
     logger.info("turning on all led")
     return jsonify(status_code_200)
 
 
 @app.route("/off-all-led", methods=['GET'])
 def turn_off_all_led():
-    subprocess.run(["pkill", "-f", "py-part/rgb-led.py"])
+    subprocess.run(["pkill", "-f", "py-part/rgb_led.py"])
     logger.info("turning off all led")
     return jsonify(status_code_200)
 
@@ -97,7 +91,11 @@ def turn_off_all_led():
 @app.route("/get-temp-hum", methods=['GET'])
 def get_temperature_and_humidity_from_sensor():
     logger.info("accessing /get-temp-hum")
-    result = subprocess.run([os.path.join(base_dir, "py-part/temp_hum_sensor.py")], capture_output=True, text=True)
+    result = subprocess.run(
+        [os.path.join(base_dir, "py-part/temp_hum_sensor.py")],
+        capture_output=True,
+        text=True
+    )
 
     if result.returncode != 0:
         logger.error("failed to run temp_hum_sensor.py or some other error occurred")

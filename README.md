@@ -24,12 +24,12 @@
 > [!NOTE]
 > Required hardware
 
-> - Raspberry Pi 4 model B
-> - Breadboard
-> - Adafruit T-Cobbler
-> - 3x Resistor 330R
-> - 1x RGB LED 
-> - 1x Adafruit AHT20 Temperature and Humidity Sensor
-> - 8x Male-Male Wire
+- Raspberry Pi 4 model B
+- Breadboard
+- Adafruit T-Cobbler
+- 3x Resistor 330R
+- 1x RGB LED 
+- 1x Adafruit AHT20 Temperature and Humidity Sensor
+- 8x Male-Male Wire
 
 <img src="sketches/rgb-led-aht20-temp-hum-sensor-wiring_image.png" alt="wiring" />

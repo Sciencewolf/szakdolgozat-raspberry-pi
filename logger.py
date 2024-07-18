@@ -16,7 +16,11 @@ class Logger:
         self.__logger_writer = "off"
         self.__logger_level = "off"  # info, warn, error, debug, all, off
 
-        with open(f"{self.__main_path}/settings.txt", "r") as file:
+        with open(
+                f"{self.__main_path}/settings.txt"
+                if str(self.__main_path).find("/stuff") == -1
+                else f"{self.__main_path}/stuff/settings.txt", "r"
+        ) as file:
             """ in future find better way to read settings file """
             writer = file.readline().split("=")[1].strip()
             if writer == "on":
