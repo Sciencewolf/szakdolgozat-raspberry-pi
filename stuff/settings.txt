@@ -1,2 +1,0 @@
-logger_writer=on
-logger_level=debug

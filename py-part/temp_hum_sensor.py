@@ -6,18 +6,7 @@ import os
 import board
 import adafruit_ahtx0
 
-# the next 3 line for adding the parent directory into PATH
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
-
-from logger import Logger
-
-
-logger = Logger("hardware-t-h-sensor-")
-
 try:
-    logger.info("trying read the sensor")
     # Create sensor object, communicating over the board's default I2C
     i2c = board.I2C()  # uses board.SCL and board.SDA
 
@@ -25,7 +14,6 @@ try:
 
     temp = "%0.1f C" % sensor.temperature
     hum = "%0.1f %%" % sensor.relative_humidity
-    logger.debug(temp, hum)
 
     # Get the directory where this script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -38,9 +26,7 @@ try:
         file.write(hum + '\n')
         file.write(datetime.datetime.now().__str__() + '\n')
 
-    logger.info("looks good")
 except Exception as ex:
-    logger.error("error while reading the sensor", ex.__str__())
+    pass
 finally:
-    logger.warn("exiting...")
     sys.exit(0)
