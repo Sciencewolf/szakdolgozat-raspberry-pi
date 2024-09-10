@@ -2,4 +2,4 @@
 
 /usr/bin/python /home/aron/szakdolgozat-raspberry-pi/webserver.py &
 /usr/local/bin/ngrok http --domain=hippo-immense-plainly.ngrok-free.app 8080 &
-/usr/bin/python /home/aron/szakdolgozat-raspberry-pi/py-part/indicate-raspi-on.py &
+/usr/bin/python /home/aron/szakdolgozat-raspberry-pi/py-part/indicate_raspi_on.py &

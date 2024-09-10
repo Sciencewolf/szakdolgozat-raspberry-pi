@@ -10,9 +10,6 @@ import sys
 app = Flask(__name__)
 CORS(app)
 
-status_code_200: dict = {"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()}
-status_code_404: dict = {"status_code": 404, "content": "not found response", "timestamp": datetime.datetime.now()}
-
 # Get the base directory where the Flask app is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -25,49 +22,49 @@ def home():
 @app.route("/on-red-led", methods=['GET'])
 def turn_on_red_led():
     subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_red.py")])
-    return jsonify(status_code_200)
+    return jsonify({"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()})
 
 
 @app.route("/off-red-led", methods=['GET'])
 def turn_off_red_led():
     subprocess.run(["pkill", "-f", "py-part/blink_rgb_red.py"])
-    return jsonify(status_code_200)
+    return jsonify({"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()})
 
 
 @app.route("/on-green-led", methods=['GET'])
 def turn_on_green_led():
     subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_green.py")])
-    return jsonify(status_code_200)
+    return jsonify({"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()})
 
 
 @app.route("/off-green-led", methods=['GET'])
 def turn_off_green_led():
     subprocess.run(["pkill", "-f", "py-part/blink_rgb_green.py"])
-    return jsonify(status_code_200)
+    return jsonify({"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()})
 
 
 @app.route("/on-blue-led", methods=['GET'])
 def turn_on_blue_led():
     subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_blue.py")])
-    return jsonify(status_code_200)
+    return jsonify({"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()})
 
 
 @app.route("/off-blue-led", methods=['GET'])
 def turn_off_blue_led():
     subprocess.run(["pkill", "-f", "py-part/blink_rgb_blue.py"])
-    return jsonify(status_code_200)
+    return jsonify({"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()})
 
 
 @app.route("/on-all-led", methods=['GET'])
 def turn_on_all_led():
     subprocess.Popen([os.path.join(base_dir, "py-part/rgb_led.py")])
-    return jsonify(status_code_200)
+    return jsonify({"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()})
 
 
 @app.route("/off-all-led", methods=['GET'])
 def turn_off_all_led():
     subprocess.run(["pkill", "-f", "py-part/rgb_led.py"])
-    return jsonify(status_code_200)
+    return jsonify({"status_code": 200, "content": "ok response", "timestamp": datetime.datetime.now()})
 
 
 @app.route("/get-temp-hum", methods=['GET'])
@@ -79,7 +76,7 @@ def get_temperature_and_humidity_from_sensor():
     )
 
     if result.returncode != 0:
-        return jsonify(status_code_404)
+        return jsonify({"status_code": 404, "content": "not found response", "timestamp": datetime.datetime.now()})
 
     try:
         with open(os.path.join(base_dir, "temp_hum.txt"), 'r') as file:
@@ -87,7 +84,7 @@ def get_temperature_and_humidity_from_sensor():
             hum = file.readline().strip()
             timestamp = file.readline().strip()
     except FileNotFoundError:
-        return jsonify(status_code_404)
+        return jsonify({"status_code": 404, "content": "not found response", "timestamp": datetime.datetime.now()})
 
     return jsonify({"temp": temp, "hum": hum, "timestamp": timestamp})
 

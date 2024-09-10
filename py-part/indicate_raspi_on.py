@@ -3,8 +3,6 @@
 import RPi.GPIO as gpio
 import time
 from signal import signal, SIGTERM, SIGHUP
-import os
-import sys
 
 
 # define gpio pin's
@@ -25,7 +23,7 @@ def main() -> None:
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
-        while count < 4:
+        while count < 6:
             gpio.output(GPIO_BLUE_PIN_NUM, gpio.HIGH)
             time.sleep(SLEEP)
             gpio.output(GPIO_BLUE_PIN_NUM, gpio.LOW)
