@@ -24,7 +24,7 @@ const lidStatus = async() => {
         const getLidStatus = await fetch("https://hippo-immense-plainly.ngrok-free.app/get-lid-status")
         const response = await getLidStatus.json()
         console.log(response)
-        lid.innerHTML = response.status
+        lid.innerHTML = response.lid
     }
     catch (error) {
         console.log(error);
