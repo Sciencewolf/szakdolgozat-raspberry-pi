@@ -89,6 +89,17 @@ def get_temperature_and_humidity_from_sensor():
     return jsonify({"temp": temp, "hum": hum, "timestamp": timestamp})
 
 
+@app.route("get-lid-status")
+def get_lid_status():
+    with open("lid-status.txt", 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            if line.startswith("!"):
+                return jsonify({"status_code": 200, "lid": line.split(" ")[1], "timestamp": datetime.datetime.now()})
+
+    return jsonify({"status_code": 404, "lid": "undefined", "timestamp": datetime.datetime.now()})
+
+
 if __name__ == "__main__":
     try:
         app.run(host="0.0.0.0", port=8080)

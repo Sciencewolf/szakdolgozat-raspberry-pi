@@ -2,28 +2,49 @@
 
 import RPi.GPIO as GPIO
 import time
+from signal import signal, SIGTERM, SIGHUP
+from datetime import datetime
+import subprocess
 
-# Set the GPIO mode to BCM
+
 GPIO.setmode(GPIO.BCM)
 
-# Define the GPIO pin for your button
-SWITCH_PIN = 23  # GPIO 23, or whichever you're using
+SWITCH_PIN: int = 23
 
-# Set the pull-up resistor for the button
 GPIO.setup(SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-try:
-    # Main loop to monitor button state
-    print("Monitoring button state...")
-    while True:
-        pin_state = GPIO.input(SWITCH_PIN)
-        if pin_state == GPIO.LOW:
-            print("Button pressed (GPIO LOW)")
-        else:
-            print(f"Button not pressed (GPIO HIGH): {pin_state}")  # Add more details
-        time.sleep(0.5)
+def main() -> None:
+    try:
+        print("Monitoring button state...")
+        signal(SIGTERM, safe_exit)
+        signal(SIGHUP, safe_exit)
+        while True:
+            pin_state: int = GPIO.input(SWITCH_PIN)
+            with open("lid-status.txt", 'w') as file:
+                if pin_state == GPIO.LOW:
+                    print(f"Button pressed (GPIO LOW): {pin_state}")
+                    file.write("lid close @ ")
+                    file.write(f"{datetime.now()} \n")
+                    file.write("! Close")
 
-except KeyboardInterrupt:
-    # Clean up GPIO on exit
-    print("Cleaning up GPIO...")
-    GPIO.cleanup()
+                    subprocess.run(["pkill", "-f", "blink_rgb_red.py"])
+                else:
+                    print(f"Button not pressed (GPIO HIGH): {pin_state}")
+                    file.write("lid open @ ")
+                    file.write(f"{datetime.now()} \n")
+                    file.write("! Open")
+
+                    subprocess.Popen(["blink_rgb_red.py"])
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        pass
+    finally:
+        GPIO.cleanup()
+
+
+def safe_exit(signum, frame) -> None:
+    exit(1)
+
+if __name__ == "__main__":
+    main()
