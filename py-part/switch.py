@@ -1,50 +1,29 @@
 #!/usr/bin/env python
 
 import RPi.GPIO as GPIO
+import time
 
 # Set the GPIO mode to BCM
 GPIO.setmode(GPIO.BCM)
 
 # Define the GPIO pin for your button
-SWITCH_PIN = 12
+SWITCH_PIN = 23  # GPIO 23, or whichever you're using
 
-# Define debounce time in milliseconds
-DEBOUNCE_TIME_MS = 200  # 200 milliseconds
-
-# Set the initial state and pull-up resistor for the button
+# Set the pull-up resistor for the button
 GPIO.setup(SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-# Initialize the button state and previous state
-switch_state = GPIO.input(SWITCH_PIN)
-prev_switch_state = switch_state
-
-
-# Define a function to handle button presses
-def button_callback(channel):
-    global switch_state
-    switch_state = GPIO.input(SWITCH_PIN)
-
-
-# Add an event listener for the button press
-GPIO.add_event_detect(SWITCH_PIN, GPIO.BOTH, callback=button_callback, bouncetime=DEBOUNCE_TIME_MS)
-
 try:
-    # Main loop
+    # Main loop to monitor button state
+    print("Monitoring button state...")
     while True:
-        # Check if the button state has changed
-        if switch_state != prev_switch_state:
-            if switch_state == GPIO.HIGH:
-                print("The limit switch: TOUCHED -> UNTOUCHED")
-            else:
-                print("The limit switch: UNTOUCHED -> TOUCHED")
-
-            prev_switch_state = switch_state
-
-        if switch_state == GPIO.HIGH:
-            print("The limit switch: UNTOUCHED")
+        pin_state = GPIO.input(SWITCH_PIN)
+        if pin_state == GPIO.LOW:
+            print("Button pressed (GPIO LOW)")
         else:
-            print("The limit switch: TOUCHED")
+            print(f"Button not pressed (GPIO HIGH): {pin_state}")  # Add more details
+        time.sleep(0.5)
 
 except KeyboardInterrupt:
     # Clean up GPIO on exit
+    print("Cleaning up GPIO...")
     GPIO.cleanup()
