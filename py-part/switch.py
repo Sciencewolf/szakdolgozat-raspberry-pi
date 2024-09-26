@@ -3,14 +3,17 @@
 import RPi.GPIO as GPIO
 from signal import signal, SIGTERM, SIGHUP
 from datetime import datetime
-import subprocess
+import time
 
 
 GPIO.setmode(GPIO.BCM)
 
 SWITCH_PIN: int = 23
+GPIO_RED_PIN_NUM: int = 21
 
 GPIO.setup(SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(GPIO_RED_PIN_NUM, GPIO.OUT, initial=GPIO.LOW)
+
 
 def main() -> None:
     try:
@@ -26,16 +29,18 @@ def main() -> None:
                 file.write("lid close @ ")
                 file.write(f"{datetime.now()} \n")
                 file.write("! Close")
-
-                subprocess.run(["pkill", "-f", "blink_rgb_red.py"])
             else:
                 print(f"Button not pressed (GPIO HIGH): {pin_state}")
-                
+
                 file.write("lid open @ ")
                 file.write(f"{datetime.now()} \n")
                 file.write("! Open")
 
-                subprocess.Popen(["blink_rgb_red.py"])
+                GPIO.output(GPIO_RED_PIN_NUM, GPIO.HIGH)
+                time.sleep(0.4)
+                GPIO.output(GPIO_RED_PIN_NUM, GPIO.LOW)
+                time.sleep(0.4)
+
 
     except KeyboardInterrupt:
         pass

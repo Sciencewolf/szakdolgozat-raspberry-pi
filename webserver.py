@@ -91,10 +91,10 @@ def get_temperature_and_humidity_from_sensor():
 
 @app.route("/get-lid-status")
 def get_lid_status():
-    if not os.path.exists("py-part/lid-status.txt"):
+    if not os.path.exists(os.path.join(base_dir, "py-part/lid-status.txt")):
         return jsonify({"status_code": 404, "lid": "undefined", "timestamp": datetime.datetime.now()})
 
-    with open("py-part/lid-status.txt", 'r') as file:
+    with open(os.path.join(base_dir, "py-part/lid-status.txt"), 'r') as file:
         lines = file.readlines()
         for line in lines:
             if line.startswith("!"):
