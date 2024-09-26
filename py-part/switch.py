@@ -37,9 +37,9 @@ def main() -> None:
                 file.write("! Open")
 
                 GPIO.output(GPIO_RED_PIN_NUM, GPIO.HIGH)
-                time.sleep(0.4)
+                time.sleep(0.1)
                 GPIO.output(GPIO_RED_PIN_NUM, GPIO.LOW)
-                time.sleep(0.4)
+                time.sleep(0.1)
 
 
     except KeyboardInterrupt:

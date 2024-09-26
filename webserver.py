@@ -94,6 +94,8 @@ def get_lid_status():
     if not os.path.exists(os.path.join(base_dir, "py-part/lid-status.txt")):
         return jsonify({"status_code": 404, "lid": "undefined", "timestamp": datetime.datetime.now()})
 
+    subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
+
     with open(os.path.join(base_dir, "py-part/lid-status.txt"), 'r') as file:
         lines = file.readlines()
         for line in lines:
