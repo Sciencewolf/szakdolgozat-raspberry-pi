@@ -18,24 +18,24 @@ def main() -> None:
         print("Monitoring button state...")
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
-        while True:
-            pin_state: int = GPIO.input(SWITCH_PIN)
-            with open("lid-status.txt", 'w') as file:
-                if pin_state == GPIO.LOW:
-                    print(f"Button pressed (GPIO LOW): {pin_state}")
-                    file.write("lid close @ ")
-                    file.write(f"{datetime.now()} \n")
-                    file.write("! Close")
 
-                    subprocess.run(["pkill", "-f", "blink_rgb_red.py"])
-                else:
-                    print(f"Button not pressed (GPIO HIGH): {pin_state}")
-                    file.write("lid open @ ")
-                    file.write(f"{datetime.now()} \n")
-                    file.write("! Open")
+        pin_state: int = GPIO.input(SWITCH_PIN)
+        
+        with open("lid-status.txt", 'w') as file:
+            if pin_state == GPIO.LOW:
+                print(f"Button pressed (GPIO LOW): {pin_state}")
+                file.write("lid close @ ")
+                file.write(f"{datetime.now()} \n")
+                file.write("! Close")
 
-                    subprocess.Popen(["blink_rgb_red.py"])
-            time.sleep(1)
+                subprocess.run(["pkill", "-f", "blink_rgb_red.py"])
+            else:
+                print(f"Button not pressed (GPIO HIGH): {pin_state}")
+                file.write("lid open @ ")
+                file.write(f"{datetime.now()} \n")
+                file.write("! Open")
+
+                subprocess.Popen(["blink_rgb_red.py"])
 
     except KeyboardInterrupt:
         pass
