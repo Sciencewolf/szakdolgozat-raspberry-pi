@@ -1,24 +1,5 @@
 # Szakdolgozat Raspberry Pi(Hardware) part
 
-<!-- ## Getting Started -->
-<!--  -->
-<!-- ```shell -->
-<!-- git clone https://github.com/Sciencewolf/szakdolgozat-raspberry-pi.git -->
-<!-- ``` -->
-<!--  -->
-<!-- ```shell -->
-<!-- cd szakdolgozat-raspberry-pi -->
-<!-- docker build -t webapp . -->
-<!-- ``` -->
-<!--  -->
-<!-- - Wait to install all dependencies -->
-<!--  -->
-<!-- ```shell -->
-<!-- docker run -it -p 8080:8080 webapp -->
-<!-- ``` -->
-<!--  -->
-<!-- * Visit ```http://<raspberry_pi_ip_address>:8080/``` -->
-
 ## RGB LED and AHT20 wiring
 
 > [!NOTE]
@@ -32,4 +13,21 @@
 - 1x Adafruit AHT20 Temperature and Humidity Sensor
 - 8x Male-Male Wire
 
-<img src="sketches/rgb-led-aht20-temp-hum-sensor-wiring_image.png" alt="wiring" />
+<img src="sketches/rgb-led-aht20-temp-hum-sensor-wiring_image.png" alt="RGB LED and AHT20 wiring" />
+
+## Ultrasonic Range Sensor wiring
+
+> [!NOTE]
+> Required hardware
+
+- Raspberry Pi 4 model B
+- Breadboard
+- Adafruit T-Cobbler
+- 1x 1k Ohm Resistor
+- 1x 2k Ohm Resistor
+- 1x HC-SR04 Ultrasonic Range Sensor
+- 4x Male-Female Wire
+- 4x Male-Male Wire
+- 2x Jumper(bridge) Wire
+
+<img src="sketches/ultrasonic-range-sensor-wiring_image.png" alt="HC-SR04 Ultrasonic Range Sensor wiring" />
