@@ -22,7 +22,6 @@
 
 - Raspberry Pi 4 model B
 - Breadboard
-- Adafruit T-Cobbler
 - 1x 1k Ohm Resistor
 - 1x 2k Ohm Resistor
 - 1x HC-SR04 Ultrasonic Range Sensor
