@@ -49,6 +49,7 @@ def main() -> None:
 
 
 def safe_exit(signum, frame) -> None:
+    """ Provides a safe shutdown of the program """
     exit(1)
 
 if __name__ == "__main__":
