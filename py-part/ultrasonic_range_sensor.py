@@ -39,7 +39,7 @@ def main() -> None:
         pulse_duration = pulse_end - pulse_start
 
         distance = pulse_duration * 17_150 # half cm/s speed of sound from object to sensor
-        print(f"{distance} cm")
+        print(f"{round(distance, 2)} cm")
 
     except KeyboardInterrupt:
         pass
