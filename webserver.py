@@ -97,10 +97,10 @@ def get_temperature_and_humidity_from_sensor():
 
 @app.route("/get-lid-status")
 def get_lid_status():
+    subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
+
     if not os.path.exists(lid_file_path):
         return jsonify({"status_code": 404, "lid": "undefined", "timestamp": datetime.datetime.now()})
-
-    subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
 
     with open(lid_file_path, 'r') as file:
         lines = file.readlines()
