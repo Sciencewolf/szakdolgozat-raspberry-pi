@@ -30,3 +30,14 @@
 - 2x Jumper(bridge) Wire
 
 <img src="sketches/ultrasonic-range-sensor-wiring_image.png" alt="HC-SR04 Ultrasonic Range Sensor wiring" />
+
+## Limit Switch wiring
+
+> [!NOTE]
+> Required hardware
+
+- Raspberry Pi 4 model B
+- 1x V-156-1C25 Limit Switch
+- 2x Male-Female Wire
+
+<img src="sketches/limit-switch-wiring_image.png" alt="V-156-1C25 Limit Switch wiring" />
