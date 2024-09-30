@@ -13,6 +13,12 @@ CORS(app)
 # Get the base directory where the Flask app is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
+# Get the home directory
+home_dir = os.path.expanduser("~")
+
+# Create the full path for the text file
+lid_file_path = os.path.join(home_dir, "lid-status.txt")
+
 
 @app.route("/")
 def home():
@@ -91,12 +97,12 @@ def get_temperature_and_humidity_from_sensor():
 
 @app.route("/get-lid-status")
 def get_lid_status():
-    if not os.path.exists(os.path.join(base_dir, "py-part/lid-status.txt")):
+    if not os.path.exists(lid_file_path):
         return jsonify({"status_code": 404, "lid": "undefined", "timestamp": datetime.datetime.now()})
 
     subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
 
-    with open(os.path.join(base_dir, "py-part/lid-status.txt"), 'r') as file:
+    with open(lid_file_path, 'r') as file:
         lines = file.readlines()
         for line in lines:
             if line.startswith("!"):
