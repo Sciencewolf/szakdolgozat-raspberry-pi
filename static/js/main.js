@@ -167,7 +167,7 @@ checkboxOnOffAllLed.addEventListener('click', async () => {
 checkboxOnOffCooler.addEventListener('click', async () => {
     if(checkboxOnOffCooler.checked) {
         try {
-            const onCooler = await fetch("http://hippo-immense-plainly.ngrok-free.app/on-cooler")
+            const onCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-cooler")
             const response = await onCooler.json()
             console.log(response)
         } catch (error) {
@@ -175,7 +175,7 @@ checkboxOnOffCooler.addEventListener('click', async () => {
         }
     } else {
         try {
-            const offCooler = await fetch("http://hippo-immense-plainly.ngrok-free.app/off-cooler")
+            const offCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-cooler")
             const response = await offCooler.json()
             console.log(response)
         } catch (error) {
