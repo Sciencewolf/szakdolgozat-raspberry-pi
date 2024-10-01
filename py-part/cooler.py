@@ -2,16 +2,29 @@
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
-import time
-import os
 
 RELAY_PIN: int = 18
 
 gpio.setmode(gpio.BCM)
-gpio.setup(RELAY_PIN, gpio.OUT, initial=gpio.HIGH)
+gpio.setup(RELAY_PIN, gpio.OUT)
 
-gpio.output(RELAY_PIN, gpio.HIGH)
-time.sleep(10)
-gpio.output(RELAY_PIN, gpio.LOW)
 
-gpio.cleanup()
+def main() -> None:
+    try:
+        signal(SIGTERM, safe_exit)
+        signal(SIGHUP, safe_exit)
+        gpio.output(RELAY_PIN, gpio.HIGH)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        gpio.output(RELAY_PIN, gpio.LOW)
+        gpio.cleanup()
+
+
+def safe_exit(signum, frame) -> None:
+    """ Provides a safe shutdown of the program """
+    exit(1)
+
+
+if __name__ == "__main__":
+    main()

@@ -95,7 +95,7 @@ def get_temperature_and_humidity_from_sensor():
     return jsonify({"temp": temp, "hum": hum, "timestamp": timestamp})
 
 
-@app.route("/get-lid-status")
+@app.route("/get-lid-status-test")
 def get_lid_status():
     subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
 
