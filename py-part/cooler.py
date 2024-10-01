@@ -13,7 +13,9 @@ def main() -> None:
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
-        gpio.output(RELAY_PIN, gpio.HIGH)
+        
+        while True:
+            gpio.output(RELAY_PIN, gpio.HIGH)
     except KeyboardInterrupt:
         pass
     finally:
