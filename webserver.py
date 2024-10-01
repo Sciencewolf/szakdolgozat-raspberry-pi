@@ -113,6 +113,20 @@ def get_lid_status():
                 )
 
 
+@app.route("/on-cooler")
+def turn_on_cooler():
+    subprocess.Popen([os.path.join(base_dir, "py-part/cooler.py")])
+
+    return jsonify({"status_code": 200, "content": "cooler is on", "timestamp": datetime.datetime.now()})
+
+
+@app.route("/off-cooler")
+def turn_off_cooler():
+    subprocess.run(["pkill", "-f", "py-part/cooler.py"])
+
+    return jsonify({"status_code": 200, "content": "cooler is off", "timestamp": datetime.datetime.now()})
+
+
 if __name__ == "__main__":
     try:
         app.run(host="0.0.0.0", port=8080)
