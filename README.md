@@ -41,3 +41,17 @@
 - 2x Male-Female Wire
 
 <img src="sketches/limit-switch-wiring_image.png" alt="V-156-1C25 Limit Switch wiring" />
+
+## Fan with Relay wiring
+
+> [!NOTE]
+> Required hardware
+
+- Raspberry Pi 4 model B
+- Breadboard
+- Adafruit T-Cobbler (optional, connect directly to ras-pi)
+- 1x 5V Fan
+- 1x Relay (2 relay module, HL-52)
+- 6x Male-Male wire
+
+<img src="sketches/relay-and-fan-wiring_image.png" alt="Fan with Relay wiring" />
