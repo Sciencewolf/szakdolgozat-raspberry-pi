@@ -1,3 +1,34 @@
 #!/usr/bin/env python3
 
-# turn on/off heating element
+
+import RPi.GPIO as gpio
+import time
+from signal import signal, SIGTERM, SIGHUP
+
+gpio.setmode(gpio.BCM)
+
+RELAY_PIN: int = 12
+
+gpio.setup(RELAY_PIN, gpio.OUT)
+
+def main() -> None:
+    try:
+        signal(SIGTERM, safe_exit)
+        signal(SIGHUP, safe_exit)
+
+        gpio.output(RELAY_PIN, gpio.HIGH)
+        time.sleep(60)
+        gpio.output(RELAY_PIN, gpio.LOW)
+    except KeyboardInterrupt as ki:
+        print(ki.__str__())
+    finally:
+        gpio.cleanup()
+
+
+def safe_exit(signum, frame) -> None:
+    """ Provides a safe shutdown of the program """
+    exit(1)
+    
+
+if __name__ == "__main__":
+    main()
