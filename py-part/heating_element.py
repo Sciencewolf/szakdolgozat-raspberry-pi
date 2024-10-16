@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/heating-element-and-relay-wiring_image.png
+description:
+"""
+
 
 import RPi.GPIO as gpio
 import time

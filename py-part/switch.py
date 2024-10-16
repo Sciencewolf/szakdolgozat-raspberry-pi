@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+"""
+wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/limit-switch-wiring_image.png
+description:
+"""
+
 import RPi.GPIO as GPIO
 from signal import signal, SIGTERM, SIGHUP
 from datetime import datetime
@@ -10,10 +15,10 @@ import os
 GPIO.setmode(GPIO.BCM)
 
 SWITCH_PIN: int = 23
-GPIO_RED_PIN_NUM: int = 21 # led
+GPIO_RED_LED_PIN_NUM: int = 21 # led
 
 GPIO.setup(SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(GPIO_RED_PIN_NUM, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(GPIO_RED_LED_PIN_NUM, GPIO.OUT, initial=GPIO.LOW)
 
 # Get the home directory
 home_dir = os.path.expanduser("~")
@@ -44,9 +49,9 @@ def main() -> None:
                 file.write("! Open")
 
                 for _ in range(5):
-                    GPIO.output(GPIO_RED_PIN_NUM, GPIO.HIGH)
+                    GPIO.output(GPIO_RED_LED_PIN_NUM, GPIO.HIGH)
                     time.sleep(0.1)
-                    GPIO.output(GPIO_RED_PIN_NUM, GPIO.LOW)
+                    GPIO.output(GPIO_RED_LED_PIN_NUM, GPIO.LOW)
                     time.sleep(0.1)
 
 

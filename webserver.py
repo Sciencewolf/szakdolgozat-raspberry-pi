@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import datetime
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, make_response
 from flask_cors import CORS
 import subprocess
 import os
-import sys
+from flask import request
 
 app = Flask(__name__)
 CORS(app)
@@ -95,7 +95,21 @@ def get_temperature_and_humidity_from_sensor():
     return jsonify({"temp": temp, "hum": hum, "timestamp": timestamp})
 
 
-@app.route("/get-lid-status-test")
+@app.route("/set-temp", methods=['GET'])
+def set_temperature():
+    temp: str = request.args.get("temp") # url/set-temp?temp=40.1 | type: float
+    print(temp)
+    return jsonify({"status_code": 501, "content": "Not Implemented"})
+
+
+@app.route("/set-hum", methods=['GET'])
+def set_humidity():
+    hum: str = request.args.get("hum") # url/set-hum?hum=62.5 | type: float
+    print(hum)
+    return jsonify({"status_code": 501, "content": "Not Implemented"})
+
+
+@app.route("/get-lid-status-test", methods=['GET'])
 def get_lid_status():
     subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
 
@@ -113,18 +127,42 @@ def get_lid_status():
                 )
 
 
-@app.route("/on-cooler")
+@app.route("/on-cooler", methods=['GET', 'PUT'])
 def turn_on_cooler():
     subprocess.Popen([os.path.join(base_dir, "py-part/cooler.py")])
 
-    return jsonify({"status_code": 200, "content": "cooler is on", "timestamp": datetime.datetime.now()})
+    return make_response(
+        jsonify(
+            {"status_code": 200,
+             "content": "cooler is on",
+             "timestamp": datetime.datetime.now()
+             },
+        200)
+    )
 
 
-@app.route("/off-cooler")
+@app.route("/off-cooler", methods=['GET', 'PUT'])
 def turn_off_cooler():
     subprocess.run(["pkill", "-f", "py-part/cooler.py"])
 
-    return jsonify({"status_code": 200, "content": "cooler is off", "timestamp": datetime.datetime.now()})
+    return make_response(
+        jsonify(
+            {"status_code": 200,
+             "content": "cooler is off",
+             "timestamp": datetime.datetime.now()
+             }
+        ),
+        200)
+
+
+@app.route("/overall", methods=['GET'])
+def overall():
+    return make_response(
+        jsonify(
+            {"status_code": 501,
+             "content": "Not Implemented"}
+        ),
+        501)
 
 
 if __name__ == "__main__":

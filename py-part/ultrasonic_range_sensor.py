@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+"""
+wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/ultrasonic-range-sensor-wiring_image.png
+description:
+"""
+
 import RPi.GPIO as GPIO
 from signal import signal, SIGTERM, SIGHUP
 import time

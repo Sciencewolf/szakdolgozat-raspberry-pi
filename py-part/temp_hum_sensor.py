@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+"""
+wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/rgb-led-aht20-temp-hum-sensor-wiring_image.png
+description:
+"""
+
 import sys
 import datetime
 import os
