@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env pythonk
+# TODO: attach images to all files
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP

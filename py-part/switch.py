@@ -10,7 +10,7 @@ import os
 GPIO.setmode(GPIO.BCM)
 
 SWITCH_PIN: int = 23
-GPIO_RED_PIN_NUM: int = 21
+GPIO_RED_PIN_NUM: int = 21 # led
 
 GPIO.setup(SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(GPIO_RED_PIN_NUM, GPIO.OUT, initial=GPIO.LOW)
