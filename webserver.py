@@ -97,19 +97,19 @@ def get_temperature_and_humidity_from_sensor():
 
 @app.route("/set-temp", methods=['GET'])
 def set_temperature():
-    temp: str = request.args.get("temp") # url/set-temp?temp=40.1 | type: float
+    temp: str = request.args.get("t") # url/set-temp?t=40.1 | type: float
     print(temp)
     return jsonify({"status_code": 501, "content": "Not Implemented"})
 
 
 @app.route("/set-hum", methods=['GET'])
 def set_humidity():
-    hum: str = request.args.get("hum") # url/set-hum?hum=62.5 | type: float
+    hum: str = request.args.get("h") # url/set-hum?h=62.5 | type: float
     print(hum)
     return jsonify({"status_code": 501, "content": "Not Implemented"})
 
 
-@app.route("/get-lid-status-test", methods=['GET'])
+@app.route("/get-lid-status", methods=['GET'])
 def get_lid_status():
     subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
 
@@ -157,10 +157,13 @@ def turn_off_cooler():
 
 @app.route("/overall", methods=['GET'])
 def overall():
+    lst: list = ["%s" % rule for rule in app.url_map.iter_rules()][1:]
+
     return make_response(
         jsonify(
             {"status_code": 501,
-             "content": "Not Implemented"}
+             "content": "Not Implemented",
+             "routes": lst}
         ),
         501)
 
