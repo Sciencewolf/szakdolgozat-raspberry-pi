@@ -26,6 +26,13 @@ main {
     padding: 1em;
 }
 
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
 .led-wrapper {
     display: flex;
     justify-content: flex-start;
@@ -64,6 +71,28 @@ main {
     top: 1em;
     right: 1em;
     padding: 10px 5px;
+}
+
+#btn-shutdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+}
+
+#btn-shutdown:hover {
+    background-color: lightslategray;
+    cursor: pointer;
+}
+
+#img-shutdown {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 48px;
+    height: 48px;
 }
 
 input:hover {

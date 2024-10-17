@@ -12,7 +12,7 @@
 	<link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/main.js') }}" defer async type="module"></script>
-     <link rel="stylesheet" href="../static/css/style.css">
+<!--     <link rel="stylesheet" href="../static/css/style.css">-->
 </head>
 
 <body>
@@ -83,6 +83,7 @@
                     </label>
                 </div>
             </div>
+
             <div class="heating-element-wrapper">
                 <div class="item heating-element">
                     <h3>Heating Element:</h3>
@@ -95,10 +96,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="endpoints-wrapper">
+            <div class="item endpoints">
+                <h3>API Endpoints</h3>
+                <button id="btn-endpoints">See</button>
+                <div id="div-endpoints"></div>
+            </div>
+        </div>
+
     </main>
 
     <footer class="footer">
-        <span>v2024.10.01</span>
+        <div class="shutdown">
+            <button id="btn-shutdown">
+                <img src="../static/images/shutdown.png" alt="shutdown icon" id="img-shutdown"/>
+            </button>
+        </div>
+        <span>v2024.10.17</span>
     </footer>
 
 </body>

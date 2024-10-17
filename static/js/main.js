@@ -7,6 +7,9 @@ const humidity = document.getElementById("hum")
 const lid = document.getElementById("lid")
 const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
 const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
+const shutdown = document.getElementById("btn-shutdown")
+const btnEndpoints = document.getElementById("btn-endpoints")
+const divEndpoints = document.getElementById("div-endpoints")
 
 const tempHumSensor = async () => {
     try {
@@ -206,5 +209,36 @@ checkboxOnOffHeatingElement.addEventListener('click', async() => {
     }
 })
 
-setInterval(async() => { await tempHumSensor() }, 10000)
-setInterval(async() => { await lidStatus() }, 5000)
+shutdown.addEventListener('click', async() => {
+    if(window.confirm('Are you sure?')) {
+        try {
+            const shutdownRaspberryPi = await fetch("https://hippo-immense-plainly.ngrok-free.app/shutdown")
+            const response = await shutdownRaspberryPi.json()
+            console.log(response)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+})
+
+btnEndpoints.addEventListener('click', async() => {
+    try {
+        const getAllAPIEndpoints = await fetch("https://hippo-immense-plainly.ngrok-free.app/overall")
+        const response = await getAllAPIEndpoints.json()
+        console.log(response)
+
+        for(let item in response) {
+            let api_url = `https://hippo-immense-plainly.ngrok-free.app${item}`
+            const url = document.createElement('a')
+            url.setAttribute('href', `${api_url}`)
+            url.target = '_blank'
+            url.innerHTML = item
+            divEndpoints.appendChild(url)
+        }
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+setInterval(async() => { await tempHumSensor() }, 10_000)
+setInterval(async() => { await lidStatus() }, 10_000)
