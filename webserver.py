@@ -175,17 +175,23 @@ def turn_off_heating_element():
     )
 
 
-@app.route("/overall", methods=['GET'])
+@app.route("/endpoints", methods=['GET'])
 def overall():
     lst: list = ["%s" % rule for rule in app.url_map.iter_rules()][1:]
 
     return make_response(
         jsonify(
-            {"status_code": 501,
-             "content": "Not Implemented",
+            {"status_code": 200,
+             "content": "Ok",
              "routes": lst}
         ),
-        501)
+        200)
+
+
+@app.route("shutdown")
+def shutdown():
+    """ Make some safety check??? """
+    os.system("sudo shutdown -h now")
 
 
 if __name__ == "__main__":

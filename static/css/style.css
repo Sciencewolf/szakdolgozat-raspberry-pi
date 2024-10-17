@@ -95,6 +95,14 @@ footer {
     height: 48px;
 }
 
+#div-endpoints {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3em;
+    flex-direction: column;
+}
+
 input:hover {
     cursor: pointer;
 }

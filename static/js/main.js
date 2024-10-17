@@ -223,11 +223,14 @@ shutdown.addEventListener('click', async() => {
 
 btnEndpoints.addEventListener('click', async() => {
     try {
-        const getAllAPIEndpoints = await fetch("https://hippo-immense-plainly.ngrok-free.app/overall")
+        const getAllAPIEndpoints = await fetch("https://hippo-immense-plainly.ngrok-free.app/endpoints")
         const response = await getAllAPIEndpoints.json()
         console.log(response)
 
-        for(let item in response) {
+        const h3Endpoints = document.getElementById("h3-endpoints").style.display = 'none'
+        btnEndpoints.style.display = 'none'
+
+        for(let item of response.routes) {
             let api_url = `https://hippo-immense-plainly.ngrok-free.app${item}`
             const url = document.createElement('a')
             url.setAttribute('href', `${api_url}`)
