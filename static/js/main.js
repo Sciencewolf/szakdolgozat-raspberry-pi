@@ -6,6 +6,7 @@ const temperature = document.getElementById("temp")
 const humidity = document.getElementById("hum")
 const lid = document.getElementById("lid")
 const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
+const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
 
 const tempHumSensor = async () => {
     try {
@@ -34,6 +35,7 @@ const lidStatus = async() => {
 
 window.addEventListener("load", async () => {
     await tempHumSensor()
+    await lidStatus()
 })
 
 window.addEventListener("error", () => {
@@ -176,6 +178,26 @@ checkboxOnOffCooler.addEventListener('click', async () => {
     } else {
         try {
             const offCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-cooler")
+            const response = await offCooler.json()
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+})
+
+checkboxOnOffHeatingElement.addEventListener('click', async() => {
+    if(checkboxOnOffHeatingElement.checked) {
+        try {
+            const onCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-heating-element")
+            const response = await onCooler.json()
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    } else {
+        try {
+            const offCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-heating-element")
             const response = await offCooler.json()
             console.log(response)
         } catch (error) {

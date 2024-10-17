@@ -155,6 +155,26 @@ def turn_off_cooler():
         200)
 
 
+@app.route("/on-heating-element")
+def turn_on_heating_element():
+    subprocess.Popen([os.path.join(base_dir, "py-part/heating_element.py")])
+
+    return make_response(
+        jsonify({"status_code": 200, "content": "heating element is on", "timestamp": datetime.datetime.now()}),
+        200
+    )
+
+
+@app.route("/off-heating-element")
+def turn_off_heating_element():
+    subprocess.run(["pkill", "-f", "py-part/heating_element.py"])
+    
+    return make_response(
+        jsonify({"status_code": 200, "content": "heating element is off", "timestamp": datetime.datetime.now()}),
+        200
+    )
+
+
 @app.route("/overall", methods=['GET'])
 def overall():
     lst: list = ["%s" % rule for rule in app.url_map.iter_rules()][1:]
