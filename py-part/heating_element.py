@@ -7,7 +7,6 @@ description:
 
 
 import RPi.GPIO as gpio
-import time
 from signal import signal, SIGTERM, SIGHUP
 
 gpio.setmode(gpio.BCM)
@@ -22,11 +21,10 @@ def main() -> None:
         signal(SIGHUP, safe_exit)
 
         gpio.output(RELAY_PIN, gpio.HIGH)
-        time.sleep(60)
-        gpio.output(RELAY_PIN, gpio.LOW)
     except KeyboardInterrupt as ki:
         print(ki.__str__())
     finally:
+        gpio.output(RELAY_PIN, gpio.LOW)
         gpio.cleanup()
 
 

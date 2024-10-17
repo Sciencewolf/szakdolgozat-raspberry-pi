@@ -168,7 +168,7 @@ def turn_on_heating_element():
 @app.route("/off-heating-element")
 def turn_off_heating_element():
     subprocess.run(["pkill", "-f", "py-part/heating_element.py"])
-    
+
     return make_response(
         jsonify({"status_code": 200, "content": "heating element is off", "timestamp": datetime.datetime.now()}),
         200
