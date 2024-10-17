@@ -188,7 +188,7 @@ def overall():
         200)
 
 
-@app.route("shutdown")
+@app.route("/shutdown")
 def shutdown():
     """ Make some safety check??? """
     os.system("sudo shutdown -h now")
