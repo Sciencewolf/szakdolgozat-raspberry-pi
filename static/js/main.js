@@ -41,9 +41,9 @@ window.addEventListener("load", async () => {
     await lidStatus()
 })
 
-window.addEventListener("error", () => {
-    document.body.innerHTML = "<h1>Error: Try to reload the page </h1>"
-})
+// window.addEventListener("error", () => {
+//     document.body.innerHTML = "<h1>Error: Try to reload the page </h1>"
+// })
 
 checkboxOnOffRedLed.addEventListener('click', async () => {
     if (checkboxOnOffRedLed.checked) {
@@ -211,6 +211,11 @@ checkboxOnOffHeatingElement.addEventListener('click', async() => {
 
 shutdown.addEventListener('click', async() => {
     if(window.confirm('Are you sure?')) {
+        document.body.style.cssText = "display: flex;justify-content: center;align-items: center;font-size: 40px;"
+        document.body.innerHTML = ""
+        const div = document.createElement('div')
+        div.innerHTML = `Disconnected at ${new Date().toISOString().split('T')[0]} ${new Date().toTimeString().split(' ')[0]}`
+        document.body.appendChild(div)
         try {
             const shutdownRaspberryPi = await fetch("https://hippo-immense-plainly.ngrok-free.app/shutdown")
             const response = await shutdownRaspberryPi.json()
