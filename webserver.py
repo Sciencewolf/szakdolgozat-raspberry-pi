@@ -23,7 +23,9 @@ lid_file_path = os.path.join(home_dir, "lid-status.txt")
 
 def is_csibekelteto_online() -> bool:
     r = re.get(os.getenv("API_URL_ALIVE"))
-    return r.status_code == re.codes.ok
+    response_code = r.status_code
+    print(response_code)
+    return response_code == re.codes.ok
 
 
 def csibekelteto_error() -> Response:
@@ -41,7 +43,7 @@ def home():
 @app.route("/alive")
 def alive():
     """ TODO: the webserver will check if maintenance or not """
-    return make_response({"response": "true"}, 200)
+    return make_response({"response": "csibekelteto is alive"}, 200)
 
 
 @app.route("/on-red-led", methods=['GET'])
@@ -314,6 +316,17 @@ def endpoints():
                  "routes": lst}
             ),
             200)
+
+    return csibekelteto_error()
+
+
+@app.route("/overall", methods=['GET'])
+def overall():
+    if is_csibekelteto_online():
+        return make_response({"day": 0,
+                              "updated": datetime.datetime.now().__str__(),
+                              "temp": 0.0,
+                              "hum": 0.0}, 200)
 
     return csibekelteto_error()
 
