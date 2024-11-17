@@ -7,9 +7,9 @@
     <meta name="theme-color" content="#303841" id="meta-theme">
     <meta name="keywords" content="Csibekeltető, szakdolgozat, raspberry-pi, android">
     
-    <title>Csibekeltető</title>
+    <title>{{ title }}</title>
 
-	<link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
+	<link rel="icon" href="../static/images/favicon.png" id="icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/main.js') }}" defer async type="module"></script>
     <!-- <link rel="stylesheet" href="../static/css/style.css"> -->
@@ -17,7 +17,7 @@
 
 <body>
     <div class="header">
-        <h2>Csibekeltető</h2>
+        <h2>{{ header }}</h2>
     </div>
     
     <main>
@@ -113,7 +113,7 @@
                 <img src="../static/images/shutdown.png" alt="shutdown icon" id="img-shutdown"/>
             </button>
         </div>
-        <span>v2024.10.17</span>
+        <span>{{ version }}</span>
     </footer>
 
 </body>

@@ -18,32 +18,47 @@ const tempHumSensor = async () => {
         console.log(response)
         temperature.innerHTML = response.temp
         humidity.innerHTML = response.hum
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
     }
 }
 
-const lidStatus = async() => {
+const lidStatus = async () => {
     try {
         const getLidStatus = await fetch("https://hippo-immense-plainly.ngrok-free.app/get-lid-status")
         const response = await getLidStatus.json()
         console.log(response)
         lid.innerHTML = response.lid
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
     }
+}
+
+const changeTitle = (title, iconType="d") => {
+    const titleElement = document.querySelector("title")
+    const iconElement = document.getElementById("icon")
+
+    const values = new Map()
+    values.set("r", "../static/images/red-led.png")
+    values.set("g", "../static/images/green-led.png")
+    values.set("b", "../static/images/blue-led.png")
+    values.set("a", "../static/images/all-led.png")
+    values.set("e", "../static/images/error.png")
+    values.set("d", "../static/images/favicon.png")
+
+    titleElement.innerHTML = title
+    iconElement.href = values.get(iconType)
+    
+    setInterval(() => {
+        titleElement.innerText = "Csibekeltető"
+        iconElement.href = values.get("d")
+    }, 5_000)
 }
 
 window.addEventListener("load", async () => {
     await tempHumSensor()
     await lidStatus()
 })
-
-// window.addEventListener("error", () => {
-//     document.body.innerHTML = "<h1>Error: Try to reload the page </h1>"
-// })
 
 checkboxOnOffRedLed.addEventListener('click', async () => {
     if (checkboxOnOffRedLed.checked) {
@@ -55,12 +70,12 @@ checkboxOnOffRedLed.addEventListener('click', async () => {
             const onRedLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-red-led")
             const response = await onRedLed.json()
             console.log(response)
-        }
-        catch (error) {
+            changeTitle("RedLED is ON", 'r')
+        } catch (error) {
             console.log(error)
+            changeTitle("Error", 'e')
         }
-    }
-    else {
+    } else {
         checkboxOnOffGreenLed.disabled = false
         checkboxOnOffBlueLed.disabled = false
         checkboxOnOffAllLed.disabled = false
@@ -69,9 +84,10 @@ checkboxOnOffRedLed.addEventListener('click', async () => {
             const offRedLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-red-led")
             const response = await offRedLed.json()
             console.log(response)
-        }
-        catch (error) {
+            changeTitle("RedLED is OFF")
+        } catch (error) {
             console.log(error)
+            changeTitle("Error", 'e')
         }
     }
 })
@@ -86,12 +102,12 @@ checkboxOnOffGreenLed.addEventListener('click', async () => {
             const onGreenLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-green-led")
             const response = await onGreenLed.json()
             console.log(response)
-        }
-        catch (error) {
+            changeTitle("GreenLED is ON", 'g')
+        } catch (error) {
             console.log(error)
+            changeTitle("Error", 'e')
         }
-    }
-    else {
+    } else {
         checkboxOnOffRedLed.disabled = false
         checkboxOnOffBlueLed.disabled = false
         checkboxOnOffAllLed.disabled = false
@@ -100,9 +116,10 @@ checkboxOnOffGreenLed.addEventListener('click', async () => {
             const offGreenLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-green-led")
             const response = await offGreenLed.json()
             console.log(response)
-        }
-        catch (error) {
+            changeTitle("GreenLED is OFF")
+        } catch (error) {
             console.log(error)
+            changeTitle("Error", 'e')
         }
     }
 })
@@ -117,12 +134,12 @@ checkboxOnOffBlueLed.addEventListener('click', async () => {
             const onBlueLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-blue-led")
             const response = await onBlueLed.json()
             console.log(response)
-        }
-        catch (error) {
+            changeTitle("BlueLED is ON", 'b')
+        } catch (error) {
             console.log(error)
+            changeTitle("Error", 'e')
         }
-    }
-    else {
+    } else {
         checkboxOnOffRedLed.disabled = false
         checkboxOnOffGreenLed.disabled = false
         checkboxOnOffAllLed.disabled = false
@@ -131,9 +148,10 @@ checkboxOnOffBlueLed.addEventListener('click', async () => {
             const offBlueLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-blue-led")
             const response = await offBlueLed.json()
             console.log(response)
-        }
-        catch (error) {
+            changeTitle("BlueLED is OFF")
+        } catch (error) {
             console.log(error)
+            changeTitle("Error", 'e')
         }
     }
 })
@@ -148,12 +166,12 @@ checkboxOnOffAllLed.addEventListener('click', async () => {
             const onAllLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-all-led")
             const response = await onAllLed.json()
             console.log(response)
-        }
-        catch (error) {
+            changeTitle("AllLed is ON", 'a')
+        } catch (error) {
             console.log(error)
+            changeTitle("Error", 'e')
         }
-    }
-    else {
+    } else {
         checkboxOnOffRedLed.disabled = false
         checkboxOnOffGreenLed.disabled = false
         checkboxOnOffBlueLed.disabled = false
@@ -162,15 +180,16 @@ checkboxOnOffAllLed.addEventListener('click', async () => {
             const offAllLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-all-led")
             const response = await offAllLed.json()
             console.log(response)
-        }
-        catch (error) {
+            changeTitle("AllLED is OFF")
+        } catch (error) {
             console.log(error)
+            changeTitle("Error", 'e')
         }
     }
 })
 
 checkboxOnOffCooler.addEventListener('click', async () => {
-    if(checkboxOnOffCooler.checked) {
+    if (checkboxOnOffCooler.checked) {
         try {
             const onCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-cooler")
             const response = await onCooler.json()
@@ -189,8 +208,8 @@ checkboxOnOffCooler.addEventListener('click', async () => {
     }
 })
 
-checkboxOnOffHeatingElement.addEventListener('click', async() => {
-    if(checkboxOnOffHeatingElement.checked) {
+checkboxOnOffHeatingElement.addEventListener('click', async () => {
+    if (checkboxOnOffHeatingElement.checked) {
         try {
             const onCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-heating-element")
             const response = await onCooler.json()
@@ -209,8 +228,8 @@ checkboxOnOffHeatingElement.addEventListener('click', async() => {
     }
 })
 
-shutdown.addEventListener('click', async() => {
-    if(window.confirm('Are you sure?')) {
+shutdown.addEventListener('click', async () => {
+    if (window.confirm('Are you sure?')) {
         document.body.style.cssText = "display: flex;justify-content: center;align-items: center;font-size: 40px;"
         document.body.innerHTML = ""
         const div = document.createElement('div')
@@ -226,7 +245,7 @@ shutdown.addEventListener('click', async() => {
     }
 })
 
-btnEndpoints.addEventListener('click', async() => {
+btnEndpoints.addEventListener('click', async () => {
     try {
         const getAllAPIEndpoints = await fetch("https://hippo-immense-plainly.ngrok-free.app/endpoints")
         const response = await getAllAPIEndpoints.json()
@@ -235,7 +254,7 @@ btnEndpoints.addEventListener('click', async() => {
         const h3Endpoints = document.getElementById("h3-endpoints").style.display = 'none'
         btnEndpoints.style.display = 'none'
 
-        for(let item of response.routes) {
+        for (let item of response.routes) {
             let api_url = `https://hippo-immense-plainly.ngrok-free.app${item}`
             const url = document.createElement('a')
             url.setAttribute('href', `${api_url}`)
@@ -248,5 +267,9 @@ btnEndpoints.addEventListener('click', async() => {
     }
 })
 
-setInterval(async() => { await tempHumSensor() }, 10_000)
-setInterval(async() => { await lidStatus() }, 10_000)
+setInterval(async () => {
+    await tempHumSensor()
+}, 10_000)
+setInterval(async () => {
+    await lidStatus()
+}, 10_000)
