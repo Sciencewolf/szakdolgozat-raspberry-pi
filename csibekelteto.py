@@ -1,10 +1,15 @@
 import os
-import sys
 from datetime import datetime
+from deprecated import deprecated
+
 import requests as re
 
 
 class Utils:
+    """
+        All actions inside csibekelteto will be implemented here.
+        Call webserver endpoint to run certain action.
+    """
     def __init__(self):
         pass
 
@@ -31,6 +36,7 @@ class Utils:
     def last_emergency_shutdown(self) -> None:
         pass
 
+    @deprecated(reason="no reason to use this method")
     def is_webserver_alive(self) -> bool:
         r = re.get(os.getenv("API_URL_ALIVE"))
         return r.status_code == re.codes.ok
@@ -83,7 +89,6 @@ class Utils:
     def run(self) -> None:
         """ Main function for Utils class """
         self.run_prediction_algorithm()
-        self.
 
 
 

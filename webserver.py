@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
 import datetime
+from deprecated import deprecated
+
 from flask import Flask, jsonify, render_template, make_response, Response
 from flask_cors import CORS
 import subprocess
 import os
 from flask import request
 import requests as re
+from csibekelteto import Utils
 
 app = Flask(__name__)
 CORS(app)
@@ -20,7 +23,9 @@ home_dir = os.path.expanduser("~")
 # Create the full path for the text file
 lid_file_path = os.path.join(home_dir, "lid-status.txt")
 
+utils: Utils = Utils()
 
+@deprecated(reason="no reason to use this method")
 def is_csibekelteto_online() -> bool:
     r = re.get(os.getenv("API_URL_ALIVE"))
     response_code = r.status_code
@@ -34,10 +39,7 @@ def csibekelteto_error() -> Response:
 
 @app.route("/")
 def home():
-    if is_csibekelteto_online():
-        return render_template("index.html")
-
-    return csibekelteto_error()
+    return render_template("index.html", version="v2024.11.17", title="Csibekeltető", header="Csibekeltető")
 
 
 @app.route("/alive")
