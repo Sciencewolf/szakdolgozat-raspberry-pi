@@ -5,6 +5,18 @@ from deprecated import deprecated
 import requests as re
 
 
+def log(reason: str="", description: str="", api_url: str="", headers: str="") -> None:
+    """ Keep logging the event's into a file """
+
+    with open("log_system.txt", 'a+') as file:
+        file.write("reason: " + reason + '\n')
+        file.write("description: " + description + '\n')
+        file.write("api_url: " + api_url + '\n')
+        file.write("headers: " + headers + '\n')
+        file.write("timestamp: " + datetime.now().__str__() + '\n')
+        file.write("--------\n")
+
+
 class Utils:
     """
         All actions inside csibekelteto will be implemented here.
@@ -66,17 +78,9 @@ class Utils:
         """ Yellow LED if humidifier if working. Do not touch the lid """
         pass
 
-    def indicate_egg_rotating(self) -> None:
+    def indicate_eggs_rotating(self) -> None:
         """ Green LED if engine is rotating the egg's. Do not touch the lid """
         pass
-
-    def log(self, content: str) -> None:
-        """ Keep logging the event's into a file """
-
-        with open("log_system.txt", 'a+') as file:
-            file.write(content + '\n')
-            file.write(datetime.now().__str__() + '\n')
-
 
     def run_prediction_algorithm(self) -> None:
         """
@@ -85,6 +89,17 @@ class Utils:
         """
         pass
 
+    def prepare_hatching(self) -> str | None:
+        """ before hatching eggs check if hardware is okay """
+        pass
+
+    def start_hatching(self) -> None:
+        """
+        Call this method when egg is ready to hatching.
+        TODO: check if everything is working fine
+        """
+        with open("hatching_date.txt", 'w') as file:
+            file.write(datetime.now().__str__())
 
     def run(self) -> None:
         """ Main function for Utils class """

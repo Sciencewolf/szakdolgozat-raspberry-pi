@@ -10,6 +10,7 @@ import os
 from flask import request
 import requests as re
 from csibekelteto_system import Utils
+from csibekelteto_system import log
 
 app = Flask(__name__)
 CORS(app)
@@ -23,6 +24,7 @@ home_dir = os.path.expanduser("~")
 # Create the full path for the text file
 lid_file_path = os.path.join(home_dir, "lid-status.txt")
 
+# Csibekelteto system
 utils: Utils = Utils()
 
 @deprecated(reason="no reason to use this method")
@@ -33,19 +35,45 @@ def is_csibekelteto_online() -> bool:
     return response_code == re.codes.ok
 
 
-def csibekelteto_error() -> Response:
+def csibekelteto_error(reason: str, description: str="") -> Response:
+    log(
+        reason=reason,
+        description=description
+    )
     return make_response({"content": "offline"}, 500)
 
 
 @app.route("/")
 def home():
+    log(
+        description="Home page loaded",
+        api_url=request.base_url,
+        headers=request.headers.__str__()
+    )
     return render_template("index.html", version="v2024.11.17", title="Csibekeltető", header="Csibekeltető")
 
 
 @app.route("/alive")
 def alive():
     """ TODO: the webserver will check if maintenance or not """
+    log(
+        description="checking if csibekelteto is alive",
+        api_url=request.base_url
+    )
     return make_response({"response": "csibekelteto is alive"}, 200)
+
+
+@app.route("/prepare-hatching")
+def prepare_hatching():
+    log(description="preparing hatching")
+    utils.prepare_hatching()
+    return make_response({"response": "ok", "timestamp": datetime.datetime.now()}, 200)
+
+@app.route("/start-hatching", methods=['GET'])
+def start_hatching():
+    log(description="starting hatching")
+    utils.start_hatching()
+    return make_response({"response": "ok", "timestamp": datetime.datetime.now()}, 200)
 
 
 @app.route("/on-red-led", methods=['GET'])
