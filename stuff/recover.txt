@@ -18,3 +18,7 @@ sudo apt-get install -y i2c-tools libgpiod-dev python3-libgpiod
 pip3 install --upgrade RPi.GPIO --break-system-packages 
 pip3 install --upgrade adafruit-blinka --break-system-packages
 sudo pip3 install adafruit-circuitpython-ahtx0 --break-system-packages
+
+raspi
+
+sudo raspi-config # enable i2c and all other tools, enable auto login
