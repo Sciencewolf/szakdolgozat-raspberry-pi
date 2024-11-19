@@ -25,7 +25,7 @@ def main() -> None:
     except KeyboardInterrupt as ki:
         print(ki.__str__())
     finally:
-        gpio.output(RELAY_PIN, gpio.LOW)
+        gpio.output(RELAY_PIN, gpio.HIGH)
         gpio.cleanup()
 
 
