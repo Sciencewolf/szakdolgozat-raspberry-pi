@@ -20,10 +20,10 @@ def main() -> None:
         signal(SIGHUP, safe_exit)
         
         while True:
-            gpio.output(RELAY_PIN, gpio.HIGH)
+            gpio.output(RELAY_PIN, gpio.LOW)
     except Exception as ex:
         print(ex.__str__())
-        gpio.output(RELAY_PIN, gpio.LOW)
+        gpio.output(RELAY_PIN, gpio.HIGH)
     except KeyboardInterrupt as ki:
         print(ki.__str__())
     finally:
