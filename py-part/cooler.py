@@ -20,11 +20,11 @@ def main() -> None:
         signal(SIGHUP, safe_exit)
         
         while True:
-            gpio.output(RELAY_PIN, gpio.HIGH)
+            gpio.output(RELAY_PIN, gpio.LOW)
     except KeyboardInterrupt:
         pass
     finally:
-        gpio.output(RELAY_PIN, gpio.LOW)
+        gpio.output(RELAY_PIN, gpio.HIGH)
         gpio.cleanup()
 
 
