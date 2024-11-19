@@ -21,8 +21,8 @@ def main() -> None:
         
         while True:
             gpio.output(RELAY_PIN, gpio.HIGH)
-    except KeyboardInterrupt:
-        pass
+    except Exception as ex:
+        print(ex.__str__())
     finally:
         gpio.output(RELAY_PIN, gpio.LOW)
         gpio.cleanup()

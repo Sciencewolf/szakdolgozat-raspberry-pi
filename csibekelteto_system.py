@@ -3,9 +3,15 @@ from datetime import datetime
 from deprecated import deprecated
 
 import requests as re
+from flask import request
 
 
-def log(reason: str="", description: str="", api_url: str="", headers: str="") -> None:
+def log(
+        reason: str="",
+        description: str="",
+        api_url: str=request.base_url,
+        headers: str=request.headers.__str__()
+) -> None:
     """ Keep logging the event's into a file """
 
     with open("log_system.txt", 'a+') as file:
@@ -48,7 +54,7 @@ class Utils:
     def last_emergency_shutdown(self) -> None:
         pass
 
-    # @deprecated(reason="no reason to use this method")
+    @deprecated(reason="no reason to use this method")
     def is_webserver_alive(self) -> bool:
         r = re.get(os.getenv("API_URL_ALIVE"))
         return r.status_code == re.codes.ok
