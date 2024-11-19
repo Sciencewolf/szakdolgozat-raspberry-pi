@@ -26,12 +26,13 @@ try:
     # Construct the path to the temp_hum.txt file
     temp_hum_file = os.path.join(script_dir, "../temp_hum.txt")
 
-    with open(temp_hum_file, 'w') as file:
+    with open('temp_hum.txt', 'w') as file:
         file.write(temp + '\n')
         file.write(hum + '\n')
         file.write(datetime.datetime.now().__str__() + '\n')
 
 except Exception as ex:
-    pass
+    print(ex.__str__())
 finally:
+    print("finally block")
     sys.exit(0)
