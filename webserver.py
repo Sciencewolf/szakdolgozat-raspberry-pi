@@ -27,7 +27,7 @@ lid_file_path = os.path.join(home_dir, "lid-status.txt")
 # Csibekelteto system
 utils: Utils = Utils()
 
-@deprecated(reason="no reason to use this method")
+# @deprecated(reason="no reason to use this method")
 def is_csibekelteto_online() -> bool:
     r = re.get(os.getenv("API_URL_ALIVE"))
     response_code = r.status_code

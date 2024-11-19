@@ -48,7 +48,7 @@ class Utils:
     def last_emergency_shutdown(self) -> None:
         pass
 
-    @deprecated(reason="no reason to use this method")
+    # @deprecated(reason="no reason to use this method")
     def is_webserver_alive(self) -> bool:
         r = re.get(os.getenv("API_URL_ALIVE"))
         return r.status_code == re.codes.ok
