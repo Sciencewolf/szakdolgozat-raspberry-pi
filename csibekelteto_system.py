@@ -3,13 +3,12 @@ from datetime import datetime
 from deprecated import deprecated
 
 import requests as re
-from flask import request
 
 
 def log(
         reason: str="",
         description: str="",
-        api_url:str="",
+        api_url: str="",
         headers: str=""
 ) -> None:
     """ Keep logging the event's into a file """
