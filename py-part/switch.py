@@ -36,14 +36,10 @@ def main() -> None:
 
         with open(lid_file_path, 'w') as file:
             if pin_state == GPIO.LOW:
-                print(f"Button pressed (GPIO LOW): {pin_state}")
-
                 file.write("lid close @ ")
                 file.write(f"{datetime.now()} \n")
                 file.write("! Close")
             else:
-                print(f"Button not pressed (GPIO HIGH): {pin_state}")
-
                 file.write("lid open @ ")
                 file.write(f"{datetime.now()} \n")
                 file.write("! Open")
@@ -55,8 +51,8 @@ def main() -> None:
                     time.sleep(0.1)
 
 
-    except KeyboardInterrupt:
-        pass
+    except Exception as ex:
+        print(ex.__str__())
     finally:
         GPIO.cleanup()
 

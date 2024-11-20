@@ -19,16 +19,15 @@ SLEEP: float = .4
 
 
 def main() -> None:
-    count: int = 0
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
-        while count < 6:
+
+        for _ in range(5):
             gpio.output(GPIO_BLUE_PIN_NUM, gpio.HIGH)
             time.sleep(SLEEP)
             gpio.output(GPIO_BLUE_PIN_NUM, gpio.LOW)
             time.sleep(SLEEP)
-            count += 1
     except KeyboardInterrupt as ex:
         pass
     finally:
