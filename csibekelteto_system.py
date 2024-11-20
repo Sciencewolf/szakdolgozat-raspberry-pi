@@ -9,8 +9,8 @@ from flask import request
 def log(
         reason: str="",
         description: str="",
-        api_url: str=request.base_url,
-        headers: str=request.headers.__str__()
+        api_url:str="",
+        headers: str=""
 ) -> None:
     """ Keep logging the event's into a file """
 

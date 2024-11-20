@@ -46,7 +46,7 @@ def csibekelteto_error(reason: str, description: str="") -> Response:
 
 @app.route("/")
 def home():
-    log(description="Home page loaded")
+    log(description="Home page loaded", api_url=request.base_url, headers=request.headers.__str__())
 
     return render_template("index.html", version="v2024.11.17", title="Csibekeltető", header="Csibekeltető")
 
@@ -54,29 +54,35 @@ def home():
 @app.route("/alive")
 def alive() -> Response:
     """ TODO: the webserver will check if maintenance or not """
-    log(description="checking if csibekelteto is alive")
+    log(description="checking if csibekelteto is alive", api_url=request.base_url, headers=request.headers.__str__())
 
     return make_response({"response": "csibekelteto is alive"}, 200)
 
 
 @app.route("/prepare-hatching")
 def prepare_hatching():
-    log(description="preparing hatching")
+    log(description="preparing hatching", api_url=request.base_url, headers=request.headers.__str__())
     utils.prepare_hatching()
 
     return make_response({"response": "ok", "timestamp": datetime.datetime.now()}, 200)
 
 @app.route("/start-hatching", methods=['GET'])
 def start_hatching():
-    log(description="starting hatching")
+    log(description="starting hatching", api_url=request.base_url, headers=request.headers.__str__())
     utils.start_hatching()
 
     return make_response({"response": "ok", "timestamp": datetime.datetime.now()}, 200)
 
 
+@app.route("/is-start-hatching")
+def is_start_hatching() -> Response:
+    """ TODO: check if hatching is started """
+    return make_response({"response": "true"}, 200)
+
+
 @app.route("/on-red-led", methods=['GET'])
 def turn_on_red_led():
-    log(description="red led is on")
+    log(description="red led is on", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_red.py")])
 
     return jsonify(
@@ -88,7 +94,7 @@ def turn_on_red_led():
 
 @app.route("/off-red-led", methods=['GET'])
 def turn_off_red_led():
-    log(description="red led is off")
+    log(description="red led is off", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.run(["pkill", "-f", "py-part/blink_rgb_red.py"])
 
     return jsonify(
@@ -100,7 +106,7 @@ def turn_off_red_led():
 
 @app.route("/on-green-led", methods=['GET'])
 def turn_on_green_led():
-    log(description="green led is on")
+    log(description="green led is on", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_green.py")])
 
     return jsonify(
@@ -112,7 +118,7 @@ def turn_on_green_led():
 
 @app.route("/off-green-led", methods=['GET'])
 def turn_off_green_led():
-    log(description="green led is off")
+    log(description="green led is off", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.run(["pkill", "-f", "py-part/blink_rgb_green.py"])
 
     return jsonify(
@@ -124,7 +130,7 @@ def turn_off_green_led():
 
 @app.route("/on-blue-led", methods=['GET'])
 def turn_on_blue_led():
-    log(description="blue led is on")
+    log(description="blue led is on", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.Popen([os.path.join(base_dir, "py-part/blink_rgb_blue.py")])
 
     return jsonify(
@@ -136,7 +142,7 @@ def turn_on_blue_led():
 
 @app.route("/off-blue-led", methods=['GET'])
 def turn_off_blue_led():
-    log(description="blue led is off")
+    log(description="blue led is off", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.run(["pkill", "-f", "py-part/blink_rgb_blue.py"])
 
     return jsonify(
@@ -148,7 +154,7 @@ def turn_off_blue_led():
 
 @app.route("/on-all-led", methods=['GET'])
 def turn_on_all_led():
-    log(description="all led is on")
+    log(description="all led is on", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.Popen([os.path.join(base_dir, "py-part/rgb_led.py")])
 
     return jsonify(
@@ -160,7 +166,7 @@ def turn_on_all_led():
 
 @app.route("/off-all-led", methods=['GET'])
 def turn_off_all_led():
-    log(description="all led is off")
+    log(description="all led is off", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.run(["pkill", "-f", "py-part/rgb_led.py"])
 
     return jsonify(
@@ -172,7 +178,7 @@ def turn_off_all_led():
 
 @app.route("/get-temp-hum", methods=['GET'])
 def get_temperature_and_humidity_from_sensor():
-    log(description="get temperature and humidity")
+    log(description="get temperature and humidity", api_url=request.base_url, headers=request.headers.__str__())
     result = subprocess.run(
         [os.path.join(base_dir, "py-part/temp_hum_sensor.py")],
         capture_output=True,
@@ -192,7 +198,7 @@ def get_temperature_and_humidity_from_sensor():
             hum = file.readline().strip()
             timestamp = file.readline().strip()
     except FileNotFoundError as fnfe:
-        log(reason="error at reading temp_hum.txt", description=f"file not found {fnfe.__str__()}")
+        log(reason="error at reading temp_hum.txt", description=f"file not found {fnfe.__str__()}", api_url=request.base_url, headers=request.headers.__str__())
         return jsonify(
             {"status_code": 404,
              "content": "not found response",
@@ -208,7 +214,7 @@ def get_temperature_and_humidity_from_sensor():
 
 @app.route("/set-temp", methods=['GET'])
 def set_temperature():
-    log(description="set temperature")
+    log(description="set temperature", api_url=request.base_url, headers=request.headers.__str__())
     temp: str = request.args.get("t")  # url/set-temp?t=40.1 | type: float
     return jsonify(
         {"status_code": 501,
@@ -218,7 +224,7 @@ def set_temperature():
 
 @app.route("/set-hum", methods=['GET'])
 def set_humidity():
-    log(description="set humidity")
+    log(description="set humidity", api_url=request.base_url, headers=request.headers.__str__())
     hum: str = request.args.get("h")  # url/set-hum?h=62.5 | type: float
     return jsonify(
         {"status_code": 501,
@@ -228,7 +234,7 @@ def set_humidity():
 
 @app.route("/get-lid-status", methods=['GET'])
 def get_lid_status():
-    log(description="get lid status [on/off]")
+    log(description="get lid status [on/off]", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
 
     if not os.path.exists(lid_file_path):
@@ -240,7 +246,7 @@ def get_lid_status():
         )
 
     with open(lid_file_path, 'r') as file:
-        log(description="access lid status file")
+        log(description="access lid status file", api_url=request.base_url, headers=request.headers.__str__())
         lines = file.readlines()
         for line in lines:
             if line.startswith("!"):
@@ -253,7 +259,7 @@ def get_lid_status():
 
 @app.route("/on-cooler", methods=['GET', 'PUT'])
 def turn_on_cooler():
-    log(description="turn on cooler")
+    log(description="turn on cooler", api_url=request.base_url, headers=request.headers.__str__())
 
     subprocess.Popen([os.path.join(base_dir, "py-part/cooler.py")])
 
@@ -269,7 +275,7 @@ def turn_on_cooler():
 
 @app.route("/off-cooler", methods=['GET', 'PUT'])
 def turn_off_cooler():
-    log(description="turn off cooler")
+    log(description="turn off cooler", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.run(["pkill", "-f", "py-part/cooler.py"])
 
     return make_response(
@@ -284,7 +290,7 @@ def turn_off_cooler():
 
 @app.route("/on-heating-element")
 def turn_on_heating_element():
-    log(description="turn on heating element")
+    log(description="turn on heating element", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.Popen([os.path.join(base_dir, "py-part/heating_element.py")])
 
     return make_response(
@@ -299,7 +305,7 @@ def turn_on_heating_element():
 
 @app.route("/off-heating-element")
 def turn_off_heating_element():
-    log(description="turn off heating element")
+    log(description="turn off heating element", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.run(["pkill", "-f", "py-part/heating_element.py"])
 
     return make_response(
@@ -314,7 +320,7 @@ def turn_off_heating_element():
 
 @app.route("/endpoints", methods=['GET'])
 def endpoints():
-    log(description="get api endpoints")
+    log(description="get api endpoints", api_url=request.base_url, headers=request.headers.__str__())
     lst: list = ["%s" % rule for rule in app.url_map.iter_rules()][1:]
 
     return make_response(
@@ -328,7 +334,7 @@ def endpoints():
 
 @app.route("/overall", methods=['GET'])
 def overall():
-    log(description="overall")
+    log(description="overall", api_url=request.base_url, headers=request.headers.__str__())
 
     return make_response({"day": 0,
                           "updated": datetime.datetime.now().__str__(),
@@ -339,7 +345,7 @@ def overall():
 @app.route("/shutdown")
 def shutdown():
     """ Make some safety check??? """
-    log(description="turn off raspi/csibekelteto")
+    log(description="turn off raspi/csibekelteto", api_url=request.base_url, headers=request.headers.__str__())
 
     os.system("sudo shutdown -h now")
 
