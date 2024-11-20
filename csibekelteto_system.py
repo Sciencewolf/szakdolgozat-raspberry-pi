@@ -15,7 +15,6 @@ def log(
     """ Keep logging the event's into a file """
 
     today = datetime.now().strftime("%Y-%B-%d")
-    print(today)
 
     with open(f"log/{today}-log_system.txt", 'a+') as file:
         file.write("reason: " + reason + '\n')
