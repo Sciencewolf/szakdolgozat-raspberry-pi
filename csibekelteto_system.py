@@ -14,7 +14,10 @@ def log(
 ) -> None:
     """ Keep logging the event's into a file """
 
-    with open("log_system.txt", 'a+') as file:
+    today = datetime.now().strftime("%Y-%B-%d")
+    print(today)
+
+    with open(f"log/{today}-log_system.txt", 'a+') as file:
         file.write("reason: " + reason + '\n')
         file.write("description: " + description + '\n')
         file.write("api_url: " + api_url + '\n')
