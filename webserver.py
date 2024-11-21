@@ -9,8 +9,8 @@ import subprocess
 import os
 from flask import request
 import requests as re
-from csibekelteto_system import Utils
-from csibekelteto_system import log
+from csibekelteto_utils import Utils
+from csibekelteto_utils import log
 
 app = Flask(__name__)
 CORS(app)
@@ -24,7 +24,7 @@ home_dir = os.path.expanduser("~")
 # Create the full path for the text file
 lid_file_path = os.path.join(home_dir, "lid-status.txt")
 
-# Csibekelteto system
+# Csibekelteto utils
 utils: Utils = Utils()
 
 @deprecated(reason="no reason to use this method")
