@@ -11,7 +11,7 @@ from signal import signal, SIGTERM, SIGHUP
 
 gpio.setmode(gpio.BCM)
 
-RELAY_PIN: int = 12
+RELAY_PIN: int = 23
 
 gpio.setup(RELAY_PIN, gpio.OUT)
 

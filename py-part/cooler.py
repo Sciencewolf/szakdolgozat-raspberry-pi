@@ -8,7 +8,7 @@ description:
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 
-RELAY_PIN: int = 18
+RELAY_PIN: int = 24
 
 gpio.setmode(gpio.BCM)
 gpio.setup(RELAY_PIN, gpio.OUT)
