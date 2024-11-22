@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
 import datetime
-from deprecated import deprecated
 
 from flask import Flask, jsonify, render_template, make_response, Response
 from flask_cors import CORS
 import subprocess
 import os
 from flask import request
-import requests as re
 from csibekelteto_utils import Utils
 from csibekelteto_utils import log
 
@@ -27,22 +25,6 @@ lid_file_path = os.path.join(home_dir, "lid-status.txt")
 # Csibekelteto utils
 utils: Utils = Utils()
 
-@deprecated(reason="no reason to use this method")
-def is_csibekelteto_online() -> bool:
-    r = re.get(os.getenv("API_URL_ALIVE"))
-    response_code = r.status_code
-    print(response_code)
-    return response_code == re.codes.ok
-
-@deprecated(reason="no reason to use this method")
-def csibekelteto_error(reason: str, description: str="") -> Response:
-    log(
-        reason=reason,
-        description=description
-    )
-
-    return make_response({"content": "offline"}, 500)
-
 
 @app.route("/")
 def home():
@@ -50,14 +32,7 @@ def home():
 
     return render_template("index.html", version="v2024.11.17", title="Csibekeltető", header="Csibekeltető")
 
-
-@app.route("/alive")
-def alive() -> Response:
-    """ TODO: the webserver will check if maintenance or not """
-    log(description="checking if csibekelteto is alive", api_url=request.base_url, headers=request.headers.__str__())
-
-    return make_response({"response": "csibekelteto is alive"}, 200)
-
+""" hatching """
 
 @app.route("/prepare-hatching")
 def prepare_hatching():
@@ -79,6 +54,7 @@ def is_start_hatching() -> Response:
     """ TODO: check if hatching is started """
     return make_response({"response": "true"}, 200)
 
+""" red led """
 
 @app.route("/on-red-led", methods=['GET'])
 def turn_on_red_led():
@@ -103,6 +79,7 @@ def turn_off_red_led():
          "timestamp": datetime.datetime.now()}
     )
 
+""" green led """
 
 @app.route("/on-green-led", methods=['GET'])
 def turn_on_green_led():
@@ -127,6 +104,7 @@ def turn_off_green_led():
          "timestamp": datetime.datetime.now()}
     )
 
+""" blue led """
 
 @app.route("/on-blue-led", methods=['GET'])
 def turn_on_blue_led():
@@ -151,6 +129,28 @@ def turn_off_blue_led():
          "timestamp": datetime.datetime.now()}
     )
 
+""" yellow led """
+
+@app.route("/on-yellow-led")
+def turn_on_yellow_led():
+    # TODO
+    return jsonify({
+        "status_code": 200,
+        "content": "ok",
+        "timestamp": datetime.datetime.now()
+    })
+
+
+@app.route("/off-yellow-led")
+def turn_off_yellow_led():
+    # TODO
+    return jsonify({
+        "status_code": 200,
+        "content": "ok",
+        "timestamp": datetime.datetime.now()
+    })
+
+""" all led """
 
 @app.route("/on-all-led", methods=['GET'])
 def turn_on_all_led():
@@ -175,6 +175,7 @@ def turn_off_all_led():
          "timestamp": datetime.datetime.now()}
     )
 
+""" get temp and hum """
 
 @app.route("/get-temp-hum", methods=['GET'])
 def get_temperature_and_humidity_from_sensor():
@@ -211,6 +212,7 @@ def get_temperature_and_humidity_from_sensor():
          "timestamp": timestamp}
     )
 
+""" set temp and hum """
 
 @app.route("/set-temp", methods=['GET'])
 def set_temperature():
@@ -231,6 +233,7 @@ def set_humidity():
          "content": "Not Implemented"}
     )
 
+""" lid/limit switch"""
 
 @app.route("/get-lid-status", methods=['GET'])
 def get_lid_status():
@@ -256,6 +259,7 @@ def get_lid_status():
                      "timestamp": datetime.datetime.now()}
                 )
 
+""" cooler """
 
 @app.route("/on-cooler", methods=['GET', 'PUT'])
 def turn_on_cooler():
@@ -287,6 +291,7 @@ def turn_off_cooler():
         200
     )
 
+""" heating element """
 
 @app.route("/on-heating-element")
 def turn_on_heating_element():
@@ -317,6 +322,35 @@ def turn_off_heating_element():
         200
     )
 
+""" dc motor """
+
+@app.route("/on-dc-motor")
+def turn_on_dc_motor():
+    log(description="turn on dc motor", api_url=request.base_url, headers=request.headers.__str__())
+    subprocess.run([os.path.join(base_dir, "py-part/dc_motor.py")])
+
+    return make_response(
+        jsonify({
+            "status_code": 200,
+            "content": "dc motor is on",
+            "timestamp": datetime.datetime.now()
+        })
+    )
+
+@app.route("/off-dc-motor")
+def turn_off_dc_motor():
+    log(description="turn off dc motor", api_url=request.base_url, headers=request.headers.__str__())
+    subprocess.run(["pkill", "-f", "py-part/dc_motor.py"])
+
+    return make_response(
+        jsonify({
+            "status_code": 200,
+            "content": "dc motor is off",
+            "timestamp": datetime.datetime.now()
+        })
+    )
+
+""" other """
 
 @app.route("/endpoints", methods=['GET'])
 def endpoints():
@@ -340,6 +374,14 @@ def overall():
                           "updated": datetime.datetime.now().__str__(),
                           "temp": 0.0,
                           "hum": 0.0}, 200)
+
+
+@app.route("/alive")
+def alive() -> Response:
+    """ TODO: the webserver will check if maintenance or not """
+    log(description="checking if csibekelteto is alive", api_url=request.base_url, headers=request.headers.__str__())
+
+    return make_response({"response": "csibekelteto is alive"}, 200)
 
 
 @app.route("/shutdown")

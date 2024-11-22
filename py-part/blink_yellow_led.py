@@ -10,7 +10,7 @@ import time
 from signal import signal, SIGTERM, SIGHUP
 
 # define gpio pin's
-GPIO_YELLOW_PIN_NUM: int = 20
+GPIO_YELLOW_PIN_NUM: int = 18
 
 gpio.setmode(gpio.BCM)
 
@@ -30,7 +30,7 @@ def main() -> None:
             gpio.output(GPIO_YELLOW_PIN_NUM, gpio.LOW)
             time.sleep(SLEEP)
     except KeyboardInterrupt as ex:
-        pass
+        print(ex.__str__())
     finally:
         gpio.cleanup()
 
