@@ -12,7 +12,7 @@
 	<link rel="icon" href="../static/images/favicon.png" id="icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/main.js') }}" defer async type="module"></script>
-    <!-- <link rel="stylesheet" href="../static/css/style.css"> -->
+<!--     <link rel="stylesheet" href="../static/css/style.css">-->
 </head>
 
 <body>
@@ -49,6 +49,15 @@
                     </div>
                 </label>
             </div>
+			<div class="item turn-on-off-yellow-led">
+				<h3>Yellow LED</h3>
+				<label class="toggle-switch">
+					<input type="checkbox" id="checkbox-on-off-yellow-led">
+					<div class="toggle-switch-background">
+						<div class="toggle-switch-handle"></div>
+					</div>
+				</label>
+			</div>
             <div class="item turn-on-off-all-led">
                 <h3>All LED</h3>
                 <label class="toggle-switch">
@@ -95,6 +104,18 @@
                     </label>
                 </div>
             </div>
+			
+			<div class="dc-motor-wrapper">
+				<div class="item dc-motor">
+					<h3>DC Motor:</h3>
+					<label class="toggle-switch">
+						<input type="checkbox" id="checkbox-on-off-dc-motor">
+						<div class="toggle-switch-background">
+							<div class="toggle-switch-handle"></div>
+						</div>
+					</label>
+				</div>
+			</div>
         </div>
 
         <div class="endpoints-wrapper">

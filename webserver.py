@@ -133,7 +133,9 @@ def turn_off_blue_led():
 
 @app.route("/on-yellow-led")
 def turn_on_yellow_led():
-    # TODO
+    log(description="yellow led is on", api_url=request.base_url, headers=request.headers.__str__())
+    subprocess.run([os.path.join(base_dir, "py-part/blink_yellow_led.py")])
+
     return jsonify({
         "status_code": 200,
         "content": "ok",
@@ -143,7 +145,9 @@ def turn_on_yellow_led():
 
 @app.route("/off-yellow-led")
 def turn_off_yellow_led():
-    # TODO
+    log(description="yellow led is off", api_url=request.base_url, headers=request.headers.__str__())
+    subprocess.run(["pkill", "-f", "py-part/blink_yellow_led.py"])
+    
     return jsonify({
         "status_code": 200,
         "content": "ok",

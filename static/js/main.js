@@ -1,6 +1,7 @@
 const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
 const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led")
 const checkboxOnOffBlueLed = document.getElementById("checkbox-on-off-blue-led")
+const checkboxOnOffYellowLed = document.getElementById("checkbox-on-off-yellow-led")
 const checkboxOnOffAllLed = document.getElementById("checkbox-on-off-all-led")
 const temperature = document.getElementById("temp")
 const humidity = document.getElementById("hum")
@@ -42,6 +43,7 @@ const changeTitle = (title, iconType="d") => {
     values.set("r", "../static/images/red-led.png")
     values.set("g", "../static/images/green-led.png")
     values.set("b", "../static/images/blue-led.png")
+    values.set("y", "../static/images/yellow-led.png")
     values.set("a", "../static/images/all-led.png")
     values.set("e", "../static/images/error.png")
     values.set("d", "../static/images/favicon.png")
@@ -149,6 +151,30 @@ checkboxOnOffBlueLed.addEventListener('click', async () => {
             const response = await offBlueLed.json()
             console.log(response)
             changeTitle("BlueLED is OFF")
+        } catch (error) {
+            console.log(error)
+            changeTitle("Error", 'e')
+        }
+    }
+})
+
+checkboxOnOffYellowLed.addEventListener('click', async () => {
+    if (checkboxOnOffYellowLed.checked) {
+        try {
+            const onYellowLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-yellow-led")
+            const response = await onYellowLed.json()
+            console.log(response)
+            changeTitle("YellowLed is ON", 'y')
+        } catch (error) {
+            console.log(error)
+            changeTitle("Error", 'e')
+        }
+    } else {
+        try {
+            const offAllLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-yellow-led")
+            const response = await offAllLed.json()
+            console.log(response)
+            changeTitle("YellowLED is OFF")
         } catch (error) {
             console.log(error)
             changeTitle("Error", 'e')
