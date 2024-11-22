@@ -15,7 +15,12 @@ def log(
 
     today = datetime.now().strftime("%Y-%B-%d")
 
-    with open(f"log/{today}-log_system.txt", 'a+') as file:
+    log_directory = "log"
+    log_file_path = f"{log_directory}/{today}-log_system.txt"
+
+    os.makedirs(log_directory, exist_ok=True)
+
+    with open(log_file_path, 'a+') as file:
         file.write("reason: " + reason + '\n')
         file.write("description: " + description + '\n')
         file.write("api_url: " + api_url + '\n')
