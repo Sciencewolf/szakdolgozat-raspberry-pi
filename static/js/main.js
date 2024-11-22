@@ -8,6 +8,7 @@ const humidity = document.getElementById("hum")
 const lid = document.getElementById("lid")
 const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
 const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
+const checkboxOnOffDcMotor = document.getElementById("checkbox-on-off-dc-motor")
 const shutdown = document.getElementById("btn-shutdown")
 const btnEndpoints = document.getElementById("btn-endpoints")
 const divEndpoints = document.getElementById("div-endpoints")
@@ -171,8 +172,8 @@ checkboxOnOffYellowLed.addEventListener('click', async () => {
         }
     } else {
         try {
-            const offAllLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-yellow-led")
-            const response = await offAllLed.json()
+            const offYellowLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-yellow-led")
+            const response = await offYellowLed.json()
             console.log(response)
             changeTitle("YellowLED is OFF")
         } catch (error) {
@@ -247,6 +248,26 @@ checkboxOnOffHeatingElement.addEventListener('click', async () => {
         try {
             const offCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-heating-element")
             const response = await offCooler.json()
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+})
+
+checkboxOnOffDcMotor.addEventListener('click', async () => {
+    if (checkboxOnOffDcMotor.checked) {
+        try {
+            const onDcMotor = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-dc-motor")
+            const response = await onDcMotor.json()
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    } else {
+        try {
+            const offDcMotor = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-dc-motor")
+            const response = await offDcMotor.json()
             console.log(response)
         } catch (error) {
             console.log(error)
