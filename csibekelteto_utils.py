@@ -1,7 +1,7 @@
 import os
 import subprocess
 from datetime import datetime
-
+import signal
 import requests as re
 
 
@@ -37,6 +37,7 @@ class Utils:
 
     def __init__(self):
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.processes = {}
 
     # __static methods
     def __on_led_factory(self, file_name: str) -> None:
@@ -44,6 +45,23 @@ class Utils:
 
     def __off_led_factory(self, file_name: str) -> None:
         subprocess.run(["pkill", "-f", f"py-part/{file_name}.py"])
+
+    def __start_process(self, name, script):
+        """Start a subprocess and track it by name."""
+        if name in self.processes and self.processes[name].poll() is None:
+            print(f"{name} is already running.")
+            return
+        process = subprocess.Popen([os.path.join(self.base_dir, script)])
+        self.processes[name] = process
+
+    def __stop_process(self, name):
+        """Stop a running subprocess by name."""
+        if name in self.processes and self.processes[name].poll() is None:
+            os.killpg(os.getpgid(self.processes[name].pid), signal.SIGTERM)
+            self.processes[name].wait()
+            del self.processes[name]
+        else:
+            print(f"{name} is not running.")
 
     def __str__(self) -> str:
         return (f"---Utils--- "
@@ -112,21 +130,21 @@ class Utils:
 
     """ DC Motor """
 
-    def on_dc_motor_forward(self) -> None:
-        subprocess.run([os.path.join(self.base_dir, "py-part/dc_motor_forward.py")])
-        subprocess.run([os.path.join(self.base_dir, "py-part/blink_yellow_led.py")])
+    def on_dc_motor_forward(self):
+        self.__start_process("dc_motor_forward", "py-part/dc_motor_forward.py")
+        self.__start_process("blink_yellow_led", "py-part/blink_yellow_led.py")
 
-    def off_dc_motor_forward(self) -> None:
-        subprocess.run(["pkill", "-f", "py-part/dc_motor_forward.py"])
-        subprocess.run(["pkill", "-f", "py-part/blink_yellow_led.py"])
+    def off_dc_motor_forward(self):
+        self.__stop_process("dc_motor_forward")
+        self.__stop_process("blink_yellow_led")
 
-    def on_dc_motor_backward(self) -> None:
-        subprocess.run([os.path.join(self.base_dir, "py-part/dc_motor_backward.py")])
-        subprocess.run([os.path.join(self.base_dir, "py-part/blink_yellow_led.py")])
+    def on_dc_motor_backward(self):
+        self.__start_process("dc_motor_backward", "py-part/dc_motor_backward.py")
+        self.__start_process("blink_yellow_led", "py-part/blink_yellow_led.py")
 
-    def off_dc_motor_backward(self) -> None:
-        subprocess.run(["pkill", "-f", "py-part/dc_motor_backward.py"])
-        subprocess.run(["pkill", "-f", "py-part/blink_yellow_led.py"])
+    def off_dc_motor_backward(self):
+        self.__stop_process("dc_motor_backward")
+        self.__stop_process("blink_yellow_led")
 
 
     """ LED """
