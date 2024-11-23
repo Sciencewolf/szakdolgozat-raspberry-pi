@@ -29,8 +29,8 @@ def main(*args, **kwargs):
         signal(SIGHUP, safe_exit)
 
         while True:
-            gpio.output(IN1_GPIO_PIN, gpio.LOW)
-            gpio.output(IN2_GPIO_PIN, gpio.HIGH)
+            gpio.output(IN1_GPIO_PIN, gpio.HIGH)
+            gpio.output(IN2_GPIO_PIN, gpio.LOW)
             pwm.ChangeDutyCycle(100)
     except Exception as ex:
         print("exiting...", ex.__str__())
