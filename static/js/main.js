@@ -258,6 +258,7 @@ checkboxOnOffHeatingElement.addEventListener('click', async () => {
 
 checkboxOnOffDcMotorForward.addEventListener('click', async () => {
     if (checkboxOnOffDcMotorForward.checked) {
+        checkboxOnOffDcMotorBackward.disabled = true
         try {
             const onDcMotorForward = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-dc-motor-forward")
             const response = await onDcMotorForward.json()
@@ -266,6 +267,7 @@ checkboxOnOffDcMotorForward.addEventListener('click', async () => {
             console.log(error)
         }
     } else {
+        checkboxOnOffDcMotorBackward.disabled = false
         try {
             const offDcMotorForward = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-dc-motor-forward")
             const response = await offDcMotorForward.json()
@@ -278,6 +280,7 @@ checkboxOnOffDcMotorForward.addEventListener('click', async () => {
 
 checkboxOnOffDcMotorBackward.addEventListener('click', async () => {
     if (checkboxOnOffDcMotorBackward.checked) {
+        checkboxOnOffDcMotorForward.disabled = true
         try {
             const onDcMotorBackward = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-dc-motor-backward")
             const response = await onDcMotorBackward.json()
@@ -286,6 +289,7 @@ checkboxOnOffDcMotorBackward.addEventListener('click', async () => {
             console.log(error)
         }
     } else {
+        checkboxOnOffDcMotorForward.disabled = false
         try {
             const offDcMotorBackward = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-dc-motor-backward")
             const response = await offDcMotorBackward.json()
