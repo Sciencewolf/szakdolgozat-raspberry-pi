@@ -115,30 +115,30 @@ class Utils:
 
     """ LED """
     # __static methods
-
     def __on_led_factory(self, file_name: str) -> None:
         subprocess.Popen([os.path.join(self.base_dir, f"py-part/{file_name}.py")])
 
     def __off_led_factory(self, file_name: str) -> None:
         subprocess.run(["pkill", "-f", f"py-part/{file_name}.py"])
 
+
     def on_red_led(self) -> None:
-        self.__on_led_factory("blink_red_led")
+        self.__on_led_factory("blink_rgb_red")
 
     def off_red_led(self) -> None:
-        self.__off_led_factory("blink_red_led")
+        self.__off_led_factory("blink_rgb_red")
 
     def on_green_led(self) -> None:
-        self.__on_led_factory("blink_green_led")
+        self.__on_led_factory("blink_rgb_green")
 
     def off_green_led(self) -> None:
-        self.__off_led_factory("blink_green_led")
+        self.__off_led_factory("blink_rgb_green")
 
     def on_blue_led(self) -> None:
-        self.__on_led_factory("blink_blue_led")
+        self.__on_led_factory("blink_rgb_blue")
 
     def off_blue_led(self) -> None:
-        self.__off_led_factory("blink_blue_led")
+        self.__off_led_factory("blink_rgb_blue")
 
     def on_yellow_led(self) -> None:
         self.__on_led_factory("blink_yellow_led")
