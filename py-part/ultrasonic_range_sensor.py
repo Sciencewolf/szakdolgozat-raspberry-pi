@@ -10,10 +10,10 @@ from signal import signal, SIGTERM, SIGHUP
 import time
 
 
-GPIO.setmode(GPIO.BCM)
-
 TRIG_PIN: int = 24
 ECHO_PIN: int = 25
+
+GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(TRIG_PIN, GPIO.OUT)
 GPIO.setup(ECHO_PIN, GPIO.IN)
@@ -47,8 +47,8 @@ def main() -> None:
         distance_rounded: float = round(distance, 2)
         print(f"{distance_rounded} cm")
 
-    except KeyboardInterrupt:
-        pass
+    except Exception as ex:
+        print(ex.__str__())
     finally:
         GPIO.cleanup()
 

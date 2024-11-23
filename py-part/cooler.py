@@ -8,10 +8,10 @@ description:
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 
-RELAY_PIN: int = 24
+RELAY_GPIO_PIN: int = 24
 
 gpio.setmode(gpio.BCM)
-gpio.setup(RELAY_PIN, gpio.OUT)
+gpio.setup(RELAY_GPIO_PIN, gpio.OUT)
 
 
 def main() -> None:
@@ -20,11 +20,11 @@ def main() -> None:
         signal(SIGHUP, safe_exit)
         
         while True:
-            gpio.output(RELAY_PIN, gpio.LOW)
+            gpio.output(RELAY_GPIO_PIN, gpio.LOW)
     except Exception as ex:
         print(ex.__str__())
     finally:
-        gpio.output(RELAY_PIN, gpio.HIGH)
+        gpio.output(RELAY_GPIO_PIN, gpio.HIGH)
         gpio.cleanup()
 
 

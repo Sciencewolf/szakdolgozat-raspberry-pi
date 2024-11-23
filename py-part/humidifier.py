@@ -7,13 +7,14 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
+from deprecated import deprecated
 
 RELAY_PIN: int = 22
 
 gpio.setmode(gpio.BCM)
 gpio.setup(RELAY_PIN, gpio.OUT)
 
-
+@deprecated(reason="dont run this code bc it is not connected yet!")
 def main() -> None:
     try:
         signal(SIGTERM, safe_exit)
