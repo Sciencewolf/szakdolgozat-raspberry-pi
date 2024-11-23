@@ -471,7 +471,7 @@ def turn_on_dc_motor_backward():
     })
 
 
-@app.route("/off-dc-motor-forward")
+@app.route("/off-dc-motor-backward")
 def turn_off_dc_motor_backward():
     log(
         description="turn off dc motor backward",
