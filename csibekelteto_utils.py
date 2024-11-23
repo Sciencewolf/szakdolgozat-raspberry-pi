@@ -47,11 +47,15 @@ class Utils:
         subprocess.run(["pkill", "-f", f"py-part/{file_name}.py"])
 
     def __start_process(self, name, script):
-        """Start a subprocess and track it by name."""
+        """Start a subprocess in a new session and track it by name."""
         if name in self.processes and self.processes[name].poll() is None:
             print(f"{name} is already running.")
             return
-        process = subprocess.Popen([os.path.join(self.base_dir, script)])
+
+        process = subprocess.Popen(
+            [os.path.join(self.base_dir, script)],
+            start_new_session=True  # Start in a new session
+        )
         self.processes[name] = process
 
     def __stop_process(self, name):
