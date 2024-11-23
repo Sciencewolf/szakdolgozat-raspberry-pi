@@ -425,33 +425,64 @@ def turn_off_heating_element():
 
 """ dc motor """
 
-@app.route("/on-dc-motor")
-def turn_on_dc_motor():
+@app.route("/on-dc-motor-forward")
+def turn_on_dc_motor_forward():
     log(
-        description="turn on dc motor",
+        description="turn on dc motor forward",
         api_url=request.base_url,
         headers=request.headers.__str__()
     )
-    utils.on_dc_motor()
+    utils.on_dc_motor_forward()
 
     return jsonify({
         "status_code": 200,
-        "content": "dc motor is on",
+        "content": "dc motor forward is on",
         "timestamp": datetime.datetime.now()
     })
 
-@app.route("/off-dc-motor")
-def turn_off_dc_motor():
+@app.route("/off-dc-motor-forward")
+def turn_off_dc_motor_forward():
     log(
-        description="turn off dc motor",
+        description="turn off dc motor forward",
         api_url=request.base_url,
         headers=request.headers.__str__()
     )
-    utils.off_dc_motor()
+    utils.off_dc_motor_forward()
 
     return jsonify({
         "status_code": 200,
-        "content": "dc motor is off",
+        "content": "dc motor forward is off",
+        "timestamp": datetime.datetime.now()
+    })
+
+@app.route("/on-dc-motor-backward")
+def turn_on_dc_motor_backward():
+    log(
+        description="turn on dc motor backward",
+        api_url=request.base_url,
+        headers=request.headers.__str__()
+    )
+    utils.on_dc_motor_backward()
+
+    return jsonify({
+        "status_code": 200,
+        "content": "dc motor backward is on",
+        "timestamp": datetime.datetime.now()
+    })
+
+
+@app.route("/off-dc-motor-forward")
+def turn_off_dc_motor_backward():
+    log(
+        description="turn off dc motor backward",
+        api_url=request.base_url,
+        headers=request.headers.__str__()
+    )
+    utils.off_dc_motor_backward()
+
+    return jsonify({
+        "status_code": 200,
+        "content": "dc motor backward is off",
         "timestamp": datetime.datetime.now()
     })
 

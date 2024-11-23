@@ -112,11 +112,17 @@ class Utils:
 
     """ DC Motor """
 
-    def on_dc_motor(self) -> None:
-        subprocess.run([os.path.join(self.base_dir, "py-part/dc_motor.py")])
+    def on_dc_motor_forward(self) -> None:
+        subprocess.run([os.path.join(self.base_dir, "py-part/dc_motor_forward.py")])
 
-    def off_dc_motor(self) -> None:
-        subprocess.run(["pkill", "-f", "py-part/dc_motor.py"])
+    def off_dc_motor_forward(self) -> None:
+        subprocess.run(["pkill", "-f", "py-part/dc_motor_forward.py"])
+
+    def on_dc_motor_backward(self) -> None:
+        subprocess.run([os.path.join(self.base_dir, "py-part/dc_motor_backward.py")])
+
+    def off_dc_motor_backward(self) -> None:
+        subprocess.run(["pkill", "-f", "py-part/dc_motor_backward.py"])
 
 
     """ LED """

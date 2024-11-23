@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 """
 wiring:
@@ -7,7 +7,6 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
-import time
 
 ENA_GPIO_PIN: int = 5
 IN1_GPIO_PIN: int = 6
@@ -22,29 +21,17 @@ gpio.setup(ENA_GPIO_PIN, gpio.OUT, initial=gpio.LOW)
 pwm = gpio.PWM(ENA_GPIO_PIN, 100)  # 100Hz PWM
 pwm.start(0)  # speed 0%
 
+
 def main(*args, **kwargs):
+    """ TODO: add args to set speed """
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
-        
-        # motor forward
-        gpio.output(IN1_GPIO_PIN, gpio.HIGH)
-        gpio.output(IN2_GPIO_PIN, gpio.LOW)
-        pwm.ChangeDutyCycle(100)  # 100% speed
-        time.sleep(5)
 
-        # Motor stop
-        gpio.output(IN1_GPIO_PIN, gpio.LOW)
-        gpio.output(IN2_GPIO_PIN, gpio.LOW)
-        pwm.ChangeDutyCycle(0)
-        time.sleep(2)
-
-        # Motor backward
-        gpio.output(IN1_GPIO_PIN, gpio.LOW)
-        gpio.output(IN2_GPIO_PIN, gpio.HIGH)
-        pwm.ChangeDutyCycle(10)
-        time.sleep(5)
-
+        while True:
+            gpio.output(IN1_GPIO_PIN, gpio.LOW)
+            gpio.output(IN2_GPIO_PIN, gpio.HIGH)
+            pwm.ChangeDutyCycle(100)
     except Exception as ex:
         print("exiting...", ex.__str__())
     finally:
@@ -59,3 +46,4 @@ def safe_exit(signum, frame) -> None:
 
 if __name__ == "__main__":
     main()
+
