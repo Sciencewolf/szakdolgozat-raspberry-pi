@@ -9,11 +9,11 @@ description:
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 
-gpio.setmode(gpio.BCM)
-
 RELAY_PIN: int = 23
 
+gpio.setmode(gpio.BCM)
 gpio.setup(RELAY_PIN, gpio.OUT)
+
 
 def main() -> None:
     try:
@@ -22,8 +22,8 @@ def main() -> None:
 
         while True:
             gpio.output(RELAY_PIN, gpio.LOW)
-    except KeyboardInterrupt as ki:
-        print(ki.__str__())
+    except Exception as ex:
+        print(ex.__str__())
     finally:
         gpio.output(RELAY_PIN, gpio.HIGH)
         gpio.cleanup()

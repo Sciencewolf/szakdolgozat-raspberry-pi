@@ -12,18 +12,16 @@ import time
 import os
 
 
-GPIO.setmode(GPIO.BCM)
-
-SWITCH_PIN: int = 4
+SWITCH_GPIO_PIN: int = 4
 GPIO_RED_LED_PIN_NUM: int = 21 # led
 
-GPIO.setup(SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(SWITCH_GPIO_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(GPIO_RED_LED_PIN_NUM, GPIO.OUT, initial=GPIO.LOW)
 
-# Get the home directory
 home_dir = os.path.expanduser("~")
 
-# Create the full path for the text file
 lid_file_path = os.path.join(home_dir, "lid-status.txt")
 
 
@@ -32,7 +30,7 @@ def main() -> None:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
-        pin_state: int = GPIO.input(SWITCH_PIN)
+        pin_state: int = GPIO.input(SWITCH_GPIO_PIN)
 
         with open(lid_file_path, 'w') as file:
             if pin_state == GPIO.LOW:
@@ -49,8 +47,6 @@ def main() -> None:
                     time.sleep(0.1)
                     GPIO.output(GPIO_RED_LED_PIN_NUM, GPIO.LOW)
                     time.sleep(0.1)
-
-
     except Exception as ex:
         print(ex.__str__())
     finally:

@@ -9,11 +9,9 @@ import RPi.GPIO as gpio
 import time
 from signal import signal, SIGTERM, SIGHUP
 
-# define gpio pin's
 GPIO_YELLOW_PIN_NUM: int = 18
 
 gpio.setmode(gpio.BCM)
-
 gpio.setup(GPIO_YELLOW_PIN_NUM, gpio.OUT, initial=gpio.LOW)
 
 SLEEP: float = .4

@@ -9,17 +9,17 @@ import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 import time
 
-ENA: int = 5
-IN1: int = 6
-IN2: int = 13
+ENA_GPIO_PIN: int = 5
+IN1_GPIO_PIN: int = 6
+IN2_GPIO_PIN: int = 13
 
 gpio.setmode(gpio.BCM)
 
-gpio.setup(IN1, gpio.OUT)
-gpio.setup(IN2, gpio.OUT)
-gpio.setup(ENA, gpio.OUT)
+gpio.setup(IN1_GPIO_PIN, gpio.OUT, initial=gpio.LOW)
+gpio.setup(IN2_GPIO_PIN, gpio.OUT, initial=gpio.LOW)
+gpio.setup(ENA_GPIO_PIN, gpio.OUT, initial=gpio.LOW)
 
-pwm = gpio.PWM(ENA, 100)  # 100Hz PWM
+pwm = gpio.PWM(ENA_GPIO_PIN, 100)  # 100Hz PWM
 pwm.start(0)  # speed 0%
 
 def main(*args, **kwargs):
@@ -28,20 +28,20 @@ def main(*args, **kwargs):
         signal(SIGHUP, safe_exit)
         
         # motor forward
-        gpio.output(IN1, gpio.HIGH)
-        gpio.output(IN2, gpio.LOW)
+        gpio.output(IN1_GPIO_PIN, gpio.HIGH)
+        gpio.output(IN2_GPIO_PIN, gpio.LOW)
         pwm.ChangeDutyCycle(100)  # 100% speed
         time.sleep(5)
 
         # Motor stop
-        gpio.output(IN1, gpio.LOW)
-        gpio.output(IN2, gpio.LOW)
+        gpio.output(IN1_GPIO_PIN, gpio.LOW)
+        gpio.output(IN2_GPIO_PIN, gpio.LOW)
         pwm.ChangeDutyCycle(0)
         time.sleep(2)
 
         # Motor backward
-        gpio.output(IN1, gpio.LOW)
-        gpio.output(IN2, gpio.HIGH)
+        gpio.output(IN1_GPIO_PIN, gpio.LOW)
+        gpio.output(IN2_GPIO_PIN, gpio.HIGH)
         pwm.ChangeDutyCycle(10)
         time.sleep(5)
 

@@ -1,22 +1,18 @@
 #!/usr/bin/env python
 
+"""
+
+"""
+
 import RPi.GPIO as gpio
 import time
 from signal import signal, SIGTERM, SIGHUP
-import os
-import sys
 
-
-# define gpio pin's
 GPIO_GREEN_PIN_NUM: int = 16
 
-# setmode
 gpio.setmode(gpio.BCM)
-
-# setup
 gpio.setup(GPIO_GREEN_PIN_NUM, gpio.OUT, initial=gpio.LOW)
 
-# time
 SLEEP: float = .4
 
 
@@ -24,13 +20,14 @@ def main() -> None:
 	try:
 		signal(SIGTERM, safe_exit)
 		signal(SIGHUP, safe_exit)
+
 		while True:
 			gpio.output(GPIO_GREEN_PIN_NUM, gpio.HIGH)
 			time.sleep(SLEEP)
 			gpio.output(GPIO_GREEN_PIN_NUM, gpio.LOW)
 			time.sleep(SLEEP)
 	except KeyboardInterrupt as ex:
-		pass
+		print(ex.__str__())
 	finally:
 		gpio.cleanup()
 
