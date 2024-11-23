@@ -147,7 +147,7 @@ def turn_on_yellow_led():
 def turn_off_yellow_led():
     log(description="yellow led is off", api_url=request.base_url, headers=request.headers.__str__())
     subprocess.run(["pkill", "-f", "py-part/blink_yellow_led.py"])
-    
+
     return jsonify({
         "status_code": 200,
         "content": "ok",

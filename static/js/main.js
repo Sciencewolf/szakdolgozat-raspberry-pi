@@ -238,16 +238,16 @@ checkboxOnOffCooler.addEventListener('click', async () => {
 checkboxOnOffHeatingElement.addEventListener('click', async () => {
     if (checkboxOnOffHeatingElement.checked) {
         try {
-            const onCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-heating-element")
-            const response = await onCooler.json()
+            const onHeatingElement = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-heating-element")
+            const response = await onHeatingElement.json()
             console.log(response)
         } catch (error) {
             console.log(error)
         }
     } else {
         try {
-            const offCooler = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-heating-element")
-            const response = await offCooler.json()
+            const offHeatingElement = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-heating-element")
+            const response = await offHeatingElement.json()
             console.log(response)
         } catch (error) {
             console.log(error)
@@ -280,6 +280,7 @@ shutdown.addEventListener('click', async () => {
         document.body.style.cssText = "display: flex;justify-content: center;align-items: center;font-size: 40px;"
         document.body.innerHTML = ""
         const div = document.createElement('div')
+        div.className = "div-disconnected"
         div.innerHTML = `Disconnected at ${new Date().toISOString().split('T')[0]} ${new Date().toTimeString().split(' ')[0]}`
         document.body.appendChild(div)
         try {
@@ -315,8 +316,12 @@ btnEndpoints.addEventListener('click', async () => {
 })
 
 setInterval(async () => {
-    await tempHumSensor()
+    if (!document.querySelector(".div-disconnected")) {
+        await tempHumSensor()
+    }
 }, 10_000)
 setInterval(async () => {
-    await lidStatus()
+    if (!document.querySelector(".div-disconnected")) {
+        await lidStatus()
+    }
 }, 10_000)

@@ -22,7 +22,7 @@ gpio.setup(ENA, gpio.OUT)
 pwm = gpio.PWM(ENA, 100)  # 100Hz PWM
 pwm.start(0)  # speed 0%
 
-def main():
+def main(*args, **kwargs):
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
