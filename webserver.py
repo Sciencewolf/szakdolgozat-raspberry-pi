@@ -510,7 +510,18 @@ def shutdown():
         headers=request.headers.__str__()
     )
 
-    os.system("sudo shutdown -h now")
+    # Respond to the client before shutting down
+    response = jsonify({
+        "status_code": 200,
+        "content": "RasPi is shutting down...",
+        "timestamp": datetime.datetime.now()
+    })
+
+    # Trigger shutdown after response
+    shutdown_command = "sudo shutdown -h now"
+    os.system(shutdown_command)
+
+    return response
 
 
 if __name__ == "__main__":

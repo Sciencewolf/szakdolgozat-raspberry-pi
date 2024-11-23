@@ -1,7 +1,6 @@
 import os
 import subprocess
 from datetime import datetime
-from deprecated import deprecated
 
 import requests as re
 
@@ -38,6 +37,13 @@ class Utils:
 
     def __init__(self):
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # __static methods
+    def __on_led_factory(self, file_name: str) -> None:
+        subprocess.Popen([os.path.join(self.base_dir, f"py-part/{file_name}.py")])
+
+    def __off_led_factory(self, file_name: str) -> None:
+        subprocess.run(["pkill", "-f", f"py-part/{file_name}.py"])
 
     def __str__(self) -> str:
         return (f"---Utils--- "
@@ -114,12 +120,6 @@ class Utils:
 
 
     """ LED """
-    # __static methods
-    def __on_led_factory(self, file_name: str) -> None:
-        subprocess.Popen([os.path.join(self.base_dir, f"py-part/{file_name}.py")])
-
-    def __off_led_factory(self, file_name: str) -> None:
-        subprocess.run(["pkill", "-f", f"py-part/{file_name}.py"])
 
 
     def on_red_led(self) -> None:
