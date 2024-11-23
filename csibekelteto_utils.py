@@ -114,18 +114,23 @@ class Utils:
 
     def on_dc_motor_forward(self) -> None:
         subprocess.run([os.path.join(self.base_dir, "py-part/dc_motor_forward.py")])
+        subprocess.run([os.path.join(self.base_dir, "py-part/blink_yellow_led.py")])
 
     def off_dc_motor_forward(self) -> None:
         subprocess.run(["pkill", "-f", "py-part/dc_motor_forward.py"])
+        subprocess.run(["pkill", "-f", "py-part/blink_yellow_led.py"])
 
     def on_dc_motor_backward(self) -> None:
         subprocess.run([os.path.join(self.base_dir, "py-part/dc_motor_backward.py")])
+        subprocess.run([os.path.join(self.base_dir, "py-part/blink_yellow_led.py")])
 
     def off_dc_motor_backward(self) -> None:
         subprocess.run(["pkill", "-f", "py-part/dc_motor_backward.py"])
+        subprocess.run(["pkill", "-f", "py-part/blink_yellow_led.py"])
 
 
     """ LED """
+    # TODO: add for every component led indication
 
 
     def on_red_led(self) -> None:
