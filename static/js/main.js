@@ -277,7 +277,7 @@ checkboxOnOffDcMotorForward.addEventListener('click', async () => {
 })
 
 checkboxOnOffDcMotorBackward.addEventListener('click', async () => {
-    if (checkboxOnOffDcMotorForward.checked) {
+    if (checkboxOnOffDcMotorBackward.checked) {
         try {
             const onDcMotorBackward = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-dc-motor-backward")
             const response = await onDcMotorBackward.json()
