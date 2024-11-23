@@ -8,7 +8,8 @@ const humidity = document.getElementById("hum")
 const lid = document.getElementById("lid")
 const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
 const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
-const checkboxOnOffDcMotor = document.getElementById("checkbox-on-off-dc-motor")
+const checkboxOnOffDcMotorForward = document.getElementById("checkbox-on-off-dc-motor-forward")
+const checkboxOnOffDcMotorBackward = document.getElementById("checkbox-on-off-dc-motor-backward")
 const shutdown = document.getElementById("btn-shutdown")
 const btnEndpoints = document.getElementById("btn-endpoints")
 const divEndpoints = document.getElementById("div-endpoints")
@@ -255,19 +256,39 @@ checkboxOnOffHeatingElement.addEventListener('click', async () => {
     }
 })
 
-checkboxOnOffDcMotor.addEventListener('click', async () => {
-    if (checkboxOnOffDcMotor.checked) {
+checkboxOnOffDcMotorForward.addEventListener('click', async () => {
+    if (checkboxOnOffDcMotorForward.checked) {
         try {
-            const onDcMotor = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-dc-motor")
-            const response = await onDcMotor.json()
+            const onDcMotorForward = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-dc-motor-forward")
+            const response = await onDcMotorForward.json()
             console.log(response)
         } catch (error) {
             console.log(error)
         }
     } else {
         try {
-            const offDcMotor = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-dc-motor")
-            const response = await offDcMotor.json()
+            const offDcMotorForward = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-dc-motor-forward")
+            const response = await offDcMotorForward.json()
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+})
+
+checkboxOnOffDcMotorBackward.addEventListener('click', async () => {
+    if (checkboxOnOffDcMotorForward.checked) {
+        try {
+            const onDcMotorBackward = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-dc-motor-backward")
+            const response = await onDcMotorBackward.json()
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    } else {
+        try {
+            const offDcMotorBackward = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-dc-motor-backward")
+            const response = await offDcMotorBackward.json()
             console.log(response)
         } catch (error) {
             console.log(error)
