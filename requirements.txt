@@ -4,3 +4,4 @@ RPi.GPIO
 
 requests~=2.32.3
 Deprecated~=1.2.15
+gpiozero~=2.0.1

@@ -1,41 +1,32 @@
 #!/usr/bin/env python
 
-"""
-
-"""
-
-import RPi.GPIO as gpio
+from gpiozero import LED
 import time
-from signal import signal, SIGTERM, SIGHUP
+from signal import signal, SIGHUP, SIGTERM
 
-GPIO_GREEN_PIN_NUM: int = 16
-
-gpio.setmode(gpio.BCM)
-gpio.setup(GPIO_GREEN_PIN_NUM, gpio.OUT, initial=gpio.LOW)
+led = LED(16)
 
 SLEEP: float = .4
 
 
 def main() -> None:
-	try:
-		signal(SIGTERM, safe_exit)
-		signal(SIGHUP, safe_exit)
+    try:
+        signal(SIGTERM, safe_exit)
+        signal(SIGHUP, safe_exit)
 
-		while True:
-			gpio.output(GPIO_GREEN_PIN_NUM, gpio.HIGH)
-			time.sleep(SLEEP)
-			gpio.output(GPIO_GREEN_PIN_NUM, gpio.LOW)
-			time.sleep(SLEEP)
-	except KeyboardInterrupt as ex:
-		print(ex.__str__())
-	finally:
-		gpio.cleanup()
+        while True:
+            led.on()
+            time.sleep(SLEEP)
+            led.off()
+            time.sleep(SLEEP)
+    except Exception as ex:
+        print(ex.__str__())
 
 
 def safe_exit(signum, frame) -> None:
-	""" Provides a safe shutdown of the program """
-	exit(1)
+    """ provides safe exit from a program """
+    exit(1)
 
 
 if __name__ == "__main__":
-	main()
+    main()

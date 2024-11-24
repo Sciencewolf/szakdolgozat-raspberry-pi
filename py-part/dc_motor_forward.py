@@ -7,7 +7,6 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
-import time
 
 ENA_GPIO_PIN: int = 5
 IN1_GPIO_PIN: int = 6

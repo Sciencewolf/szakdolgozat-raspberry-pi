@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
-import RPi.GPIO as gpio
+from gpiozero import LED
 import time
-from signal import signal, SIGTERM, SIGHUP
+from signal import signal, SIGHUP, SIGTERM
 
-GPIO_RED_PIN_NUM: int = 21
-
-gpio.setmode(gpio.BCM)
-gpio.setup(GPIO_RED_PIN_NUM, gpio.OUT, initial=gpio.LOW)
+led = LED(21)
 
 SLEEP: float = .4
 
@@ -16,19 +13,18 @@ def main() -> None:
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
+
         while True:
-            gpio.output(GPIO_RED_PIN_NUM, gpio.HIGH)
+            led.on()
             time.sleep(SLEEP)
-            gpio.output(GPIO_RED_PIN_NUM, gpio.LOW)
+            led.off()
             time.sleep(SLEEP)
-    except KeyboardInterrupt as ex:
-        pass
-    finally:
-        gpio.cleanup()
+    except Exception as ex:
+        print(ex.__str__())
 
 
 def safe_exit(signum, frame) -> None:
-    """ Provides a safe shutdown of the program """
+    """ provides safe exit from a program """
     exit(1)
 
 

@@ -6,6 +6,7 @@ description:
 """
 
 import RPi.GPIO as GPIO
+from gpiozero import LED
 from signal import signal, SIGTERM, SIGHUP
 from datetime import datetime
 import time
@@ -13,12 +14,11 @@ import os
 
 
 SWITCH_GPIO_PIN: int = 4
-GPIO_RED_LED_PIN_NUM: int = 21 # led
+red_led = LED(21)
 
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(SWITCH_GPIO_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(GPIO_RED_LED_PIN_NUM, GPIO.OUT, initial=GPIO.LOW)
 
 home_dir = os.path.expanduser("~")
 
@@ -43,9 +43,9 @@ def main() -> None:
                 file.write("! Open")
 
                 for _ in range(5):
-                    GPIO.output(GPIO_RED_LED_PIN_NUM, GPIO.HIGH)
+                    red_led.on()
                     time.sleep(0.1)
-                    GPIO.output(GPIO_RED_LED_PIN_NUM, GPIO.LOW)
+                    red_led.off()
                     time.sleep(0.1)
     except Exception as ex:
         print(ex.__str__())

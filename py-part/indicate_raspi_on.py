@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 
-import RPi.GPIO as gpio
+from gpiozero import LED
 import time
 from signal import signal, SIGTERM, SIGHUP
 
 
-GPIO_BLUE_PIN_NUM: int = 20
-
-gpio.setmode(gpio.BCM)
-gpio.setup(GPIO_BLUE_PIN_NUM, gpio.OUT, initial=gpio.LOW)
+led = LED(20)
 
 SLEEP: float = .4
 
@@ -19,14 +16,12 @@ def main() -> None:
         signal(SIGHUP, safe_exit)
 
         for _ in range(5):
-            gpio.output(GPIO_BLUE_PIN_NUM, gpio.HIGH)
+            led.on()
             time.sleep(SLEEP)
-            gpio.output(GPIO_BLUE_PIN_NUM, gpio.LOW)
+            led.off()
             time.sleep(SLEEP)
     except Exception as ex:
         print(ex.__str__())
-    finally:
-        gpio.cleanup()
 
 
 def safe_exit(signum, frame) -> None:
