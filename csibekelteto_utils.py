@@ -156,22 +156,22 @@ class Utils:
 
 
     def on_red_led(self) -> None:
-        self.__on_led_factory("blink_rgb_red")
+        self.__on_led_factory("blink_red_led")
 
     def off_red_led(self) -> None:
-        self.__off_led_factory("blink_rgb_red")
+        self.__off_led_factory("blink_red_led")
 
     def on_green_led(self) -> None:
-        self.__on_led_factory("blink_rgb_green")
+        self.__on_led_factory("blink_green_led")
 
     def off_green_led(self) -> None:
-        self.__off_led_factory("blink_rgb_green")
+        self.__off_led_factory("blink_green_led")
 
     def on_blue_led(self) -> None:
-        self.__on_led_factory("blink_rgb_blue")
+        self.__on_led_factory("blink_blue_led")
 
     def off_blue_led(self) -> None:
-        self.__off_led_factory("blink_rgb_blue")
+        self.__off_led_factory("blink_blue_led")
 
     def on_yellow_led(self) -> None:
         self.__on_led_factory("blink_yellow_led")
