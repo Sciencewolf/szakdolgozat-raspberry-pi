@@ -36,7 +36,7 @@ def home():
 
     return render_template(
         template_name_or_list="index.html",
-        version="v2024.11.17",
+        version="v2024.11.23",
         title="Csibekeltető",
         header="Csibekeltető"
     )
