@@ -40,11 +40,6 @@ class Utils:
         self.processes = {}
 
     # __static methods
-    def __on_led_factory(self, file_name: str) -> None:
-        subprocess.Popen([os.path.join(self.base_dir, f"py-part/{file_name}.py")])
-
-    def __off_led_factory(self, file_name: str) -> None:
-        subprocess.run(["pkill", "-f", f"py-part/{file_name}.py"])
 
     def __start_process(self, name, script):
         """Start a subprocess in a new session and track it by name."""
@@ -117,38 +112,38 @@ class Utils:
     """ Cooler """
 
     def on_cooler(self) -> None:
-        subprocess.Popen([os.path.join(self.base_dir, "py-part/cooler.py")])
+        self.__start_process("cooler", "py-part/cooler.py")
 
     def off_cooler(self) -> None:
-        subprocess.run(["pkill", "-f", "py-part/cooler.py"])
+        self.__stop_process("cooler")
 
 
     """ Heating element """
 
     def on_heating_element(self) -> None:
-        subprocess.Popen([os.path.join(self.base_dir, "py-part/heating_element.py")])
+        self.__start_process("heating_element", "py-part/heating_element.py")
 
     def off_heating_element(self) -> None:
-        subprocess.run(["pkill", "-f", "py-part/heating_element.py"])
+        self.__stop_process("heating_element")
 
 
     """ DC Motor """
 
     def on_dc_motor_forward(self):
         self.__start_process("dc_motor_forward", "py-part/dc_motor_forward.py")
-        self.__start_process("blink_yellow_led", "py-part/blink_yellow_led.py")
+        self.__start_process("blink_yellow_led_dc_forward", "py-part/blink_yellow_led.py")
 
     def off_dc_motor_forward(self):
         self.__stop_process("dc_motor_forward")
-        self.__stop_process("blink_yellow_led")
+        self.__stop_process("blink_yellow_led_dc_forward")
 
     def on_dc_motor_backward(self):
         self.__start_process("dc_motor_backward", "py-part/dc_motor_backward.py")
-        self.__start_process("blink_yellow_led", "py-part/blink_yellow_led.py")
+        self.__start_process("blink_yellow_led_dc_backward", "py-part/blink_yellow_led.py")
 
     def off_dc_motor_backward(self):
         self.__stop_process("dc_motor_backward")
-        self.__stop_process("blink_yellow_led")
+        self.__stop_process("blink_yellow_led_dc_backward")
 
 
     """ LED """
@@ -156,34 +151,34 @@ class Utils:
 
 
     def on_red_led(self) -> None:
-        self.__on_led_factory("blink_red_led")
+        self.__start_process("blink_red_led", "py-part/blink_red_led.py")
 
     def off_red_led(self) -> None:
-        self.__off_led_factory("blink_red_led")
+        self.__stop_process("blink_red_led")
 
     def on_green_led(self) -> None:
-        self.__on_led_factory("blink_green_led")
+        self.__start_process("blink_green_led", "py-part/blink_green_led.py")
 
     def off_green_led(self) -> None:
-        self.__off_led_factory("blink_green_led")
+        self.__stop_process("blink_green_led")
 
     def on_blue_led(self) -> None:
-        self.__on_led_factory("blink_blue_led")
+        self.__start_process("blink_blue_led", "py-part/blink_blue_led.py")
 
     def off_blue_led(self) -> None:
-        self.__off_led_factory("blink_blue_led")
+        self.__stop_process("blink_blue_led")
 
     def on_yellow_led(self) -> None:
-        self.__on_led_factory("blink_yellow_led")
+        self.__start_process("blink_yellow_led", "py-part/blink_yellow_led.py")
 
     def off_yellow_led(self) -> None:
-        self.__off_led_factory("blink_yellow_led")
+        self.__stop_process("blink_yellow_led")
 
     def on_all_led(self) -> None:
-        self.__on_led_factory("rgb_led")
+        self.__start_process("rgb_led", "py-part/blink_rgb_led.py")
 
     def off_all_led(self) -> None:
-        self.__off_led_factory("rgb_led")
+        self.__stop_process("rgb_led")
 
 
     """ Other """
