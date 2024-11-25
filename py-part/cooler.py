@@ -7,6 +7,7 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
+from csibekelteto_utils import safe_exit
 
 RELAY_GPIO_PIN: int = 24
 
@@ -26,11 +27,6 @@ def main() -> None:
     finally:
         gpio.output(RELAY_GPIO_PIN, gpio.HIGH)
         gpio.cleanup()
-
-
-def safe_exit(signum, frame) -> None:
-    """ Provides a safe shutdown of the program """
-    exit(1)
 
 
 if __name__ == "__main__":

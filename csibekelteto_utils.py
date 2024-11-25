@@ -29,6 +29,11 @@ def log(
         file.write("--------\n")
 
 
+def safe_exit(signum, frame):
+    """ provides safe exit from a program """
+    exit(1)
+
+
 class Utils:
     """
         All actions inside csibekelteto will be implemented here.

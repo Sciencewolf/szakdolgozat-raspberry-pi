@@ -11,6 +11,7 @@ from signal import signal, SIGTERM, SIGHUP
 from datetime import datetime
 import time
 import os
+from csibekelteto_utils import safe_exit
 
 
 SWITCH_GPIO_PIN: int = 4
@@ -52,10 +53,6 @@ def main() -> None:
     finally:
         GPIO.cleanup()
 
-
-def safe_exit(signum, frame) -> None:
-    """ Provides a safe shutdown of the program """
-    exit(1)
 
 if __name__ == "__main__":
     main()
