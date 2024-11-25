@@ -2,7 +2,10 @@ import os
 import subprocess
 from datetime import datetime
 import signal
+from typing import AnyStr
+
 import requests as re
+from flask import jsonify, Response
 
 
 def log(
@@ -36,13 +39,18 @@ class Utils:
     """
 
     def __init__(self):
-        self.base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.processes = {}
+        self.base_dir: AnyStr = os.path.dirname(os.path.abspath(__file__))
+        self.lid_file_path = os.path.join(self.base_dir, "lid-status.txt")
+        self.processes: dict = {}
 
     # __static methods
 
-    def __start_process(self, name, script):
+    def __start_process(self, name, script, remove_from_poll=False):
         """Start a subprocess in a new session and track it by name."""
+
+        if remove_from_poll:
+            del self.processes[name] # added bc of lid
+
         if name in self.processes and self.processes[name].poll() is None:
             print(f"{name} is already running.")
             return
@@ -68,9 +76,48 @@ class Utils:
                 f"\n\tLast Emergency Shutdown: {self.last_emergency_shutdown()}"
                 f"\n---Utils---")
 
-    def is_lid_closed(self) -> bool:
-        r = re.get(os.getenv("API_URL_LID"))
-        return r.status_code == re.codes.ok
+
+    """ Utils method's """
+
+    def get_temp_and_hum(self, api_base_url: str, timestamp: datetime, headers: str) -> Response:
+        result = subprocess.run(
+            [os.path.join(self.base_dir, "py-part/temp_hum_sensor.py")],
+            capture_output=True,
+            text=True
+        )
+
+        if result.returncode != 0:
+            return jsonify({
+                "status_code": 404,
+                "content": "not found response",
+                "timestamp": timestamp
+            })
+
+        try:
+            with open(os.path.join(self.base_dir, "temp_hum.txt"), 'r') as file:
+                temp = file.readline().strip()
+                hum = file.readline().strip()
+                timestamp = file.readline().strip()
+        except FileNotFoundError as fnfe:
+            log(
+                reason="error at reading temp_hum.txt",
+                description=f"file not found {fnfe.__str__()}",
+                api_url=api_base_url,
+                headers=headers
+            )
+
+            return jsonify({
+                "status_code": 404,
+                "content": "not found response",
+                "timestamp": timestamp
+            })
+
+        return jsonify({
+            "temp": temp,
+            "hum": hum,
+            "timestamp": timestamp
+        })
+
 
     def is_temperature_normal(self) -> bool:
         pass
@@ -108,6 +155,41 @@ class Utils:
         """
         with open("hatching_date.txt", 'w') as file:
             file.write(datetime.now().__str__())
+
+
+    """ Lid """
+
+    def lid_status(self, api_base_url: str, timestamp: datetime, headers: str) -> Response:
+        self.__start_process("lid", "py-part/switch.py", True)
+
+        if not os.path.exists(self.lid_file_path):
+            log(
+                description="lid status file does not exists",
+                api_url=api_base_url
+            )
+
+            return jsonify({
+                "status_code": 404,
+                "lid": "undefined",
+                "timestamp": timestamp
+            })
+
+        with open(self.lid_file_path, 'r') as file:
+            log(
+                description="access lid status file",
+                api_url=api_base_url,
+                headers=headers
+            )
+
+            lines = file.readlines()
+            for line in lines:
+                if line.startswith("!"):
+                    return jsonify({
+                        "status_code": 200,
+                        "lid": line.split(" ")[1],
+                        "timestamp": timestamp
+                    })
+
 
     """ Cooler """
 
@@ -182,6 +264,10 @@ class Utils:
 
 
     """ Other """
+
+    def shutdown(self) -> None:
+        shutdown_command = "sudo shutdown -h now"
+        os.system(shutdown_command)
 
     def health(self) -> None:
         """ Green LED """

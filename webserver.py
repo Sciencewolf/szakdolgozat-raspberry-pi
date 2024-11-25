@@ -4,7 +4,6 @@ import datetime
 
 from flask import Flask, jsonify, render_template, Response
 from flask_cors import CORS
-import subprocess
 import os
 from flask import request
 from csibekelteto_utils import Utils
@@ -16,11 +15,8 @@ CORS(app)
 # Get the base directory where the Flask app is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Get the home directory
-home_dir = os.path.expanduser("~")
-
 # Create the full path for the text file
-lid_file_path = os.path.join(home_dir, "lid-status.txt")
+lid_file_path = os.path.join(base_dir, "lid-status.txt")
 
 # Csibekelteto utils
 utils: Utils = Utils()
@@ -44,7 +40,7 @@ def home():
 """ hatching """
 
 @app.route("/prepare-hatching")
-def prepare_hatching():
+def prepare_hatching() -> Response:
     log(
         description="preparing hatching",
         api_url=request.base_url,
@@ -59,7 +55,7 @@ def prepare_hatching():
     })
 
 @app.route("/start-hatching", methods=['GET'])
-def start_hatching():
+def start_hatching() -> Response:
     log(
         description="starting hatching",
         api_url=request.base_url,
@@ -74,7 +70,7 @@ def start_hatching():
     })
 
 
-@app.route("/is-start-hatching")
+@app.route("/is-start-hatching", methods=['GET'])
 def is_start_hatching() -> Response:
     """ TODO: check if hatching is started """
     return jsonify({})
@@ -82,7 +78,7 @@ def is_start_hatching() -> Response:
 """ red led """
 
 @app.route("/on-red-led", methods=['GET'])
-def turn_on_red_led():
+def turn_on_red_led() -> Response:
     log(
         description="red led is on",
         api_url=request.base_url,
@@ -98,7 +94,7 @@ def turn_on_red_led():
 
 
 @app.route("/off-red-led", methods=['GET'])
-def turn_off_red_led():
+def turn_off_red_led() -> Response:
     log(
         description="red led is off",
         api_url=request.base_url,
@@ -115,7 +111,7 @@ def turn_off_red_led():
 """ green led """
 
 @app.route("/on-green-led", methods=['GET'])
-def turn_on_green_led():
+def turn_on_green_led() -> Response:
     log(
         description="green led is on",
         api_url=request.base_url,
@@ -131,7 +127,7 @@ def turn_on_green_led():
 
 
 @app.route("/off-green-led", methods=['GET'])
-def turn_off_green_led():
+def turn_off_green_led() -> Response:
     log(
         description="green led is off",
         api_url=request.base_url,
@@ -148,7 +144,7 @@ def turn_off_green_led():
 """ blue led """
 
 @app.route("/on-blue-led", methods=['GET'])
-def turn_on_blue_led():
+def turn_on_blue_led() -> Response:
     log(
         description="blue led is on",
         api_url=request.base_url,
@@ -164,7 +160,7 @@ def turn_on_blue_led():
 
 
 @app.route("/off-blue-led", methods=['GET'])
-def turn_off_blue_led():
+def turn_off_blue_led() -> Response:
     log(
         description="blue led is off",
         api_url=request.base_url,
@@ -180,8 +176,8 @@ def turn_off_blue_led():
 
 """ yellow led """
 
-@app.route("/on-yellow-led")
-def turn_on_yellow_led():
+@app.route("/on-yellow-led", methods=['GET'])
+def turn_on_yellow_led() -> Response:
     log(
         description="yellow led is on",
         api_url=request.base_url,
@@ -196,8 +192,8 @@ def turn_on_yellow_led():
     })
 
 
-@app.route("/off-yellow-led")
-def turn_off_yellow_led():
+@app.route("/off-yellow-led", methods=['GET'])
+def turn_off_yellow_led() -> Response:
     log(
         description="yellow led is off",
         api_url=request.base_url,
@@ -214,7 +210,7 @@ def turn_off_yellow_led():
 """ all led """
 
 @app.route("/on-all-led", methods=['GET'])
-def turn_on_all_led():
+def turn_on_all_led() -> Response:
     log(
         description="all led is on",
         api_url=request.base_url,
@@ -230,7 +226,7 @@ def turn_on_all_led():
 
 
 @app.route("/off-all-led", methods=['GET'])
-def turn_off_all_led():
+def turn_off_all_led() -> Response:
     log(
         description="all led is off",
         api_url=request.base_url,
@@ -247,54 +243,23 @@ def turn_off_all_led():
 """ get temp and hum """
 
 @app.route("/get-temp-hum", methods=['GET'])
-def get_temperature_and_humidity_from_sensor():
+def get_temperature_and_humidity_from_sensor() -> Response:
     log(
         description="get temperature and humidity",
         api_url=request.base_url,
         headers=request.headers.__str__()
     )
-    result = subprocess.run(
-        [os.path.join(base_dir, "py-part/temp_hum_sensor.py")],
-        capture_output=True,
-        text=True
+
+    return utils.get_temp_and_hum(
+        api_base_url=request.base_url,
+        timestamp=datetime.datetime.now(),
+        headers=request.headers.__str__()
     )
-
-    if result.returncode != 0:
-        return jsonify({
-            "status_code": 404,
-            "content": "not found response",
-            "timestamp": datetime.datetime.now()
-        })
-
-    try:
-        with open(os.path.join(base_dir, "temp_hum.txt"), 'r') as file:
-            temp = file.readline().strip()
-            hum = file.readline().strip()
-            timestamp = file.readline().strip()
-    except FileNotFoundError as fnfe:
-        log(
-            reason="error at reading temp_hum.txt",
-            description=f"file not found {fnfe.__str__()}",
-            api_url=request.base_url,
-            headers=request.headers.__str__()
-        )
-
-        return jsonify({
-            "status_code": 404,
-            "content": "not found response",
-            "timestamp": datetime.datetime.now()
-        })
-
-    return jsonify({
-        "temp": temp,
-        "hum": hum,
-        "timestamp": timestamp
-    })
 
 """ set temp and hum """
 
-@app.route("/set-temp", methods=['GET'])
-def set_temperature():
+@app.route("/set-temp", methods=['GET', 'PUT'])
+def set_temperature() -> Response:
     log(
         description="set temperature",
         api_url=request.base_url,
@@ -307,8 +272,8 @@ def set_temperature():
     })
 
 
-@app.route("/set-hum", methods=['GET'])
-def set_humidity():
+@app.route("/set-hum", methods=['GET', 'PUT'])
+def set_humidity() -> Response:
     log(
         description="set humidity",
         api_url=request.base_url,
@@ -323,44 +288,24 @@ def set_humidity():
 """ lid/limit switch"""
 
 @app.route("/get-lid-status", methods=['GET'])
-def get_lid_status():
+def get_lid_status() -> Response:
     log(
         description="get lid status [on/off]",
         api_url=request.base_url,
         headers=request.headers.__str__()
     )
-    subprocess.Popen([os.path.join(base_dir, "py-part/switch.py")])
 
-    if not os.path.exists(lid_file_path):
-        log(
-            description="lid status file does not exists",
-            api_url=request.base_url
-        )
-        return jsonify({
-            "status_code": 404,
-            "lid": "undefined",
-            "timestamp": datetime.datetime.now()
-        })
+    return utils.lid_status(
+        api_base_url=request.base_url,
+        timestamp=datetime.datetime.now(),
+        headers=request.headers.__str__()
+    )
 
-    with open(lid_file_path, 'r') as file:
-        log(
-            description="access lid status file",
-            api_url=request.base_url,
-            headers=request.headers.__str__()
-        )
-        lines = file.readlines()
-        for line in lines:
-            if line.startswith("!"):
-                return jsonify({
-                    "status_code": 200,
-                    "lid": line.split(" ")[1],
-                    "timestamp": datetime.datetime.now()
-                })
 
 """ cooler """
 
 @app.route("/on-cooler", methods=['GET', 'PUT'])
-def turn_on_cooler():
+def turn_on_cooler() -> Response:
     log(
         description="turn on cooler",
         api_url=request.base_url,
@@ -376,7 +321,7 @@ def turn_on_cooler():
 
 
 @app.route("/off-cooler", methods=['GET', 'PUT'])
-def turn_off_cooler():
+def turn_off_cooler() -> Response:
     log(
         description="turn off cooler",
         api_url=request.base_url,
@@ -392,8 +337,8 @@ def turn_off_cooler():
 
 """ heating element """
 
-@app.route("/on-heating-element")
-def turn_on_heating_element():
+@app.route("/on-heating-element", methods=['GET'])
+def turn_on_heating_element() -> Response:
     log(
         description="turn on heating element",
         api_url=request.base_url,
@@ -408,8 +353,8 @@ def turn_on_heating_element():
     })
 
 
-@app.route("/off-heating-element")
-def turn_off_heating_element():
+@app.route("/off-heating-element", methods=['GET'])
+def turn_off_heating_element() -> Response:
     log(
         description="turn off heating element",
         api_url=request.base_url,
@@ -425,8 +370,8 @@ def turn_off_heating_element():
 
 """ dc motor """
 
-@app.route("/on-dc-motor-forward")
-def turn_on_dc_motor_forward():
+@app.route("/on-dc-motor-forward", methods=['GET'])
+def turn_on_dc_motor_forward() -> Response:
     log(
         description="turn on dc motor forward",
         api_url=request.base_url,
@@ -440,8 +385,8 @@ def turn_on_dc_motor_forward():
         "timestamp": datetime.datetime.now()
     })
 
-@app.route("/off-dc-motor-forward")
-def turn_off_dc_motor_forward():
+@app.route("/off-dc-motor-forward", methods=['GET'])
+def turn_off_dc_motor_forward() -> Response:
     log(
         description="turn off dc motor forward",
         api_url=request.base_url,
@@ -455,8 +400,8 @@ def turn_off_dc_motor_forward():
         "timestamp": datetime.datetime.now()
     })
 
-@app.route("/on-dc-motor-backward")
-def turn_on_dc_motor_backward():
+@app.route("/on-dc-motor-backward", methods=['GET'])
+def turn_on_dc_motor_backward() -> Response:
     log(
         description="turn on dc motor backward",
         api_url=request.base_url,
@@ -471,8 +416,8 @@ def turn_on_dc_motor_backward():
     })
 
 
-@app.route("/off-dc-motor-backward")
-def turn_off_dc_motor_backward():
+@app.route("/off-dc-motor-backward", methods=['GET'])
+def turn_off_dc_motor_backward() -> Response:
     log(
         description="turn off dc motor backward",
         api_url=request.base_url,
@@ -489,7 +434,7 @@ def turn_off_dc_motor_backward():
 """ other """
 
 @app.route("/endpoints", methods=['GET'])
-def endpoints():
+def endpoints() -> Response:
     log(
         description="get api endpoints",
         api_url=request.base_url,
@@ -505,7 +450,7 @@ def endpoints():
 
 
 @app.route("/overall", methods=['GET'])
-def overall():
+def overall() -> Response:
     log(
         description="overall",
         api_url=request.base_url,
@@ -520,7 +465,7 @@ def overall():
     })
 
 
-@app.route("/alive")
+@app.route("/alive", methods=['GET'])
 def alive() -> Response:
     """ TODO: the webserver will check if maintenance or not """
     log(
@@ -533,7 +478,7 @@ def alive() -> Response:
 
 
 @app.route("/shutdown")
-def shutdown():
+def shutdown() -> Response:
     """ Make some safety check??? """
     log(
         description="turn off raspi/csibekelteto",
@@ -547,10 +492,7 @@ def shutdown():
         "content": "RasPi is shutting down...",
         "timestamp": datetime.datetime.now()
     })
-
-    # Trigger shutdown after response
-    shutdown_command = "sudo shutdown -h now"
-    os.system(shutdown_command)
+    utils.shutdown()
 
     return response
 

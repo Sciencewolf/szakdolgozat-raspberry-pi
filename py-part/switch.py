@@ -20,9 +20,9 @@ GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(SWITCH_GPIO_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-home_dir = os.path.expanduser("~")
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
-lid_file_path = os.path.join(home_dir, "lid-status.txt")
+lid_file_path = os.path.join(base_dir, "../lid-status.txt")
 
 
 def main() -> None:
