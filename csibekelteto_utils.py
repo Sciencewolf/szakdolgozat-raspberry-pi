@@ -45,11 +45,8 @@ class Utils:
 
     # __static methods
 
-    def __start_process(self, name, script, remove_from_poll=False):
+    def __start_process(self, name, script):
         """Start a subprocess in a new session and track it by name."""
-
-        if remove_from_poll:
-            del self.processes[name] # added bc of lid
 
         if name in self.processes and self.processes[name].poll() is None:
             print(f"{name} is already running.")
@@ -160,7 +157,7 @@ class Utils:
     """ Lid """
 
     def lid_status(self, api_base_url: str, timestamp: datetime, headers: str) -> Response:
-        self.__start_process("lid", "py-part/switch.py", True)
+        subprocess.Popen([os.path.join(self.base_dir, "py-part/switch.py")])
 
         if not os.path.exists(self.lid_file_path):
             log(
