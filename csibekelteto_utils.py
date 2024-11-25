@@ -2,9 +2,6 @@ import os
 import subprocess
 from datetime import datetime
 import signal
-from typing import AnyStr
-
-import requests as re
 from flask import jsonify, Response
 
 
@@ -39,8 +36,8 @@ class Utils:
     """
 
     def __init__(self):
-        self.base_dir: AnyStr = os.path.dirname(os.path.abspath(__file__))
-        self.lid_file_path = os.path.join(self.base_dir, "lid-status.txt")
+        self.base_dir: str = os.path.dirname(os.path.abspath(__file__))
+        self.lid_file_path: str = os.path.join(self.base_dir, "lid-status.txt")
         self.processes: dict = {}
 
     # __static methods
@@ -157,7 +154,25 @@ class Utils:
     """ Lid """
 
     def lid_status(self, api_base_url: str, timestamp: datetime, headers: str) -> Response:
-        subprocess.Popen([os.path.join(self.base_dir, "py-part/switch.py")])
+        result = subprocess.run(
+            [os.path.join(self.base_dir, "py-part/switch.py")],
+            capture_output=True,
+            text=True
+        )
+
+        if result.returncode != 0:
+            log(
+                reason="error at switch",
+                description="not found",
+                api_url=api_base_url,
+                headers=headers
+            )
+
+            return jsonify({
+                "status_code": 404,
+                "content": "error at lid",
+                "timestamp": timestamp
+            })
 
         if not os.path.exists(self.lid_file_path):
             log(
@@ -201,6 +216,7 @@ class Utils:
 
     def on_heating_element(self) -> None:
         self.__start_process("heating_element", "py-part/heating_element.py")
+        self.indicate_heating_element()
 
     def off_heating_element(self) -> None:
         self.__stop_process("heating_element")
@@ -297,11 +313,7 @@ class Utils:
 
 def main() -> None:
     utils: Utils = Utils()
-    import time
-
-    while True:
-        utils.run()
-        time.sleep(10)
+    print(utils.processes)
 
 
 if __name__ == "__main__":
