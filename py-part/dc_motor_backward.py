@@ -7,7 +7,6 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
-from csibekelteto_utils import safe_exit
 
 ENA_GPIO_PIN: int = 5
 IN1_GPIO_PIN: int = 6
@@ -38,6 +37,11 @@ def main(*args, **kwargs):
     finally:
         pwm.stop()
         gpio.cleanup()
+
+
+def safe_exit(signum, frame) -> None:
+    """ Provides a safe shutdown of the program """
+    exit(1)
 
 
 if __name__ == "__main__":

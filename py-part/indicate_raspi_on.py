@@ -3,7 +3,6 @@
 from gpiozero import LED
 import time
 from signal import signal, SIGTERM, SIGHUP
-from csibekelteto_utils import safe_exit
 
 
 led = LED(20)
@@ -23,6 +22,11 @@ def main() -> None:
             time.sleep(SLEEP)
     except Exception as ex:
         print(ex.__str__())
+
+
+def safe_exit(signum, frame) -> None:
+    """ Provides a safe shutdown of the program """
+    exit(1)
 
 
 if __name__ == "__main__":
