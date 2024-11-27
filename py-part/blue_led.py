@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 
 from gpiozero import LED
 import time
@@ -14,13 +15,19 @@ def main() -> None:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
-        while True:
-            led.on()
-            time.sleep(SLEEP)
-            led.off()
-            time.sleep(SLEEP)
+        if sys.argv[1] == "blink" and len(sys.argv) == 2:
+            while True:
+                led.on()
+                time.sleep(SLEEP)
+                led.off()
+                time.sleep(SLEEP)
+        elif sys.argv[1] == 'hold' and len(sys.argv) == 2 :
+            while True:
+                led.on()
     except Exception as ex:
         print(ex.__str__())
+    finally:
+        led.off()
 
 
 def safe_exit(signum, frame) -> None:

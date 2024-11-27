@@ -29,6 +29,17 @@ def log(
         file.write("--------\n")
 
 
+LED_PINS: dict = {
+    "red": 17,
+    "green": 27,
+    "white": 22,
+    "orange": 5,
+    "yellow": 6,
+    "purple": 13,
+    "blue": 19
+}
+
+
 class Utils:
     """
         All actions inside csibekelteto will be implemented here.
@@ -41,7 +52,7 @@ class Utils:
         self.processes: dict = {}
         self.led_panel: dict = {}
 
-    # __static methods
+    # __private methods
 
     def __start_process(self, name, script) -> None:
         """Start a subprocess in a new session and track it by name."""
@@ -223,7 +234,7 @@ class Utils:
 
     def on_dc_motor_forward(self):
         self.__start_process("dc_motor_forward", "py-part/dc_motor_forward.py")
-        self.__start_process("blink_yellow_led_dc_forward", "py-part/blink_yellow_led.py")
+        self.__start_process("blink_yellow_led_dc_forward", "py-part/yellow_led.py")
 
     def off_dc_motor_forward(self):
         self.__stop_process("dc_motor_forward")
@@ -231,7 +242,7 @@ class Utils:
 
     def on_dc_motor_backward(self):
         self.__start_process("dc_motor_backward", "py-part/dc_motor_backward.py")
-        self.__start_process("blink_yellow_led_dc_backward", "py-part/blink_yellow_led.py")
+        self.__start_process("blink_yellow_led_dc_backward", "py-part/yellow_led.py")
 
     def off_dc_motor_backward(self):
         self.__stop_process("dc_motor_backward")
@@ -242,43 +253,43 @@ class Utils:
     # TODO: add for every component led indication
 
     def on_red_led(self) -> None:
-        self.__start_process("blink_red_led", "py-part/blink_red_led.py")
+        self.__start_process("blink_red_led", "py-part/red_led.py")
 
     def off_red_led(self) -> None:
         self.__stop_process("blink_red_led")
 
     def on_green_led(self) -> None:
-        self.__start_process("blink_green_led", "py-part/blink_green_led.py")
+        self.__start_process("blink_green_led", "py-part/green_led.py")
 
     def off_green_led(self) -> None:
         self.__stop_process("blink_green_led")
 
     def on_white_led(self) -> None:
-        self.__start_process("blink_white_led", "py-part/blink_white_led.py")
+        self.__start_process("blink_white_led", "py-part/white_led.py")
 
     def off_white_led(self) -> None:
         self.__stop_process("blink_white_led")
 
     def on_orange_led(self) -> None:
-        self.__start_process("blink_orange_led", "py-part/blink_orange_led.py")
+        self.__start_process("blink_orange_led", "py-part/orange_led.py")
 
     def off_orange_led(self) -> None:
         self.__stop_process("blink_orange_led")
 
     def on_yellow_led(self) -> None:
-        self.__start_process("blink_yellow_led", "py-part/blink_yellow_led.py")
+        self.__start_process("blink_yellow_led", "py-part/yellow_led.py")
 
     def off_yellow_led(self) -> None:
         self.__stop_process("blink_yellow_led")
 
     def on_purple_led(self) -> None:
-        self.__start_process("blink_purple_led", "py-part/blink_purple_led.py")
+        self.__start_process("blink_purple_led", "py-part/purple_led.py")
 
     def off_purple_led(self) -> None:
         self.__stop_process("blink_purple_led")
 
     def on_blue_led(self) -> None:
-        self.__start_process("blink_blue_led", "py-part/blink_blue_led.py")
+        self.__start_process("blink_blue_led", "py-part/blue_led.py")
 
     def off_blue_led(self) -> None:
         self.__stop_process("blink_blue_led")
