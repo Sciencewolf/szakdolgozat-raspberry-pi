@@ -27,7 +27,7 @@ def home():
     log(
         description="Home page loaded",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
 
     return render_template(
@@ -44,7 +44,7 @@ def prepare_hatching() -> Response:
     log(
         description="preparing hatching",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.prepare_hatching()
 
@@ -59,7 +59,7 @@ def start_hatching() -> Response:
     log(
         description="starting hatching",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.start_hatching()
 
@@ -82,7 +82,7 @@ def turn_on_red_led() -> Response:
     log(
         description="red led is on",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_red_led()
 
@@ -98,7 +98,7 @@ def turn_off_red_led() -> Response:
     log(
         description="red led is off",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_red_led()
 
@@ -115,7 +115,7 @@ def turn_on_green_led() -> Response:
     log(
         description="green led is on",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_green_led()
 
@@ -131,7 +131,7 @@ def turn_off_green_led() -> Response:
     log(
         description="green led is off",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_green_led()
 
@@ -148,7 +148,7 @@ def turn_on_blue_led() -> Response:
     log(
         description="blue led is on",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_blue_led()
 
@@ -164,7 +164,7 @@ def turn_off_blue_led() -> Response:
     log(
         description="blue led is off",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_blue_led()
 
@@ -181,7 +181,7 @@ def turn_on_yellow_led() -> Response:
     log(
         description="yellow led is on",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_yellow_led()
 
@@ -197,7 +197,7 @@ def turn_off_yellow_led() -> Response:
     log(
         description="yellow led is off",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_yellow_led()
 
@@ -214,7 +214,7 @@ def turn_on_all_led() -> Response:
     log(
         description="all led is on",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_all_led()
 
@@ -230,7 +230,7 @@ def turn_off_all_led() -> Response:
     log(
         description="all led is off",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_all_led()
 
@@ -247,13 +247,13 @@ def get_temperature_and_humidity_from_sensor() -> Response:
     log(
         description="get temperature and humidity",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
 
     return utils.get_temp_and_hum(
         api_base_url=request.base_url,
         timestamp=datetime.datetime.now(),
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
 
 """ set temp and hum """
@@ -263,7 +263,7 @@ def set_temperature() -> Response:
     log(
         description="set temperature",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     temp: str = request.args.get("t")  # url/set-temp?t=40.1 | type: float
     return jsonify({
@@ -277,7 +277,7 @@ def set_humidity() -> Response:
     log(
         description="set humidity",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     hum: str = request.args.get("h")  # url/set-hum?h=62.5 | type: float
     return jsonify({
@@ -292,13 +292,13 @@ def get_lid_status() -> Response:
     log(
         description="get lid status [on/off]",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
 
     return utils.lid_status(
         api_base_url=request.base_url,
         timestamp=datetime.datetime.now(),
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
 
 
@@ -309,7 +309,7 @@ def turn_on_cooler() -> Response:
     log(
         description="turn on cooler",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_cooler()
 
@@ -325,7 +325,7 @@ def turn_off_cooler() -> Response:
     log(
         description="turn off cooler",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_cooler()
 
@@ -342,7 +342,7 @@ def turn_on_heating_element() -> Response:
     log(
         description="turn on heating element",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_heating_element()
 
@@ -358,7 +358,7 @@ def turn_off_heating_element() -> Response:
     log(
         description="turn off heating element",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_heating_element()
 
@@ -375,7 +375,7 @@ def turn_on_dc_motor_forward() -> Response:
     log(
         description="turn on dc motor forward",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_dc_motor_forward()
 
@@ -390,7 +390,7 @@ def turn_off_dc_motor_forward() -> Response:
     log(
         description="turn off dc motor forward",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_dc_motor_forward()
 
@@ -405,7 +405,7 @@ def turn_on_dc_motor_backward() -> Response:
     log(
         description="turn on dc motor backward",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.on_dc_motor_backward()
 
@@ -421,7 +421,7 @@ def turn_off_dc_motor_backward() -> Response:
     log(
         description="turn off dc motor backward",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     utils.off_dc_motor_backward()
 
@@ -438,7 +438,7 @@ def endpoints() -> Response:
     log(
         description="get api endpoints",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
     lst: list = ["%s" % rule for rule in app.url_map.iter_rules()][1:]
 
@@ -454,7 +454,7 @@ def overall() -> Response:
     log(
         description="overall",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
 
     return jsonify({
@@ -471,7 +471,7 @@ def alive() -> Response:
     log(
         description="checking if csibekelteto is alive",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
 
     return jsonify({"response": "csibekelteto is alive"})
@@ -483,7 +483,7 @@ def shutdown() -> Response:
     log(
         description="turn off raspi/csibekelteto",
         api_url=request.base_url,
-        headers=request.headers.__str__()
+        headers=request.user_agent.string
     )
 
     # Respond to the client before shutting down
