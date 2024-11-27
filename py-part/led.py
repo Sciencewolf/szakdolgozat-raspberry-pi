@@ -5,7 +5,8 @@ import sys
 from gpiozero import LED
 import time
 from signal import signal, SIGHUP, SIGTERM
-from ..csibekelteto_utils import LED_PINS
+# if error -> export PYTHONPATH=/home/aron/szakdolgozat-raspberry-pi:$PYTHONPATH
+from csibekelteto_utils import LED_PINS
 
 led = LED(LED_PINS.get(sys.argv[1]))
 
