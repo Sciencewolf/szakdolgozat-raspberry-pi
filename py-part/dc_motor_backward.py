@@ -8,9 +8,9 @@ description:
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 
-ENA_GPIO_PIN: int = 5
-IN1_GPIO_PIN: int = 6
-IN2_GPIO_PIN: int = 13
+ENA_GPIO_PIN: int = 16
+IN1_GPIO_PIN: int = 20
+IN2_GPIO_PIN: int = 21
 
 gpio.setmode(gpio.BCM)
 

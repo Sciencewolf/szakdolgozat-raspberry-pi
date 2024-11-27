@@ -1,7 +1,7 @@
 const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
 const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led")
 const checkboxOnOffWhiteLed = document.getElementById("checkbox-on-off-white-led")
-const checkboxOnOffOrangeLed = document.getElementById("checkbox-on-off-orane-led")
+const checkboxOnOffOrangeLed = document.getElementById("checkbox-on-off-orange-led")
 const checkboxOnOffYellowLed = document.getElementById("checkbox-on-off-yellow-led")
 const checkboxOnOffPurpleLed = document.getElementById("checkbox-on-off-purple-led")
 const checkboxOnOffBlueLed = document.getElementById("checkbox-on-off-blue-led")
@@ -131,7 +131,7 @@ checkboxOnOffWhiteLed.addEventListener('click', async () => {
         }
     } else {
         try {
-            const offWhiteLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-green-led")
+            const offWhiteLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-white-led")
             const response = await offWhiteLed.json()
             console.log(response)
             changeTitle("WhiteLED is OFF")

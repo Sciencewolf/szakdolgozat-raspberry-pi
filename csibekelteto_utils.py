@@ -253,11 +253,17 @@ class Utils:
     def off_green_led(self) -> None:
         self.__stop_process("blink_green_led")
 
-    def on_blue_led(self) -> None:
-        self.__start_process("blink_blue_led", "py-part/blink_blue_led.py")
+    def on_white_led(self) -> None:
+        self.__start_process("blink_white_led", "py-part/blink_white_led.py")
 
-    def off_blue_led(self) -> None:
-        self.__stop_process("blink_blue_led")
+    def off_white_led(self) -> None:
+        self.__stop_process("blink_white_led")
+
+    def on_orange_led(self) -> None:
+        self.__start_process("blink_orange_led", "py-part/blink-orange-led.py")
+
+    def off_orange_led(self) -> None:
+        self.__stop_process("blink_orange_led")
 
     def on_yellow_led(self) -> None:
         self.__start_process("blink_yellow_led", "py-part/blink_yellow_led.py")
@@ -265,11 +271,18 @@ class Utils:
     def off_yellow_led(self) -> None:
         self.__stop_process("blink_yellow_led")
 
-    def on_all_led(self) -> None:
-        self.__start_process("rgb_led", "py-part/blink_rgb_led.py")
+    def on_purple_led(self) -> None:
+        self.__start_process("blink_purple_led", "py-part/blink_purple_led.py")
 
-    def off_all_led(self) -> None:
-        self.__stop_process("rgb_led")
+    def off_purple_led(self) -> None:
+        self.__stop_process("blink_purple_led")
+
+    def on_blue_led(self) -> None:
+        self.__start_process("blink_blue_led", "py-part/blink_blue_led.py")
+
+    def off_blue_led(self) -> None:
+        self.__stop_process("blink_blue_led")
+
 
     """ Other """
 

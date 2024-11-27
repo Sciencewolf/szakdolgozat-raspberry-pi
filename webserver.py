@@ -141,36 +141,68 @@ def turn_off_green_led() -> Response:
         "timestamp": datetime.datetime.now()
     })
 
-""" blue led """
+""" white led"""
 
-@app.route("/on-blue-led", methods=['GET'])
-def turn_on_blue_led() -> Response:
+@app.route("/on-white-led", methods=['GET'])
+def turn_on_white_led() -> Response:
     log(
-        description="blue led is on",
+        description="white led is on",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
-    utils.on_blue_led()
+    utils.on_white_led()
 
     return jsonify({
         "status_code": 200,
-        "content": "blue led is on",
+        "content": "white led is on",
         "timestamp": datetime.datetime.now()
     })
 
 
-@app.route("/off-blue-led", methods=['GET'])
-def turn_off_blue_led() -> Response:
+@app.route("/off-white-led", methods=['GET'])
+def turn_off_white_led() -> Response:
     log(
-        description="blue led is off",
+        description="white led is off",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
-    utils.off_blue_led()
+    utils.off_white_led()
 
     return jsonify({
         "status_code": 200,
-        "content": "blue led is off",
+        "content": "white led is off",
+        "timestamp": datetime.datetime.now()
+    })
+
+""" orange led """
+
+@app.route("/on-orange-led")
+def turn_on_orange_led() -> Response:
+    log(
+        description="orange led is on",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+    utils.on_orange_led()
+
+    return jsonify({
+        "status_code": 200,
+        "content": "orange led is on",
+        "timestamp": datetime.datetime.now()
+    })
+
+@app.route("/off-orange-led")
+def turn_off_orange_led() -> Response:
+    log(
+        description="orange led is off",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+    utils.off_orange_led()
+
+    return jsonify({
+        "status_code": 200,
+        "content": "orange led is off",
         "timestamp": datetime.datetime.now()
     })
 
@@ -207,38 +239,74 @@ def turn_off_yellow_led() -> Response:
         "timestamp": datetime.datetime.now()
     })
 
-""" all led """
+""" purple led """
 
-@app.route("/on-all-led", methods=['GET'])
-def turn_on_all_led() -> Response:
+@app.route("/on-purple-led", methods=['GET'])
+def turn_on_purple_led() -> Response:
     log(
-        description="all led is on",
+        description="purple led is on",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
-    utils.on_all_led()
+    utils.on_purple_led()
 
     return jsonify({
         "status_code": 200,
-        "content": "all led is on",
+        "content": "purple led is on",
         "timestamp": datetime.datetime.now()
     })
 
 
-@app.route("/off-all-led", methods=['GET'])
-def turn_off_all_led() -> Response:
+@app.route("/off-purple-led", methods=['GET'])
+def turn_off_purple_led() -> Response:
     log(
-        description="all led is off",
+        description="purple led is off",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
-    utils.off_all_led()
+    utils.off_purple_led()
 
     return jsonify({
         "status_code": 200,
-        "content": "all led is off",
+        "content": "purple led is off",
         "timestamp": datetime.datetime.now()
     })
+
+
+""" blue led """
+
+@app.route("/on-blue-led", methods=['GET'])
+def turn_on_blue_led() -> Response:
+    log(
+        description="blue led is on",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+    utils.on_blue_led()
+
+    return jsonify({
+        "status_code": 200,
+        "content": "blue led is on",
+        "timestamp": datetime.datetime.now()
+    })
+
+
+@app.route("/off-blue-led", methods=['GET'])
+def turn_off_blue_led() -> Response:
+    log(
+        description="blue led is off",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+    utils.off_blue_led()
+
+    return jsonify({
+        "status_code": 200,
+        "content": "blue led is off",
+        "timestamp": datetime.datetime.now()
+    })
+
+
 
 """ get temp and hum """
 
