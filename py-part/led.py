@@ -5,7 +5,7 @@ import sys
 from gpiozero import LED
 import time
 from signal import signal, SIGHUP, SIGTERM
-from csibekelteto_utils import LED_PINS
+from ..csibekelteto_utils import LED_PINS
 
 led = LED(LED_PINS.get(sys.argv[1]))
 
