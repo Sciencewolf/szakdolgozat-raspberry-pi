@@ -8,7 +8,7 @@ from signal import signal, SIGHUP, SIGTERM
 # if error -> export PYTHONPATH=/home/aron/szakdolgozat-raspberry-pi:$PYTHONPATH
 from csibekelteto_utils import LED_PINS
 
-if sys.argv[1] not in list(LED_PINS.values()):
+if sys.argv[1] not in list(LED_PINS.keys()):
     print(f"{sys.argv[1]} led not found")
     print(f"\n\tTry:  {list(LED_PINS.keys())}")
     sys.exit(1)
