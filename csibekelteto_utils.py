@@ -39,10 +39,11 @@ class Utils:
         self.base_dir: str = os.path.dirname(os.path.abspath(__file__))
         self.lid_file_path: str = os.path.join(self.base_dir, "lid-status.txt")
         self.processes: dict = {}
+        self.led_panel: dict = {}
 
     # __static methods
 
-    def __start_process(self, name, script):
+    def __start_process(self, name, script) -> None:
         """Start a subprocess in a new session and track it by name."""
 
         if name in self.processes and self.processes[name].poll() is None:
@@ -53,10 +54,12 @@ class Utils:
             [os.path.join(self.base_dir, script)],
             start_new_session=True  # Start in a new session
         )
+
         self.processes[name] = process
 
-    def __stop_process(self, name):
+    def __stop_process(self, name) -> None:
         """Stop a running subprocess by name."""
+
         if name in self.processes and self.processes[name].poll() is None:
             os.killpg(os.getpgid(self.processes[name].pid), signal.SIGTERM)
             self.processes[name].wait()
@@ -69,7 +72,6 @@ class Utils:
                 f"\n\tHealth: {self.health()} "
                 f"\n\tLast Emergency Shutdown: {self.last_emergency_shutdown()}"
                 f"\n---Utils---")
-
 
     """ Utils method's """
 
@@ -112,7 +114,6 @@ class Utils:
             "timestamp": timestamp
         })
 
-
     def is_temperature_normal(self) -> bool:
         pass
 
@@ -149,7 +150,6 @@ class Utils:
         """
         with open("hatching_date.txt", 'w') as file:
             file.write(datetime.now().__str__())
-
 
     """ Lid """
 
@@ -202,7 +202,6 @@ class Utils:
                         "timestamp": timestamp
                     })
 
-
     """ Cooler """
 
     def on_cooler(self) -> None:
@@ -210,7 +209,6 @@ class Utils:
 
     def off_cooler(self) -> None:
         self.__stop_process("cooler")
-
 
     """ Heating element """
 
@@ -220,7 +218,6 @@ class Utils:
 
     def off_heating_element(self) -> None:
         self.__stop_process("heating_element")
-
 
     """ DC Motor """
 
@@ -240,10 +237,9 @@ class Utils:
         self.__stop_process("dc_motor_backward")
         self.__stop_process("blink_yellow_led_dc_backward")
 
-
     """ LED """
-    # TODO: add for every component led indication
 
+    # TODO: add for every component led indication
 
     def on_red_led(self) -> None:
         self.__start_process("blink_red_led", "py-part/blink_red_led.py")
@@ -274,7 +270,6 @@ class Utils:
 
     def off_all_led(self) -> None:
         self.__stop_process("rgb_led")
-
 
     """ Other """
 

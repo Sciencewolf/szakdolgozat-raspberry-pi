@@ -1,5 +1,15 @@
 # Szakdolgozat Raspberry Pi(Hardware) part
 
+> [!NOTE]
+> LED Color Code
+> Lid open: red
+> Heating element on: green
+> Cooler on: White
+> Humidifier on: pink
+> DC motor on: yellow
+> Raspi on: purple
+> Preparing: blue
+
 ## RGB LED and AHT20 wiring
 
 > [!NOTE]
