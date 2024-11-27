@@ -260,7 +260,7 @@ class Utils:
         self.__stop_process("blink_white_led")
 
     def on_orange_led(self) -> None:
-        self.__start_process("blink_orange_led", "py-part/blink-orange-led.py")
+        self.__start_process("blink_orange_led", "py-part/blink_orange_led.py")
 
     def off_orange_led(self) -> None:
         self.__stop_process("blink_orange_led")
