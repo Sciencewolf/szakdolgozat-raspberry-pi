@@ -5,7 +5,7 @@ import time
 from signal import signal, SIGTERM, SIGHUP
 
 
-led = LED(20)
+led = LED(19)
 
 SLEEP: float = .4
 
