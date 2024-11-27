@@ -10,9 +10,9 @@
     <title>{{ title }}</title>
 
 	<link rel="icon" href="../static/images/favicon.png" id="icon">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer async type="module"></script>
-<!--	<link rel="stylesheet" href="../static/css/style.css">-->
+<!--    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">-->
+<!--    <script src="{{ url_for('static', filename='js/main.js') }}" defer async type="module"></script>-->
+	<link rel="stylesheet" href="../static/css/style.css">
 </head>
 
 <body>
@@ -40,15 +40,24 @@
                     </div>
                 </label>
             </div>
-            <div class="item turn-on-off-blue-led">
-                <h3>Blue LED</h3>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="checkbox-on-off-blue-led">
-                    <div class="toggle-switch-background">
-                        <div class="toggle-switch-handle"></div>
-                    </div>
-                </label>
-            </div>
+			<div class="item turn-on-off-white-led">
+				<h3>White LED</h3>
+				<label class="toggle-switch">
+					<input type="checkbox" id="checkbox-on-off-white-led">
+					<div class="toggle-switch-background">
+						<div class="toggle-switch-handle"></div>
+					</div>
+				</label>
+			</div>
+			<div class="item turn-on-off-orange-led">
+				<h3>Orange LED</h3>
+				<label class="toggle-switch">
+					<input type="checkbox" id="checkbox-on-off-orange-led">
+					<div class="toggle-switch-background">
+						<div class="toggle-switch-handle"></div>
+					</div>
+				</label>
+			</div>
 			<div class="item turn-on-off-yellow-led">
 				<h3>Yellow LED</h3>
 				<label class="toggle-switch">
@@ -58,15 +67,25 @@
 					</div>
 				</label>
 			</div>
-            <div class="item turn-on-off-all-led">
-                <h3>All LED</h3>
+			<div class="item turn-on-off-purple-led">
+				<h3>Purple LED</h3>
+				<label class="toggle-switch">
+					<input type="checkbox" id="checkbox-on-off-purple-led">
+					<div class="toggle-switch-background">
+						<div class="toggle-switch-handle"></div>
+					</div>
+				</label>
+			</div>
+            <div class="item turn-on-off-blue-led">
+                <h3>Blue LED</h3>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="checkbox-on-off-all-led">
+                    <input type="checkbox" id="checkbox-on-off-blue-led">
                     <div class="toggle-switch-background">
                         <div class="toggle-switch-handle"></div>
                     </div>
                 </label>
             </div>
+			
         </div>
         <div class="temp-hum-wrapper">
             <div class="item temp-hum">
