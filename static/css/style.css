@@ -184,6 +184,26 @@ input:hover {
 }
 
 
-@media only screen and (max-width: 768px) {
+@media screen and (max-width: 768px) {
+    header {
+        position: unset;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+    }
 
+    main {
+        overflow: auto;
+        padding-top: 10em;
+        padding-bottom: 10em;
+        flex-direction: column;
+    }
+
+    footer {
+        position: unset;
+        display: flex;
+        justify-content: right;
+        align-items: center;
+        margin: 1em;
+    }
 }
