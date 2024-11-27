@@ -25,7 +25,7 @@ def main() -> None:
         script_dir = os.path.dirname(os.path.abspath(__file__))
 
         # Construct the path to the temp_hum.txt file
-        temp_hum_file = os.path.join(script_dir, "../temp_hum.txt")
+        temp_hum_file = os.path.join(script_dir, "temp_hum.txt")
 
         with open('temp_hum.txt', 'w') as file:
             file.write(temp + '\n')
