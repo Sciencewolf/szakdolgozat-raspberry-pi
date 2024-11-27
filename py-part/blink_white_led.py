@@ -4,7 +4,7 @@ from gpiozero import LED
 import time
 from signal import signal, SIGHUP, SIGTERM
 
-led = LED(17)
+led = LED(22)
 
 SLEEP: float = .4
 
