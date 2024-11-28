@@ -16,11 +16,12 @@ gpio.setup(RELAY_PIN, gpio.OUT)
 
 
 def main() -> None:
-    for i in range(1, 5, -1):
-        print(i)
-        time.sleep(1)
 
     try:
+        for i in range(15, 0, -1):
+            print(i)
+            time.sleep(1)
+            
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
