@@ -39,6 +39,23 @@ LED_PINS: dict = {
     "blue": 19
 }
 
+class Mode:
+    """ Defines modes for led [blink or hold]  """
+
+    blink = "blink"
+    hold = "hold"
+
+class LEDS:
+    """ Defines led colors """
+
+    red = "red"
+    green = "green"
+    white = "white"
+    orange = "orange"
+    yellow = "yellow"
+    purple = "purple"
+    blue = "blue"
+
 
 class Utils:
     """
@@ -53,30 +70,44 @@ class Utils:
         self.led_panel: dict = {}
 
     # __private methods
+    # TODO: leds on start process
 
-    def __start_process(self, name, script) -> None:
+    def __start_process(self, name: str, script: str, led: str="", mode: str="") -> None:
         """Start a subprocess in a new session and track it by name."""
 
         if name in self.processes and self.processes[name].poll() is None:
-            print(f"{name} is already running.")
+            print(f"Process {name} is already running with PID {self.processes[name].pid}.")
             return
 
-        process = subprocess.Popen(
-            [os.path.join(self.base_dir, script)],
-            start_new_session=True  # Start in a new session
-        )
+        try:
+            process = subprocess.Popen(
+                [os.path.join(self.base_dir, script)] + [led, mode],
+                start_new_session=True  # Start in a new session
+            )
+            self.processes[name] = process
+            print(f"Process {name} started with PID {process.pid}.")
+        except Exception as e:
+            print(f"Failed to start process {name}: {e}")
 
-        self.processes[name] = process
 
-    def __stop_process(self, name) -> None:
+    def __stop_process(self, name: str) -> None:
         """Stop a running subprocess by name."""
 
-        if name in self.processes and self.processes[name].poll() is None:
-            os.killpg(os.getpgid(self.processes[name].pid), signal.SIGTERM)
-            self.processes[name].wait()
-            del self.processes[name]
+        if name in self.processes:
+            process = self.processes[name]
+            if process.poll() is None:  # Process is still running
+                try:
+                    os.killpg(os.getpgid(process.pid), signal.SIGTERM)  # Send SIGTERM to process group
+                    process.wait()  # Wait for process to terminate
+                    print(f"Process {name} stopped.")
+                except Exception as e:
+                    print(f"Error stopping process {name}: {e}")
+            else:
+                print(f"Process {name} has already stopped.")
+            del self.processes[name]  # Remove from tracking
         else:
             print(f"{name} is not running.")
+
 
     def __str__(self) -> str:
         return (f"---Utils--- "
@@ -216,16 +247,17 @@ class Utils:
     """ Cooler """
 
     def on_cooler(self) -> None:
-        self.__start_process("cooler", "py-part/cooler.py")
+        self.__start_process(name="cooler", script="py-part/cooler.py")
+        self.on_white_led()
 
     def off_cooler(self) -> None:
         self.__stop_process("cooler")
+        self.off_white_led()
 
     """ Heating element """
 
     def on_heating_element(self) -> None:
         self.__start_process("heating_element", "py-part/heating_element.py")
-        self.indicate_heating_element()
 
     def off_heating_element(self) -> None:
         self.__stop_process("heating_element")

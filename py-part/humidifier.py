@@ -7,21 +7,25 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
-from deprecated import deprecated
+import time
 
-RELAY_PIN: int = 22
+RELAY_PIN: int = 25
 
 gpio.setmode(gpio.BCM)
 gpio.setup(RELAY_PIN, gpio.OUT)
 
-@deprecated(reason="dont run this code bc it is not connected yet!")
+
 def main() -> None:
+    for i in range(1, 5, -1):
+        print(i)
+        time.sleep(1)
+
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
-        while True:
-            gpio.output(RELAY_PIN, gpio.LOW)
+        gpio.output(RELAY_PIN, gpio.LOW)
+        time.sleep(0.5)
     except Exception as ex:
         print(ex.__str__())
     finally:
