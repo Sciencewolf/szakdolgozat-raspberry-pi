@@ -2,12 +2,15 @@
 
 import datetime
 
-from flask import Flask, jsonify, render_template, Response
+from flask import Flask, jsonify, render_template, Response, make_response
 from flask_cors import CORS
 import os
 from flask import request
+
+# if error -> export PYTHONPATH=/home/aron/szakdolgozat-raspberry-pi:$PYTHONPATH
 from csibekelteto_utils import Utils
 from csibekelteto_utils import log
+
 
 app = Flask(__name__)
 CORS(app)
@@ -15,15 +18,61 @@ CORS(app)
 # Get the base directory where the Flask app is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Create the full path for the text file
 lid_file_path = os.path.join(base_dir, "lid-status.txt")
 
-# Csibekelteto utils
 utils: Utils = Utils()
 
 
+def api_200_ok_response(
+        response: str,
+        timestamp: datetime=datetime.datetime.now(),
+        status_code: int=200,
+        other: list | None=None
+) -> Response:
+
+    return make_response(
+        jsonify({
+            "status_code": status_code,
+            "response": response,
+            "timestamp": timestamp,
+            "other": other
+        }), 200
+    )
+
+def api_404_not_found_response(
+        response: str,
+        timestamp: datetime=datetime.datetime.now(),
+        status_code: int=404,
+        other: list | None=None
+) -> Response:
+
+    return make_response(
+        jsonify({
+            "status_code": status_code,
+            "response": response,
+            "timestamp": timestamp,
+            "other": other
+        }), 404
+    )
+
+def api_501_not_implemented_response(
+        response: str,
+        timestamp: datetime=datetime.datetime.now(),
+        status_code: int=501,
+        other: list | None=None
+) -> Response:
+
+    return make_response(
+        jsonify({
+            "status_code": status_code,
+            "response": response,
+            "timestamp": timestamp,
+            "other": other
+        }), 501
+    )
+
 @app.route("/")
-def home():
+def index():
     log(
         description="Home page loaded",
         api_url=request.base_url,
@@ -32,7 +81,7 @@ def home():
 
     return render_template(
         template_name_or_list="index.html",
-        version="v2024.11.23",
+        version="v2024.11.28",
         title="Csibekeltető",
         header="Csibekeltető"
     )
@@ -48,11 +97,7 @@ def prepare_hatching() -> Response:
     )
     utils.prepare_hatching()
 
-    return jsonify({
-        "status_code": 200,
-        "response": "ok",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_501_not_implemented_response("preparing hatching")
 
 @app.route("/start-hatching", methods=['GET'])
 def start_hatching() -> Response:
@@ -63,17 +108,13 @@ def start_hatching() -> Response:
     )
     utils.start_hatching()
 
-    return jsonify({
-        "status_code": 200,
-        "response": "hatching is started",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_501_not_implemented_response("hatching is started")
 
 
 @app.route("/is-start-hatching", methods=['GET'])
 def is_start_hatching() -> Response:
     """ TODO: check if hatching is started """
-    return jsonify({})
+    return api_501_not_implemented_response("Not implemented yet", datetime.datetime.now())
 
 """ red led """
 
@@ -86,11 +127,7 @@ def turn_on_red_led() -> Response:
     )
     utils.on_red_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "red led is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("red led is on")
 
 
 @app.route("/off-red-led", methods=['GET'])
@@ -102,11 +139,7 @@ def turn_off_red_led() -> Response:
     )
     utils.off_red_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "red led is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("red led is off")
 
 """ green led """
 
@@ -119,11 +152,7 @@ def turn_on_green_led() -> Response:
     )
     utils.on_green_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "green led is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("green led is on")
 
 
 @app.route("/off-green-led", methods=['GET'])
@@ -135,11 +164,7 @@ def turn_off_green_led() -> Response:
     )
     utils.off_green_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "green led is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("green led is off")
 
 """ white led"""
 
@@ -152,11 +177,7 @@ def turn_on_white_led() -> Response:
     )
     utils.on_white_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "white led is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("white led is on")
 
 
 @app.route("/off-white-led", methods=['GET'])
@@ -168,11 +189,7 @@ def turn_off_white_led() -> Response:
     )
     utils.off_white_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "white led is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("white led is off")
 
 """ orange led """
 
@@ -185,11 +202,7 @@ def turn_on_orange_led() -> Response:
     )
     utils.on_orange_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "orange led is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("orange led is on")
 
 @app.route("/off-orange-led")
 def turn_off_orange_led() -> Response:
@@ -200,11 +213,7 @@ def turn_off_orange_led() -> Response:
     )
     utils.off_orange_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "orange led is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("orange led is off")
 
 """ yellow led """
 
@@ -217,11 +226,7 @@ def turn_on_yellow_led() -> Response:
     )
     utils.on_yellow_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "yellow led is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("yellow led is on")
 
 
 @app.route("/off-yellow-led", methods=['GET'])
@@ -233,11 +238,7 @@ def turn_off_yellow_led() -> Response:
     )
     utils.off_yellow_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "yellow led is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("yellow led is off")
 
 """ purple led """
 
@@ -250,11 +251,7 @@ def turn_on_purple_led() -> Response:
     )
     utils.on_purple_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "purple led is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("purple led is on")
 
 
 @app.route("/off-purple-led", methods=['GET'])
@@ -266,11 +263,7 @@ def turn_off_purple_led() -> Response:
     )
     utils.off_purple_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "purple led is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("purple led is off")
 
 
 """ blue led """
@@ -284,11 +277,7 @@ def turn_on_blue_led() -> Response:
     )
     utils.on_blue_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "blue led is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("blue led is on")
 
 
 @app.route("/off-blue-led", methods=['GET'])
@@ -300,11 +289,7 @@ def turn_off_blue_led() -> Response:
     )
     utils.off_blue_led()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "blue led is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("blue led is off")
 
 
 
@@ -334,10 +319,7 @@ def set_temperature() -> Response:
         headers=request.user_agent.string
     )
     temp: str = request.args.get("t")  # url/set-temp?t=40.1 | type: float
-    return jsonify({
-        "status_code": 501,
-        "content": "Not Implemented"
-    })
+    return api_501_not_implemented_response("Not Implemented yet")
 
 
 @app.route("/set-hum", methods=['GET', 'PUT'])
@@ -348,10 +330,7 @@ def set_humidity() -> Response:
         headers=request.user_agent.string
     )
     hum: str = request.args.get("h")  # url/set-hum?h=62.5 | type: float
-    return jsonify({
-        "status_code": 501,
-        "content": "Not Implemented"
-    })
+    return api_501_not_implemented_response("Not Implemented yet")
 
 """ lid/limit switch"""
 
@@ -381,11 +360,7 @@ def turn_on_cooler() -> Response:
     )
     utils.on_cooler()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "cooler is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("cooler is on")
 
 
 @app.route("/off-cooler", methods=['GET', 'PUT'])
@@ -397,11 +372,7 @@ def turn_off_cooler() -> Response:
     )
     utils.off_cooler()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "cooler is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("cooler is off")
 
 """ heating element """
 
@@ -414,11 +385,7 @@ def turn_on_heating_element() -> Response:
     )
     utils.on_heating_element()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "heating element is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("heating element is on")
 
 
 @app.route("/off-heating-element", methods=['GET'])
@@ -430,11 +397,7 @@ def turn_off_heating_element() -> Response:
     )
     utils.off_heating_element()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "heating element is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("heating element is off")
 
 """ dc motor """
 
@@ -447,11 +410,7 @@ def turn_on_dc_motor_forward() -> Response:
     )
     utils.on_dc_motor_forward()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "dc motor forward is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("dc motor forward is on")
 
 @app.route("/off-dc-motor-forward", methods=['GET'])
 def turn_off_dc_motor_forward() -> Response:
@@ -462,11 +421,7 @@ def turn_off_dc_motor_forward() -> Response:
     )
     utils.off_dc_motor_forward()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "dc motor forward is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("dc motor forward is off")
 
 @app.route("/on-dc-motor-backward", methods=['GET'])
 def turn_on_dc_motor_backward() -> Response:
@@ -477,11 +432,7 @@ def turn_on_dc_motor_backward() -> Response:
     )
     utils.on_dc_motor_backward()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "dc motor backward is on",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("dc motor backward is on")
 
 
 @app.route("/off-dc-motor-backward", methods=['GET'])
@@ -493,11 +444,20 @@ def turn_off_dc_motor_backward() -> Response:
     )
     utils.off_dc_motor_backward()
 
-    return jsonify({
-        "status_code": 200,
-        "content": "dc motor backward is off",
-        "timestamp": datetime.datetime.now()
-    })
+    return api_200_ok_response("dc motor backward is off")
+
+""" humidifier """
+
+@app.route("/on-humidifier")
+def turn_on_humidifier():
+    log(
+        description="turn on humidifier",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+    utils.on_humidifier()
+
+    return api_501_not_implemented_response("Not implemented yet")
 
 """ other """
 
@@ -510,11 +470,7 @@ def endpoints() -> Response:
     )
     lst: list = ["%s" % rule for rule in app.url_map.iter_rules()][1:]
 
-    return jsonify({
-        "status_code": 200,
-        "content": "Ok",
-        "routes": lst
-    })
+    return api_200_ok_response("ok", other=lst)
 
 
 @app.route("/overall", methods=['GET'])
@@ -542,7 +498,7 @@ def alive() -> Response:
         headers=request.user_agent.string
     )
 
-    return jsonify({"response": "csibekelteto is alive"})
+    return api_200_ok_response("csibekelteto is alive")
 
 
 @app.route("/shutdown")
@@ -555,11 +511,7 @@ def shutdown() -> Response:
     )
 
     # Respond to the client before shutting down
-    response = jsonify({
-        "status_code": 200,
-        "content": "RasPi is shutting down...",
-        "timestamp": datetime.datetime.now()
-    })
+    response = api_200_ok_response("RasPi is shutting down...")
     utils.shutdown()
 
     return response
