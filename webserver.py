@@ -25,7 +25,6 @@ utils: Utils = Utils()
 
 def api_200_ok_response(
         response: str,
-        timestamp: datetime=datetime.datetime.now(),
         status_code: int=200,
         other: list | None=None
 ) -> Response:
@@ -34,14 +33,13 @@ def api_200_ok_response(
         jsonify({
             "status_code": status_code,
             "response": response,
-            "timestamp": timestamp,
+            "timestamp": datetime.datetime.now(),
             "other": other
         }), 200
     )
 
 def api_404_not_found_response(
         response: str,
-        timestamp: datetime=datetime.datetime.now(),
         status_code: int=404,
         other: list | None=None
 ) -> Response:
@@ -50,14 +48,13 @@ def api_404_not_found_response(
         jsonify({
             "status_code": status_code,
             "response": response,
-            "timestamp": timestamp,
+            "timestamp": datetime.datetime.now(),
             "other": other
         }), 404
     )
 
 def api_501_not_implemented_response(
         response: str,
-        timestamp: datetime=datetime.datetime.now(),
         status_code: int=501,
         other: list | None=None
 ) -> Response:
@@ -66,7 +63,7 @@ def api_501_not_implemented_response(
         jsonify({
             "status_code": status_code,
             "response": response,
-            "timestamp": timestamp,
+            "timestamp": datetime.datetime.now(),
             "other": other
         }), 501
     )
@@ -97,7 +94,7 @@ def prepare_hatching() -> Response:
     )
     utils.prepare_hatching()
 
-    return api_501_not_implemented_response("preparing hatching")
+    return api_501_not_implemented_response("/prepare-hatching not implemented yet")
 
 @app.route("/start-hatching", methods=['GET'])
 def start_hatching() -> Response:
@@ -108,13 +105,13 @@ def start_hatching() -> Response:
     )
     utils.start_hatching()
 
-    return api_501_not_implemented_response("hatching is started")
+    return api_501_not_implemented_response("/start-hatching not implemented yet")
 
 
 @app.route("/is-start-hatching", methods=['GET'])
 def is_start_hatching() -> Response:
     """ TODO: check if hatching is started """
-    return api_501_not_implemented_response("Not implemented yet", datetime.datetime.now())
+    return api_501_not_implemented_response("/is-start-hatching not implemented yet")
 
 """ red led """
 
@@ -319,7 +316,7 @@ def set_temperature() -> Response:
         headers=request.user_agent.string
     )
     temp: str = request.args.get("t")  # url/set-temp?t=40.1 | type: float
-    return api_501_not_implemented_response("Not Implemented yet")
+    return api_501_not_implemented_response("/set-temp not implemented yet")
 
 
 @app.route("/set-hum", methods=['GET', 'PUT'])
@@ -330,7 +327,7 @@ def set_humidity() -> Response:
         headers=request.user_agent.string
     )
     hum: str = request.args.get("h")  # url/set-hum?h=62.5 | type: float
-    return api_501_not_implemented_response("Not Implemented yet")
+    return api_501_not_implemented_response("/set-hum not implemented yet")
 
 """ lid/limit switch"""
 
@@ -455,9 +452,21 @@ def turn_on_humidifier():
         api_url=request.base_url,
         headers=request.user_agent.string
     )
-    utils.on_humidifier()
+    # utils.on_humidifier()
 
-    return api_501_not_implemented_response("Not implemented yet")
+    return api_501_not_implemented_response("/on-humidifier not implemented yet")
+
+
+@app.route("/off-humidifier")
+def turn_off_humidifier() -> Response:
+    log(
+        description="turn off humidifier",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+    # utils.off_humidifier()
+
+    return api_501_not_implemented_response("/off-humidifier not implemented yet")
 
 """ other """
 

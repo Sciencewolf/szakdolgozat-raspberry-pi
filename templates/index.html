@@ -87,19 +87,16 @@
             </div>
 			
         </div>
-        <div class="temp-hum-wrapper">
-            <div class="item temp-hum">
+        <div class="info-wrapper">
+            <div class="item info">
                 <h3>Temperature: <span id="temp"></span></h3>
                 <h3>Humidity: <span id="hum"></span></h3>
+				<h3>Lid is: <span id="lid"></span></h3>
             </div>
         </div>
 
         <div class="other-wrapper">
-            <div class="lid-wrapper">
-                <div class="item lid">
-                    <h3>Lid is: <span id="lid"></span></h3>
-                </div>
-            </div>
+			
             <div class="cooler-wrapper">
                 <div class="item cooler">
                     <h3>Cooler:</h3>
@@ -141,6 +138,18 @@
 					<h3>DC Motor backward:</h3>
 					<label class="toggle-switch">
 						<input type="checkbox" id="checkbox-on-off-dc-motor-backward">
+						<div class="toggle-switch-background">
+							<div class="toggle-switch-handle"></div>
+						</div>
+					</label>
+				</div>
+			</div>
+			
+			<div class="humidifier-wrapper">
+				<div class="item humidifier">
+					<h3>Humidifier:</h3>
+					<label class="toggle-switch">
+						<input type="checkbox" id="checkbox-on-off-humidifier">
 						<div class="toggle-switch-background">
 							<div class="toggle-switch-handle"></div>
 						</div>

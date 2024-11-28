@@ -60,7 +60,7 @@ footer {
     gap: 1em;
 }
 
-.temp-hum {
+.info {
     flex-direction: column;
     align-items: start;
     gap: 0;
