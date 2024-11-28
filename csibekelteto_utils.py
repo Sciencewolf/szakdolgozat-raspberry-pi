@@ -45,7 +45,7 @@ class Mode:
     blink = "blink"
     hold = "hold"
 
-class LEDS:
+class Leds:
     """ Defines led colors """
 
     red = "red"
@@ -72,7 +72,7 @@ class Utils:
     # __private methods
     # TODO: leds on start process
 
-    def __start_process(self, name: str, script: str, led: str="", mode: str="") -> None:
+    def __start_process(self, name: str, script: str="led.py", led: str="", mode: str="") -> None:
         """Start a subprocess in a new session and track it by name."""
 
         if name in self.processes and self.processes[name].poll() is None:
@@ -81,7 +81,7 @@ class Utils:
 
         try:
             process = subprocess.Popen(
-                [os.path.join(self.base_dir, script)] + [led, mode],
+                [os.path.join(self.base_dir, f"py-part/{script}")] + [led, mode],
                 start_new_session=True  # Start in a new session
             )
             self.processes[name] = process
@@ -247,84 +247,125 @@ class Utils:
     """ Cooler """
 
     def on_cooler(self) -> None:
-        self.__start_process(name="cooler", script="py-part/cooler.py")
+        self.__start_process(name="cooler", script="cooler.py")
         self.on_white_led()
 
     def off_cooler(self) -> None:
-        self.__stop_process("cooler")
+        self.__stop_process(name="cooler")
         self.off_white_led()
 
     """ Heating element """
 
     def on_heating_element(self) -> None:
-        self.__start_process("heating_element", "py-part/heating_element.py")
+        self.__start_process(name="heating_element", script="heating_element.py")
+        self.on_green_led()
 
     def off_heating_element(self) -> None:
         self.__stop_process("heating_element")
+        self.off_green_led()
 
     """ DC Motor """
 
-    def on_dc_motor_forward(self):
-        self.__start_process("dc_motor_forward", "py-part/dc_motor_forward.py")
-        self.__start_process("blink_yellow_led_dc_forward", "py-part/yellow_led.py")
+    def on_dc_motor_forward(self) -> None:
+        self.__start_process(name="dc_motor_forward", script="dc_motor_forward.py")
+        self.on_yellow_led()
 
-    def off_dc_motor_forward(self):
+    def off_dc_motor_forward(self) -> None:
         self.__stop_process("dc_motor_forward")
-        self.__stop_process("blink_yellow_led_dc_forward")
+        self.off_yellow_led()
 
-    def on_dc_motor_backward(self):
-        self.__start_process("dc_motor_backward", "py-part/dc_motor_backward.py")
-        self.__start_process("blink_yellow_led_dc_backward", "py-part/yellow_led.py")
+    def on_dc_motor_backward(self) -> None:
+        self.__start_process(name="dc_motor_backward", script="dc_motor_backward.py")
+        self.on_yellow_led()
 
-    def off_dc_motor_backward(self):
+    def off_dc_motor_backward(self) -> None:
         self.__stop_process("dc_motor_backward")
-        self.__stop_process("blink_yellow_led_dc_backward")
+        self.off_yellow_led()
+
+
+    """ Humidifier """
+
+    def on_humidifier(self) -> None:
+        self.__start_process(name="humidifier", script="humidifier.py")
+        self.on_purple_led()
+
+    def off_humidifier(self) -> None:
+        self.__stop_process("humidifier")
+        self.off_purple_led()
 
     """ LED """
 
     # TODO: add for every component led indication
 
-    def on_red_led(self) -> None:
-        self.__start_process("blink_red_led", "py-part/red_led.py")
+    def on_red_led(self, mode: str=Mode.hold) -> None:
+        self.__start_process(
+            name="red_led",
+            led=Leds.red,
+            mode=mode
+        )
 
     def off_red_led(self) -> None:
-        self.__stop_process("blink_red_led")
+        self.__stop_process("red_led")
 
-    def on_green_led(self) -> None:
-        self.__start_process("blink_green_led", "py-part/green_led.py")
+    def on_green_led(self, mode: str=Mode.hold) -> None:
+        self.__start_process(
+            name="green_led",
+            led=Leds.green,
+            mode=mode
+        )
 
     def off_green_led(self) -> None:
-        self.__stop_process("blink_green_led")
+        self.__stop_process("green_led")
 
-    def on_white_led(self) -> None:
-        self.__start_process("blink_white_led", "py-part/white_led.py")
+    def on_white_led(self, mode: str=Mode.hold) -> None:
+        self.__start_process(
+            name="white_led",
+            led=Leds.white,
+            mode=mode
+        )
 
     def off_white_led(self) -> None:
-        self.__stop_process("blink_white_led")
+        self.__stop_process("white_led")
 
-    def on_orange_led(self) -> None:
-        self.__start_process("blink_orange_led", "py-part/orange_led.py")
+    def on_orange_led(self, mode: str=Mode.hold) -> None:
+        self.__start_process(
+            name="orange_led",
+            led=Leds.orange,
+            mode=mode
+        )
 
     def off_orange_led(self) -> None:
-        self.__stop_process("blink_orange_led")
+        self.__stop_process("orange_led")
 
-    def on_yellow_led(self) -> None:
-        self.__start_process("blink_yellow_led", "py-part/yellow_led.py")
+    def on_yellow_led(self, mode: str=Mode.hold) -> None:
+        self.__start_process(
+            name="yellow_led",
+            led=Leds.yellow,
+            mode=mode
+        )
 
     def off_yellow_led(self) -> None:
-        self.__stop_process("blink_yellow_led")
+        self.__stop_process("yellow_led")
 
-    def on_purple_led(self) -> None:
-        self.__start_process("blink_purple_led", "py-part/purple_led.py")
+    def on_purple_led(self, mode: str=Mode.hold) -> None:
+        self.__start_process(
+            name="purple_led",
+            led=Leds.purple,
+            mode=mode
+        )
 
     def off_purple_led(self) -> None:
-        self.__stop_process("blink_purple_led")
+        self.__stop_process("purple_led")
 
-    def on_blue_led(self) -> None:
-        self.__start_process("blink_blue_led", "py-part/blue_led.py")
+    def on_blue_led(self, mode: str=Mode.hold) -> None:
+        self.__start_process(
+            name="blue_led",
+            led=Leds.blue,
+            mode=mode
+        )
 
     def off_blue_led(self) -> None:
-        self.__stop_process("blink_blue_led")
+        self.__stop_process("blue_led")
 
 
     """ Other """

@@ -14,7 +14,7 @@ import os
 
 
 SWITCH_GPIO_PIN: int = 4
-red_led = LED(21)
+red_led = LED(17)
 
 GPIO.setmode(GPIO.BCM)
 
