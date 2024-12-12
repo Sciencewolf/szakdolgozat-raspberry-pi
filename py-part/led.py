@@ -8,6 +8,11 @@ from signal import signal, SIGHUP, SIGTERM
 # if error -> export PYTHONPATH=/home/aron/szakdolgozat-raspberry-pi:$PYTHONPATH
 from csibekelteto_utils import LED_PINS
 
+if len(sys.argv) == 1:
+    print(f"Usage: \nled.py {list(LED_PINS.keys())} 'blink/hold' ")
+    print("Example: led.py 'yellow' 'hold' ")
+    sys.exit(1)
+
 if sys.argv[1] not in list(LED_PINS.keys()):
     print(f"{sys.argv[1]} led not found")
     print(f"\n\tTry:  {list(LED_PINS.keys())}")
