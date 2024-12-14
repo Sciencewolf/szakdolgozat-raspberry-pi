@@ -9,7 +9,6 @@ import RPi.GPIO as GPIO
 from gpiozero import LED
 from signal import signal, SIGTERM, SIGHUP
 from datetime import datetime
-import time
 import os
 
 
@@ -41,12 +40,6 @@ def main() -> None:
                 file.write("lid open @ ")
                 file.write(f"{datetime.now()} \n")
                 file.write("! Open")
-
-                for _ in range(5):
-                    red_led.on()
-                    time.sleep(0.1)
-                    red_led.off()
-                    time.sleep(0.1)
     except Exception as ex:
         print(ex.__str__())
     finally:

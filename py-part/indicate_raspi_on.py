@@ -15,11 +15,8 @@ def main() -> None:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
-        for _ in range(5):
-            led.on()
-            time.sleep(SLEEP)
-            led.off()
-            time.sleep(SLEEP)
+        led.on()
+        time.sleep(SLEEP*10)
     except Exception as ex:
         print(ex.__str__())
 

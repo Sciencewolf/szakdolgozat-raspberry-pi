@@ -174,13 +174,6 @@ class Utils:
         """ Green LED if engine is rotating the egg's. Do not touch the lid """
         pass
 
-    def run_prediction_algorithm(self) -> None:
-        """
-        Run szakdolgozat-algorithm to predict the normal temp and hum range.
-        java code will be called
-        """
-        pass
-
     def prepare_hatching(self) -> str | None:
         """ before hatching eggs check if hardware is okay """
         pass
@@ -294,8 +287,6 @@ class Utils:
         self.off_purple_led()
 
     """ LED """
-
-    # TODO: add for every component led indication
 
     def on_red_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(

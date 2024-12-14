@@ -315,6 +315,7 @@ def set_temperature() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     temp: str = request.args.get("t")  # url/set-temp?t=40.1 | type: float
     return api_501_not_implemented_response("/set-temp not implemented yet")
 
@@ -326,6 +327,7 @@ def set_humidity() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     hum: str = request.args.get("h")  # url/set-hum?h=62.5 | type: float
     return api_501_not_implemented_response("/set-hum not implemented yet")
 
@@ -477,6 +479,7 @@ def endpoints() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     lst: list = ["%s" % rule for rule in app.url_map.iter_rules()][1:]
 
     return api_200_ok_response("ok", other=lst)
@@ -519,7 +522,6 @@ def shutdown() -> Response:
         headers=request.user_agent.string
     )
 
-    # Respond to the client before shutting down
     response = api_200_ok_response("RasPi is shutting down...")
     utils.shutdown()
 
