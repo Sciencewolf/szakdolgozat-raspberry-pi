@@ -15,7 +15,7 @@ def log(
 
     today = datetime.now().strftime("%Y-%B-%d")
 
-    log_directory = "log"
+    log_directory = "/home/aron/szakdolgozat-raspberry-pi/log"
     log_file_path = f"{log_directory}/{today}-log_system.txt"
 
     os.makedirs(log_directory, exist_ok=True)

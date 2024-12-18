@@ -307,6 +307,7 @@ def get_temperature_and_humidity_from_sensor() -> Response:
     )
 
 """ set temp and hum """
+""" TODO: if file has t and h and another api call enters, override value  """
 
 @app.route("/set-temp", methods=['GET', 'PUT'])
 def set_temperature() -> Response:
@@ -317,6 +318,10 @@ def set_temperature() -> Response:
     )
 
     temp: str = request.args.get("t")  # url/set-temp?t=40.1 | type: float
+
+    with open('set_temp_hum.txt', 'a+') as file:
+        file.write(f"t: {temp}\n")
+
     return api_501_not_implemented_response("/set-temp not implemented yet")
 
 
@@ -329,6 +334,10 @@ def set_humidity() -> Response:
     )
 
     hum: str = request.args.get("h")  # url/set-hum?h=62.5 | type: float
+
+    with open("set_temp)hum.txt", 'a+') as file:
+        file.write(f"h: {hum}\n")
+
     return api_501_not_implemented_response("/set-hum not implemented yet")
 
 """ lid/limit switch"""
@@ -357,6 +366,7 @@ def turn_on_cooler() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     utils.on_cooler()
 
     return api_200_ok_response("cooler is on")
@@ -369,6 +379,7 @@ def turn_off_cooler() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     utils.off_cooler()
 
     return api_200_ok_response("cooler is off")
@@ -382,6 +393,7 @@ def turn_on_heating_element() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     utils.on_heating_element()
 
     return api_200_ok_response("heating element is on")
@@ -394,6 +406,7 @@ def turn_off_heating_element() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     utils.off_heating_element()
 
     return api_200_ok_response("heating element is off")
@@ -407,6 +420,7 @@ def turn_on_dc_motor_forward() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     utils.on_dc_motor_forward()
 
     return api_200_ok_response("dc motor forward is on")
@@ -418,6 +432,7 @@ def turn_off_dc_motor_forward() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     utils.off_dc_motor_forward()
 
     return api_200_ok_response("dc motor forward is off")
@@ -429,6 +444,7 @@ def turn_on_dc_motor_backward() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     utils.on_dc_motor_backward()
 
     return api_200_ok_response("dc motor backward is on")
@@ -441,6 +457,7 @@ def turn_off_dc_motor_backward() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+    
     utils.off_dc_motor_backward()
 
     return api_200_ok_response("dc motor backward is off")

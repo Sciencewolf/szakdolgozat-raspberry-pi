@@ -4,6 +4,7 @@ class LED{
         const response = await onRedLed.json()
 
         console.log(response)
+        
     }
 
     static async offRedLed() {
@@ -11,6 +12,8 @@ class LED{
         const response = await offRedLed.json()
 
         console.log(response)
+        
+
     }
 
     static async onGreenLed() {
@@ -18,6 +21,8 @@ class LED{
         const response = await onGreenLed.json()
 
         console.log(response)
+        
+
     }
 
     static async offGreenLed() {
@@ -25,6 +30,8 @@ class LED{
         const response = await offGreenLed.json()
 
         console.log(response)
+        
+
     }
 
     static async onBlueLed() {
@@ -32,6 +39,8 @@ class LED{
         const response = await onBlueLed.json()
 
         console.log(response)
+        
+
     }
 
     static async offBlueLed() {
@@ -39,6 +48,8 @@ class LED{
         const response = await offBlueLed.json()
 
         console.log(response)
+        
+
     }
 
     static async onYellowLed() {
@@ -46,6 +57,8 @@ class LED{
         const response = await onYellowLed.json()
 
         console.log(response)
+        
+
     }
 
     static async offYellowLed() {
@@ -53,6 +66,8 @@ class LED{
         const response = await offYellowLed.json()
 
         console.log(response)
+        
+
     }
 
     static async onWhiteLed() {
@@ -60,6 +75,8 @@ class LED{
         const response = await onWhiteLed.json()
 
         console.log(response)
+        
+
     }
 
     static async offWhiteLed() {
@@ -67,6 +84,8 @@ class LED{
         const response = await offWhiteLed.json()
 
         console.log(response)
+        
+
     }
 
     static async onOrangeLed() {
@@ -74,6 +93,8 @@ class LED{
         const response = await onOrangeLed.json()
 
         console.log(response)
+        
+
     }
 
     static async offOrangeLed() {
@@ -81,6 +102,8 @@ class LED{
         const response = await offOrangeLed.json()
 
         console.log(response)
+        
+
     }
 
     static async onPurpleLed() {
@@ -88,6 +111,8 @@ class LED{
         const response = await onPurpleLed.json()
 
         console.log(response)
+        
+
     }
 
     static async offPurpleLed() {
@@ -95,6 +120,8 @@ class LED{
         const response = await offPurpleLed.json()
 
         console.log(response)
+        
+
     }
 }
 
@@ -104,6 +131,8 @@ class Motor{
         const response = await onDcMotorForward.json()
 
         console.log(response)
+        
+
     }
 
     static async offDcMotorForward() {
@@ -111,6 +140,8 @@ class Motor{
         const response = await offDcMotorForward.json()
 
         console.log(response)
+        
+
     }
 
     static async onDcMotorBackward() {
@@ -118,6 +149,8 @@ class Motor{
         const response = await onDcMotorBackward.json()
 
         console.log(response)
+        
+
     }
 
     static async offDcMotorBackward() {
@@ -125,6 +158,8 @@ class Motor{
         const response = await offDcMotorBackward.json()
 
         console.log(response)
+        
+
     }
 }
 
@@ -134,6 +169,10 @@ class Sensor {
         const response = await getTemperatureAndHumidity.json()
 
         console.log(response)
+        
+
+
+        return [response.temp, response.hum]
     }
 
     static async getLidStatus() {
@@ -141,6 +180,8 @@ class Sensor {
         const response = await getLidStatus.json()
 
         console.log(response)
+        
+
 
         return response.lid
     }
@@ -153,6 +194,8 @@ class Cooler {
         const response = await onCooler.json()
 
         console.log(response)
+        
+
     }
 
     static async offCooler() {
@@ -160,6 +203,8 @@ class Cooler {
         const response = await offCooler.json()
 
         console.log(response)
+        
+
     }
 }
 
@@ -169,6 +214,8 @@ class HeatingElement {
         const response = await onHeatingElement.json()
 
         console.log(response)
+        
+
     }
 
     static async offHeatingElement() {
@@ -176,6 +223,8 @@ class HeatingElement {
         const response = await offHeatingElement.json()
 
         console.log(response)
+        
+
     }
 }
 
@@ -185,6 +234,8 @@ class Humidifier {
         const response = await onHumidifier.json()
 
         console.log(response)
+        
+
     }
 
     static async offHumidifier() {
@@ -192,6 +243,8 @@ class Humidifier {
         const response = await offHumidifier.json()
 
         console.log(response)
+        
+
     }
 }
 

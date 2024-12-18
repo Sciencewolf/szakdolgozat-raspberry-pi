@@ -1,4 +1,4 @@
-import {Cooler, HeatingElement, Humidifier, LED, Motor, Sensor} from "./utils";
+import {Cooler, HeatingElement, Humidifier, LED, Motor, Sensor} from "./utils.mjs";
 
 const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
 const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led")
@@ -27,18 +27,22 @@ const shutdown = document.getElementById("btn-shutdown")
 const tempHumSensor = async () => {
     try {
         const [temp, hum] = await Sensor.getTemperatureAndHumidity()
-        temperature.innerHTML = temp
-        humidity.innerHTML = hum
+        temperature.innerHTML = await temp
+        humidity.innerHTML = await hum
+        sessionStorage.setItem("error", "false")
     } catch (error) {
+        sessionStorage.setItem('error', 'true')
         console.log(error);
     }
 }
 
 const lidStatus = async () => {
     try {
-        const lid = await Sensor.getLidStatus()
-        lid.innerHTML = lid
+        const _lid = await Sensor.getLidStatus()
+        lid.innerHTML = await _lid
+        sessionStorage.setItem("error", "false")
     } catch (error) {
+        sessionStorage.setItem('error', 'true')
         console.log(error);
     }
 }
@@ -317,10 +321,10 @@ btnEndpoints.addEventListener('click', async () => {
         const response = await getAllAPIEndpoints.json()
         console.log(response)
 
-        const h3Endpoints = document.getElementById("h3-endpoints").style.display = 'none'
+        document.getElementById("h3-endpoints").style.display = 'none'
         btnEndpoints.style.display = 'none'
 
-        for (let item of response.routes) {
+        for (let item of response.other) {
             let api_url = `https://hippo-immense-plainly.ngrok-free.app${item}`
             const url = document.createElement('a')
             url.setAttribute('href', `${api_url}`)
@@ -332,6 +336,17 @@ btnEndpoints.addEventListener('click', async () => {
         console.log(err)
     }
 })
+
+setInterval(() => {
+    if(sessionStorage.getItem('error') === 'true') {
+        document.body.style.cssText = "display: flex;justify-content: center;align-items: center;font-size: 40px;"
+        document.body.innerHTML = ""
+        const div = document.createElement('div')
+        div.className = "div-disconnected"
+        div.innerHTML = `Disconnected at ${new Date().toISOString().split('T')[0]} ${new Date().toTimeString().split(' ')[0]}`
+        document.body.appendChild(div)    }
+}, 2_000)
+
 
 setInterval(async () => {
     if (!document.querySelector(".div-disconnected")) {
