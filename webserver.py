@@ -514,8 +514,21 @@ def overall() -> Response:
         "day": 0,
         "updated": datetime.datetime.now().__str__(),
         "temp": 0.0,
-        "hum": 0.0,
-        "health": utils.health()
+        "hum": 0.0
+    })
+
+
+@app.route('/health', methods=['GET'])
+def health() -> Response:
+    log(
+        description="health",
+        api_url=request.base_url,
+    )
+
+    return jsonify({
+        "cpu": utils.health()[0][1],
+        "total_ram": utils.health()[1][1],
+        "ram": utils.health()[2][1],
     })
 
 

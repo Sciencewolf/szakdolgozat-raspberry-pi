@@ -1,4 +1,4 @@
-import {Cooler, HeatingElement, Humidifier, LED, Motor, Sensor} from "./utils.mjs";
+import {Cooler, HeatingElement, Humidifier, LED, Motor, Sensor, Health} from "./utils.mjs";
 
 const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
 const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led")
@@ -11,6 +11,9 @@ const checkboxOnOffBlueLed = document.getElementById("checkbox-on-off-blue-led")
 const temperature = document.getElementById("temp")
 const humidity = document.getElementById("hum")
 const lid = document.getElementById("lid")
+const cpu = document.getElementById("cpu")
+const totalRam = document.getElementById("total-ram")
+const ramApp = document.getElementById("ram-app")
 
 const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
 const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
@@ -44,6 +47,18 @@ const lidStatus = async () => {
     } catch (error) {
         sessionStorage.setItem('error', 'true')
         console.log(error);
+    }
+}
+
+const getHealth = async () => {
+    try {
+        const getAllData = await Health.getAll()
+
+        cpu.innerHTML = getAllData[0]
+        totalRam.innerHTML = getAllData[1]
+        ramApp.innerHTML = getAllData[2]
+    } catch (err) {
+        console.log(err)
     }
 }
 
@@ -356,5 +371,10 @@ setInterval(async () => {
 setInterval(async () => {
     if (!document.querySelector(".div-disconnected")) {
         await lidStatus()
+    }
+}, 10_000)
+setInterval(async() => {
+    if (!document.querySelector(".div-disconnected")) {
+        await getHealth()
     }
 }, 10_000)

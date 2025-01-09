@@ -248,4 +248,15 @@ class Humidifier {
     }
 }
 
-export {LED, Motor, Sensor, Cooler, HeatingElement, Humidifier}
+class Health {
+    static async getAll() {
+        const get = await fetch("https://hippo-immense-plainly.ngrok-free.app/health")
+        const response = await get.json()
+
+        console.log(response)
+
+        return [response.cpu, response.total_ram, response.ram]
+    }
+}
+
+export {LED, Motor, Sensor, Cooler, HeatingElement, Humidifier, Health}
