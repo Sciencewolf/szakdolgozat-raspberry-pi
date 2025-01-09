@@ -3,6 +3,7 @@ import subprocess
 from datetime import datetime
 import signal
 from flask import jsonify, Response
+import psutil
 
 
 def log(
@@ -365,9 +366,14 @@ class Utils:
         shutdown_command = "sudo shutdown -h now"
         os.system(shutdown_command)
 
-    def health(self) -> None:
-        """ Green LED """
-        pass
+    def health(self) -> list:
+        cpu = psutil.cpu_percent()
+        memory = psutil.virtual_memory()
+        battery = psutil.sensors_battery()
+
+        return [["cpu", cpu], ["memory %", memory.percent], ["battery", battery]]
+
+
 
     def emergency_shutdown(self) -> None:
         """

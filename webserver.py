@@ -514,7 +514,8 @@ def overall() -> Response:
         "day": 0,
         "updated": datetime.datetime.now().__str__(),
         "temp": 0.0,
-        "hum": 0.0
+        "hum": 0.0,
+        "health": utils.health()
     })
 
 
