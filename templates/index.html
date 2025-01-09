@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#303841" id="meta-theme">
     <meta name="keywords" content="Csibekeltető, szakdolgozat, raspberry-pi, android">
     
-    <title>{{ title }}</title>
+    <title>{{ text }}</title>
 
 	<link rel="icon" href="../static/images/favicon.png" id="icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -18,7 +18,7 @@
 
 <body>
     <header class="header">
-        <h2>{{ header }}</h2>
+        <h2>{{ text }}</h2>
     </header>
     
     <main>
@@ -68,10 +68,10 @@
 					</div>
 				</label>
 			</div>
-			<div class="item turn-on-off-purple-led">
-				<h3>Purple LED</h3>
+			<div class="item turn-on-off-cold-white-led">
+				<h3>Cold White LED</h3>
 				<label class="toggle-switch">
-					<input type="checkbox" id="checkbox-on-off-purple-led">
+					<input type="checkbox" id="checkbox-on-off-cold-white-led">
 					<div class="toggle-switch-background">
 						<div class="toggle-switch-handle"></div>
 					</div>
@@ -95,8 +95,8 @@
 				<h3>Lid is: <span id="lid"></span></h3>
                 <h3>CPU: <span id="cpu"></span></h3>
                 <h3>Total RAM: <span id="total-ram"></span></h3>
-                <h3>RAM by app: <span id="ram-app"></span></h3>
-                <h3>VRAM: <span id="vram"></span></h3>
+                <h3>RAM app: <span id="ram-app"></span></h3>
+                <h3>VRAM app: <span id="vram"></span></h3>
             </div>
         </div>
 
@@ -154,7 +154,7 @@
 				<div class="item humidifier">
 					<h3>Humidifier:</h3>
 					<label class="toggle-switch">
-						<input type="checkbox" id="checkbox-on-off-humidifier">
+						<input type="checkbox" id="checkbox-on-off-humidifier" disabled>
 						<div class="toggle-switch-background">
 							<div class="toggle-switch-handle"></div>
 						</div>

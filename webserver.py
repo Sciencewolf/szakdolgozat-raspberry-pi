@@ -78,9 +78,8 @@ def index():
 
     return render_template(
         template_name_or_list="index.html",
-        version="v2024.11.28",
-        title="Csibekeltető",
-        header="Csibekeltető"
+        version="v2025.01.09",
+        text="Csibekeltető",
     )
 
 """ hatching """
@@ -237,30 +236,30 @@ def turn_off_yellow_led() -> Response:
 
     return api_200_ok_response("yellow led is off")
 
-""" purple led """
+""" cold white led """
 
-@app.route("/on-purple-led", methods=['GET'])
-def turn_on_purple_led() -> Response:
+@app.route("/on-cold-white-led", methods=['GET'])
+def turn_on_cold_white_led() -> Response:
     log(
-        description="purple led is on",
+        description="cold white led is on",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
-    utils.on_purple_led()
+    utils.on_cold_white_led()
 
-    return api_200_ok_response("purple led is on")
+    return api_200_ok_response("cold white led is on")
 
 
-@app.route("/off-purple-led", methods=['GET'])
-def turn_off_purple_led() -> Response:
+@app.route("/off-cold-white-led", methods=['GET'])
+def turn_off_cold_white_led() -> Response:
     log(
-        description="purple led is off",
+        description="cold_white led is off",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
-    utils.off_purple_led()
+    utils.off_cold_white_led()
 
-    return api_200_ok_response("purple led is off")
+    return api_200_ok_response("cold_white led is off")
 
 
 """ blue led """

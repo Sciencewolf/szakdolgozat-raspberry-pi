@@ -5,7 +5,7 @@ const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led
 const checkboxOnOffWhiteLed = document.getElementById("checkbox-on-off-white-led")
 const checkboxOnOffOrangeLed = document.getElementById("checkbox-on-off-orange-led")
 const checkboxOnOffYellowLed = document.getElementById("checkbox-on-off-yellow-led")
-const checkboxOnOffPurpleLed = document.getElementById("checkbox-on-off-purple-led")
+const checkboxOnOffColdWhiteLed = document.getElementById("checkbox-on-off-cold-white-led")
 const checkboxOnOffBlueLed = document.getElementById("checkbox-on-off-blue-led")
 
 const temperature = document.getElementById("temp")
@@ -55,10 +55,10 @@ const getHealth = async () => {
     try {
         const getAllData = await Health.getAll()
 
-        cpu.innerHTML = getAllData[0]
-        totalRam.innerHTML = getAllData[1]
-        ramApp.innerHTML = getAllData[2]
-        vram.innerHTML = getAllData[3]
+        cpu.innerHTML = getAllData[0] + " %"
+        totalRam.innerHTML = getAllData[1] + " %"
+        ramApp.innerHTML = getAllData[2] + " MB"
+        vram.innerHTML = getAllData[3] + " MB"
     } catch (err) {
         console.log(err)
     }
@@ -190,19 +190,19 @@ checkboxOnOffYellowLed.addEventListener('click', async () => {
     }
 })
 
-checkboxOnOffPurpleLed.addEventListener('click', async () => {
-    if (checkboxOnOffPurpleLed.checked) {
+checkboxOnOffColdWhiteLed.addEventListener('click', async () => {
+    if (checkboxOnOffColdWhiteLed.checked) {
         try {
-            await LED.onPurpleLed()
-            changeTitle("PurpleLed is ON")
+            await LED.onColdWhiteLed()
+            changeTitle("ColdWhiteLed is ON")
         } catch (error) {
             console.log(error)
             changeTitle("Error", 'e')
         }
     } else {
         try {
-            await LED.offPurpleLed()
-            changeTitle("PurpleLED is OFF")
+            await LED.offColdWhiteLed()
+            changeTitle("ColdWhiteLED is OFF")
         } catch (error) {
             console.log(error)
             changeTitle("Error", 'e')

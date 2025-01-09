@@ -38,7 +38,7 @@ LED_PINS: dict = {
     "white": 22,
     "orange": 5,
     "yellow": 6,
-    "purple": 13,
+    "cold_white": 13,
     "blue": 19
 }
 
@@ -56,7 +56,7 @@ class Leds:
     white = "white"
     orange = "orange"
     yellow = "yellow"
-    purple = "purple"
+    cold_white = "cold_white"
     blue = "blue"
 
 
@@ -120,6 +120,7 @@ class Utils:
 
     """ Utils method's """
 
+    # TODO: refactor this method pls, remove Responses, move to api level
     def get_temp_and_hum(self, api_base_url: str, timestamp: datetime, headers: str) -> Response:
         result = subprocess.run(
             [os.path.join(self.base_dir, "py-part/temp_hum_sensor.py")],
@@ -159,23 +160,41 @@ class Utils:
             "timestamp": timestamp
         })
 
-    def is_temperature_normal(self) -> bool:
-        pass
+    def set_temp(self, temp: float) -> None:
+        self.on_heating_element()
 
-    def is_humidity_normal(self) -> bool:
-        pass
+        while True:
+            temp, _, day = self.get_temp_and_hum()
 
-    def indicate_heating_element(self) -> None:
-        """ Blue LED if heating element is working. Do not touch the lid """
-        pass
+            if self.is_temperature_normal(day, temp):
+                self.off_heating_element()
+                break
+    
 
-    def indicate_humidifier(self) -> None:
-        """ Yellow LED if humidifier if working. Do not touch the lid """
-        pass
+    def set_hum(self, hum: float) -> None:
+        self.on_humidifier()
 
-    def indicate_eggs_rotating(self) -> None:
-        """ Green LED if engine is rotating the egg's. Do not touch the lid """
-        pass
+        while True:
+            _, hum, day = self.get_temp_and_hum()
+
+            if self.is_humidity_normal(day, hum):
+                self.off_humidifier()
+                break
+
+
+    def is_temperature_normal(self, day: int, temp: float) -> bool:
+        temp_datas = {
+            0: 37.5
+        }
+
+        return temp_datas[day] == temp
+
+    def is_humidity_normal(self, day: int, hum: float) -> bool:
+        hum_datas = {
+            0: 66.7
+        }
+
+        return hum_datas[day] == hum
 
     def prepare_hatching(self) -> str | None:
         """ before hatching eggs check if hardware is okay """
@@ -191,6 +210,7 @@ class Utils:
 
     """ Lid """
 
+    # TODO: refactor this method pls, remove Responses
     def lid_status(self, api_base_url: str, timestamp: datetime, headers: str) -> Response:
         result = subprocess.run(
             [os.path.join(self.base_dir, "py-part/switch.py")],
@@ -283,11 +303,11 @@ class Utils:
 
     def on_humidifier(self) -> None:
         self.__start_process(name="humidifier", script="humidifier.py")
-        self.on_purple_led()
+        self.on_cold_white_led()
 
     def off_humidifier(self) -> None:
         self.__stop_process("humidifier")
-        self.off_purple_led()
+        self.off_cold_white_led()
 
     """ LED """
 
@@ -341,15 +361,15 @@ class Utils:
     def off_yellow_led(self) -> None:
         self.__stop_process("yellow_led")
 
-    def on_purple_led(self, mode: str=Mode.hold) -> None:
+    def on_cold_white_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(
-            name="purple_led",
-            led=Leds.purple,
+            name="cold_white_led",
+            led=Leds.cold_white,
             mode=mode
         )
 
-    def off_purple_led(self) -> None:
-        self.__stop_process("purple_led")
+    def off_cold_white_led(self) -> None:
+        self.__stop_process("cold_white_led")
 
     def on_blue_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(
@@ -383,8 +403,6 @@ class Utils:
             ["memory by app vms", app_vmem_usage]
         ]
 
-
-
     def emergency_shutdown(self) -> None:
         """
             1. heating element -> off
@@ -393,21 +411,14 @@ class Utils:
             4. cooler -> off
             5. LED if someone is running -> off
         """
-        pass
 
-    def last_emergency_shutdown(self) -> None:
-        pass
+        with open("emergency.txt", 'a+') as file:
+            file.write(datetime.now().__str__())
 
-    def error(self) -> None:
-        """ Red LED """
-        pass
 
-    def last_error(self) -> str | None:
-        pass
-
-    def run(self) -> None:
-        """ Main function for Utils class """
-        self.run_prediction_algorithm()
+    def last_emergency_shutdown(self) -> str:
+        with open('emergency.txt', 'r') as file:
+            return file.readlines()[-1]
 
 
 def main() -> None:
