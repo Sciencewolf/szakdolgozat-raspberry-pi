@@ -529,6 +529,7 @@ def health() -> Response:
         "cpu": utils.health()[0][1],
         "total_ram": utils.health()[1][1],
         "ram": utils.health()[2][1],
+        "vram": utils.health()[3][1]
     })
 
 

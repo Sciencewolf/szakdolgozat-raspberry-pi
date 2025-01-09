@@ -255,7 +255,7 @@ class Health {
 
         console.log(response)
 
-        return [response.cpu, response.total_ram, response.ram]
+        return [response.cpu, response.total_ram, response.ram, response.vram]
     }
 }
 

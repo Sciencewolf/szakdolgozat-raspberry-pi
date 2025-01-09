@@ -14,6 +14,7 @@ const lid = document.getElementById("lid")
 const cpu = document.getElementById("cpu")
 const totalRam = document.getElementById("total-ram")
 const ramApp = document.getElementById("ram-app")
+const vram = document.getElementById("vram")
 
 const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
 const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
@@ -57,6 +58,7 @@ const getHealth = async () => {
         cpu.innerHTML = getAllData[0]
         totalRam.innerHTML = getAllData[1]
         ramApp.innerHTML = getAllData[2]
+        vram.innerHTML = getAllData[3]
     } catch (err) {
         console.log(err)
     }
@@ -377,4 +379,4 @@ setInterval(async() => {
     if (!document.querySelector(".div-disconnected")) {
         await getHealth()
     }
-}, 10_000)
+}, 2_000)
