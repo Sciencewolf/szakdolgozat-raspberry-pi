@@ -2,6 +2,8 @@ import os
 import subprocess
 from datetime import datetime
 import signal
+from typing import AnyStr
+
 from flask import jsonify, Response
 import psutil
 
@@ -368,10 +370,18 @@ class Utils:
 
     def health(self) -> list:
         cpu = psutil.cpu_percent()
-        memory = psutil.virtual_memory()
-        battery = psutil.sensors_battery()
+        all_memory = psutil.virtual_memory()
+        process = psutil.Process(os.getpid())
+        app_mem_usage = process.memory_info().rss / 1024 ** 2
+        app_vmem_usage = process.memory_info().vms / 1024 ** 2
 
-        return [["cpu", cpu], ["memory %", memory.percent], ["battery", battery]]
+
+        return [
+            ["cpu", cpu],
+            ["all memory %", all_memory.percent],
+            ["memory by app rss", app_mem_usage],
+            ["memory by app vms", app_vmem_usage]
+        ]
 
 
 
