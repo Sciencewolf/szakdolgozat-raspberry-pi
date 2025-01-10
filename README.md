@@ -6,10 +6,10 @@
 - Lid open: red
 - Heating element on: green
 - Cooler on: White
-- Humidifier on: pink
+- Humidifier on: blue
 - DC motor on: yellow
 - Raspi on: cold white
-- Preparing: blue
+- Other: -
 
 # Hardware Wiring
 > [!WARNING]
