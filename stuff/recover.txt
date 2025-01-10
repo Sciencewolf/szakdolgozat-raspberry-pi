@@ -1,4 +1,4 @@
-ssh error
+ssh error on windows
 
 ssh-keygen.exe -R raspberrypi
 ssh-keygen.exe -R <ip>

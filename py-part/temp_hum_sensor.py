@@ -22,12 +22,12 @@ def main() -> None:
         hum = "%0.1f %%" % sensor.relative_humidity
 
         # Get the directory where this script is located
-        script_dir = os.path.dirname(os.path.abspath(__file__))
+        script_dir = '/home/aron/szakdolgozat-raspberry-pi/'
 
         # Construct the path to the temp_hum.txt file
         temp_hum_file = os.path.join(script_dir, "temp_hum.txt")
 
-        with open('temp_hum.txt', 'w') as file:
+        with open(temp_hum_file, 'w') as file:
             file.write(temp + '\n')
             file.write(hum + '\n')
             file.write(datetime.datetime.now().__str__() + '\n')

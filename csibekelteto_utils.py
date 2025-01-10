@@ -2,10 +2,9 @@ import os
 import subprocess
 from datetime import datetime
 import signal
-from typing import AnyStr
-
 from flask import jsonify, Response
 import psutil
+import time
 
 
 def log(
@@ -73,7 +72,6 @@ class Utils:
         self.led_panel: dict = {}
 
     # __private methods
-    # TODO: leds on start process
 
     def __start_process(self, name: str, script: str="led.py", led: str="", mode: str="") -> None:
         """Start a subprocess in a new session and track it by name."""
@@ -169,6 +167,8 @@ class Utils:
             if self.is_temperature_normal(day, temp):
                 self.off_heating_element()
                 break
+
+            time.sleep(20)
     
 
     def set_hum(self, hum: float) -> None:
@@ -180,6 +180,8 @@ class Utils:
             if self.is_humidity_normal(day, hum):
                 self.off_humidifier()
                 break
+
+            time.sleep(20)
 
 
     def is_temperature_normal(self, day: int, temp: float) -> bool:

@@ -68,6 +68,10 @@ def api_501_not_implemented_response(
         }), 501
     )
 
+
+""" Routes """
+
+
 @app.route("/")
 def index():
     log(
