@@ -8,8 +8,12 @@
 - Cooler on: White
 - Humidifier on: pink
 - DC motor on: yellow
-- Raspi on: purple
--  Preparing: blue
+- Raspi on: cold white
+- Preparing: blue
+
+# Hardware Wiring
+> [!WARNING]
+> Outdated version!
 
 ## RGB LED and AHT20 wiring
 
