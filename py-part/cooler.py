@@ -7,6 +7,7 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
+import time
 
 RELAY_GPIO_PIN: int = 24
 
@@ -18,12 +19,17 @@ def main() -> None:
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
+
+        # Turn on the relay once
+        gpio.output(RELAY_GPIO_PIN, gpio.LOW)
         
         while True:
-            gpio.output(RELAY_GPIO_PIN, gpio.LOW)
+            # Sleep to avoid CPU overloading
+            time.sleep(1)
     except Exception as ex:
         print(ex.__str__())
     finally:
+        # Turn off the relay on exit
         gpio.output(RELAY_GPIO_PIN, gpio.HIGH)
         gpio.cleanup()
 

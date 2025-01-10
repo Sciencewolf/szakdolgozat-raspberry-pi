@@ -7,6 +7,7 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
+import time
 
 ENA_GPIO_PIN: int = 16
 IN1_GPIO_PIN: int = 20
@@ -28,10 +29,12 @@ def main(*args, **kwargs):
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
+        gpio.output(IN1_GPIO_PIN, gpio.LOW)
+        gpio.output(IN2_GPIO_PIN, gpio.HIGH)
+        pwm.ChangeDutyCycle(100)  # 100% speed
+
         while True:
-            gpio.output(IN1_GPIO_PIN, gpio.LOW)
-            gpio.output(IN2_GPIO_PIN, gpio.HIGH)
-            pwm.ChangeDutyCycle(100)  # 100% speed
+            time.sleep(1)
     except Exception as ex:
         print("exiting...", ex.__str__())
     finally:

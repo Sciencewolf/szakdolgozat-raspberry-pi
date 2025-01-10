@@ -3,11 +3,12 @@
 from gpiozero import LED
 import time
 from signal import signal, SIGTERM, SIGHUP
+from csibekelteto_utils import LED_PINS
 
 
-led = LED(19)
+led = LED(LED_PINS['blue'])
 
-SLEEP: float = .4
+SLEEP: float = 8 # sec
 
 
 def main() -> None:
@@ -16,7 +17,9 @@ def main() -> None:
         signal(SIGHUP, safe_exit)
 
         led.on()
-        time.sleep(SLEEP*10)
+        time.sleep(SLEEP)
+        led.off()
+
     except Exception as ex:
         print(ex.__str__())
 

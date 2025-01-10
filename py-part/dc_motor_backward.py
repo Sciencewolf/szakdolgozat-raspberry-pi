@@ -7,6 +7,7 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
+import time
 
 ENA_GPIO_PIN: int = 16
 IN1_GPIO_PIN: int = 20
@@ -19,21 +20,25 @@ gpio.setup(IN2_GPIO_PIN, gpio.OUT, initial=gpio.LOW)
 gpio.setup(ENA_GPIO_PIN, gpio.OUT, initial=gpio.LOW)
 
 pwm = gpio.PWM(ENA_GPIO_PIN, 100)  # 100Hz PWM
-pwm.start(0)  # speed 0%
+pwm.start(0)  # Start with 0% duty cycle
 
 
-def main(*args, **kwargs):
+def main():
     """ TODO: add args to set speed """
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
+        # Set GPIO states and PWM duty cycle once
+        gpio.output(IN1_GPIO_PIN, gpio.HIGH)
+        gpio.output(IN2_GPIO_PIN, gpio.LOW)
+        pwm.ChangeDutyCycle(100)
+
+        # Keep the program running with minimal CPU usage
         while True:
-            gpio.output(IN1_GPIO_PIN, gpio.HIGH)
-            gpio.output(IN2_GPIO_PIN, gpio.LOW)
-            pwm.ChangeDutyCycle(100)
+            time.sleep(1)  # Add a delay to avoid busy-waiting
     except Exception as ex:
-        print("exiting...", ex.__str__())
+        print("Exiting...", ex.__str__())
     finally:
         pwm.stop()
         gpio.cleanup()
@@ -46,4 +51,3 @@ def safe_exit(signum, frame) -> None:
 
 if __name__ == "__main__":
     main()
-

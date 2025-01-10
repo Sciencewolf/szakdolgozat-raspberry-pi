@@ -34,13 +34,15 @@ def main() -> None:
                 time.sleep(SLEEP)
                 led.off()
                 time.sleep(SLEEP)
-        elif sys.argv[2] == 'hold' and len(sys.argv) == 3 :
+        elif sys.argv[2] == 'hold' and len(sys.argv) == 3:
+            led.on()  # Turn LED on once
             while True:
-                led.on()
+                time.sleep(1)  # Add a delay to reduce CPU usage
     except Exception as ex:
         print(ex.__str__())
     finally:
         led.off()
+
 
 
 def safe_exit(signum, frame) -> None:

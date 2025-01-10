@@ -8,6 +8,7 @@ description:
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
+import time
 
 RELAY_PIN: int = 23
 
@@ -20,8 +21,10 @@ def main() -> None:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
+        gpio.output(RELAY_PIN, gpio.LOW)
+
         while True:
-            gpio.output(RELAY_PIN, gpio.LOW)
+            time.sleep(1)
     except Exception as ex:
         print(ex.__str__())
     finally:
