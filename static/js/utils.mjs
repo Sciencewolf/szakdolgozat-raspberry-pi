@@ -257,6 +257,15 @@ class Health {
 
         return [response.cpu, response.total_ram, response.ram, response.vram]
     }
+
+    static async isRaspiAlive() {
+        const get = await fetch("https://hippo-immense-plainly.ngrok-free.app/alive")
+        const response = await get.json()
+
+        console.log(response);
+
+        return response.status_code === 200
+    }
 }
 
 export {LED, Motor, Sensor, Cooler, HeatingElement, Humidifier, Health}

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/relay-and-fan-wiring_image.png
@@ -9,29 +9,26 @@ import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 import time
 
-RELAY_GPIO_PIN: int = 24
+RELAY_GPIO_PIN = 24
 
 gpio.setmode(gpio.BCM)
 gpio.setup(RELAY_GPIO_PIN, gpio.OUT)
 
-
-def main() -> None:
+def main():
     try:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
-        # Turn on the relay once
         gpio.output(RELAY_GPIO_PIN, gpio.LOW)
-        
+
         while True:
-            # Sleep to avoid CPU overloading
             time.sleep(1)
-    except Exception as ex:
-        print(ex.__str__())
+    except Exception as e:
+        print(f"Error: {e}")
     finally:
-        # Turn off the relay on exit
         gpio.output(RELAY_GPIO_PIN, gpio.HIGH)
         gpio.cleanup()
+
 
 
 def safe_exit(signum, frame) -> None:

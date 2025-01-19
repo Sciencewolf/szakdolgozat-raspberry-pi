@@ -256,9 +256,11 @@ class Utils:
             lines = file.readlines()
             for line in lines:
                 if line.startswith("!"):
+                    status: str = line.split(" ")[1]
+
                     return jsonify({
                         "status_code": 200,
-                        "lid": line.split(" ")[1],
+                        "lid": status,
                         "timestamp": timestamp
                     })
 

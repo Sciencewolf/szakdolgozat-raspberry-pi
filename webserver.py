@@ -465,6 +465,7 @@ def turn_off_dc_motor_backward() -> Response:
 
     return api_200_ok_response("dc motor backward is off")
 
+
 """ humidifier """
 
 @app.route("/on-humidifier")

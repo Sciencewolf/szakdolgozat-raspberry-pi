@@ -19,7 +19,7 @@ const vram = document.getElementById("vram")
 const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
 const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
 const checkboxOnOffDcMotorForward = document.getElementById("checkbox-on-off-dc-motor-forward")
-const checkboxOnOffDcMotorBackward = document.getElementById("checkbox-on-off-dc-motor-backward")
+// const checkboxOnOffDcMotorBackward = document.getElementById("checkbox-on-off-dc-motor-backward")
 const checkboxOnOffHumidifier = document.getElementById("checkbox-on-off-humidifier")
 
 const btnEndpoints = document.getElementById("btn-endpoints")
@@ -48,6 +48,18 @@ const lidStatus = async () => {
     } catch (error) {
         sessionStorage.setItem('error', 'true')
         console.log(error);
+    }
+}
+
+const isAlive = async () => {
+    try {
+        const response = await Health.isRaspiAlive()
+
+        if(response) {
+            window.location.href = "/"
+        }
+    } catch (err) {
+        console.log(err);
     }
 }
 
@@ -264,14 +276,14 @@ checkboxOnOffHeatingElement.addEventListener('click', async () => {
 
 checkboxOnOffDcMotorForward.addEventListener('click', async () => {
     if (checkboxOnOffDcMotorForward.checked) {
-        checkboxOnOffDcMotorBackward.disabled = true
+        // checkboxOnOffDcMotorBackward.disabled = true
         try {
             await Motor.onDcMotorForward()
         } catch (error) {
             console.log(error)
         }
     } else {
-        checkboxOnOffDcMotorBackward.disabled = false
+        // checkboxOnOffDcMotorBackward.disabled = false
         try {
             await Motor.offDcMotorForward()
         } catch (error) {
@@ -280,23 +292,23 @@ checkboxOnOffDcMotorForward.addEventListener('click', async () => {
     }
 })
 
-checkboxOnOffDcMotorBackward.addEventListener('click', async () => {
-    if (checkboxOnOffDcMotorBackward.checked) {
-        checkboxOnOffDcMotorForward.disabled = true
-        try {
-            await Motor.onDcMotorBackward()
-        } catch (error) {
-            console.log(error)
-        }
-    } else {
-        checkboxOnOffDcMotorForward.disabled = false
-        try {
-            await Motor.offDcMotorBackward()
-        } catch (error) {
-            console.log(error)
-        }
-    }
-})
+// checkboxOnOffDcMotorBackward.addEventListener('click', async () => {
+//     if (checkboxOnOffDcMotorBackward.checked) {
+//         checkboxOnOffDcMotorForward.disabled = true
+//         try {
+//             await Motor.onDcMotorBackward()
+//         } catch (error) {
+//             console.log(error)
+//         }
+//     } else {
+//         checkboxOnOffDcMotorForward.disabled = false
+//         try {
+//             await Motor.offDcMotorBackward()
+//         } catch (error) {
+//             console.log(error)
+//         }
+//     }
+// })
 
 checkboxOnOffHumidifier.addEventListener('click', async () => {
     if (checkboxOnOffHumidifier.checked) {
@@ -360,8 +372,16 @@ setInterval(() => {
         document.body.innerHTML = ""
         const div = document.createElement('div')
         div.className = "div-disconnected"
-        div.innerHTML = `Disconnected at ${new Date().toISOString().split('T')[0]} ${new Date().toTimeString().split(' ')[0]}`
-        document.body.appendChild(div)    }
+        div.innerHTML = "RasPi/webserver is offline"
+        document.body.appendChild(div)  
+    }
+
+}, 2_000)
+
+setInterval(async () => {
+    if (document.querySelector('.div-disconnected')) {
+        await isAlive()
+    }
 }, 2_000)
 
 
@@ -369,12 +389,12 @@ setInterval(async () => {
     if (!document.querySelector(".div-disconnected")) {
         await tempHumSensor()
     }
-}, 10_000)
+}, 2_000)
 setInterval(async () => {
     if (!document.querySelector(".div-disconnected")) {
         await lidStatus()
     }
-}, 10_000)
+}, 2_000)
 setInterval(async() => {
     if (!document.querySelector(".div-disconnected")) {
         await getHealth()
