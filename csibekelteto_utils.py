@@ -2,7 +2,7 @@ import os
 import subprocess
 from datetime import datetime
 import signal
-from flask import jsonify, Response
+from flask import jsonify
 import psutil
 import time
 
@@ -18,7 +18,7 @@ def log(
     today = datetime.now().strftime("%Y-%B-%d")
 
     log_directory = "/home/aron/szakdolgozat-raspberry-pi/log"
-    log_file_path = f"{log_directory}/{today}-log_system.txt"
+    log_file_path = f"{log_directory}/{today}-log-system.txt"
 
     os.makedirs(log_directory, exist_ok=True)
 
@@ -118,8 +118,7 @@ class Utils:
 
     """ Utils method's """
 
-    # TODO: refactor this method pls, remove Responses, move to api level
-    def get_temp_and_hum(self, api_base_url: str, timestamp: datetime, headers: str) -> Response:
+    def get_temp_and_hum(self) -> dict:
         result = subprocess.run(
             [os.path.join(self.base_dir, "py-part/temp_hum_sensor.py")],
             capture_output=True,
@@ -127,36 +126,23 @@ class Utils:
         )
 
         if result.returncode != 0:
-            return jsonify({
+            return {
                 "status_code": 404,
                 "content": "not found response",
                 "timestamp": timestamp
-            })
+            }
 
-        try:
-            with open(os.path.join(self.base_dir, "temp_hum.txt"), 'r') as file:
-                temp = file.readline().strip()
-                hum = file.readline().strip()
-                timestamp = file.readline().strip()
-        except FileNotFoundError as fnfe:
-            log(
-                reason="error at reading temp_hum.txt",
-                description=f"file not found {fnfe.__str__()}",
-                api_url=api_base_url,
-                headers=headers
-            )
+        with open(os.path.join(self.base_dir, "temp_hum.txt"), 'r') as file:
+            temp = file.readline().strip()
+            hum = file.readline().strip()
+            timestamp = file.readline().strip()
 
-            return jsonify({
-                "status_code": 404,
-                "content": "not found response",
+            return {
+                "temp": temp,
+                "hum": hum,
                 "timestamp": timestamp
-            })
-
-        return jsonify({
-            "temp": temp,
-            "hum": hum,
-            "timestamp": timestamp
-        })
+            }
+    
 
     def set_temp(self, temp: float) -> None:
         self.on_heating_element()
@@ -212,8 +198,7 @@ class Utils:
 
     """ Lid """
 
-    # TODO: refactor this method pls, remove Responses
-    def lid_status(self, api_base_url: str, timestamp: datetime, headers: str) -> Response:
+    def lid_status(self) -> dict:
         result = subprocess.run(
             [os.path.join(self.base_dir, "py-part/switch.py")],
             capture_output=True,
@@ -223,46 +208,37 @@ class Utils:
         if result.returncode != 0:
             log(
                 reason="error at switch",
-                description="not found",
-                api_url=api_base_url,
-                headers=headers
+                description="not found"
             )
 
             return jsonify({
                 "status_code": 404,
                 "content": "error at lid",
-                "timestamp": timestamp
+                "timestamp": datetime.now().__str__()
             })
 
         if not os.path.exists(self.lid_file_path):
-            log(
-                description="lid status file does not exists",
-                api_url=api_base_url
-            )
+            log(description="lid status file does not exists")
 
             return jsonify({
                 "status_code": 404,
                 "lid": "undefined",
-                "timestamp": timestamp
+                "timestamp": datetime.now().__str__()
             })
 
         with open(self.lid_file_path, 'r') as file:
-            log(
-                description="access lid status file",
-                api_url=api_base_url,
-                headers=headers
-            )
+            log(description="access lid status file")
 
             lines = file.readlines()
             for line in lines:
                 if line.startswith("!"):
                     status: str = line.split(" ")[1]
 
-                    return jsonify({
+                    return {
                         "status_code": 200,
                         "lid": status,
-                        "timestamp": timestamp
-                    })
+                        "timestamp": datetime.now().__str__()
+                    }
 
     """ Cooler """
 

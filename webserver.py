@@ -24,7 +24,7 @@ utils: Utils = Utils()
 
 
 def api_200_ok_response(
-        response: str,
+        response: str | list | dict | None,
         status_code: int=200,
         other: list | None=None
 ) -> Response:
@@ -303,11 +303,7 @@ def get_temperature_and_humidity_from_sensor() -> Response:
         headers=request.user_agent.string
     )
 
-    return utils.get_temp_and_hum(
-        api_base_url=request.base_url,
-        timestamp=datetime.datetime.now(),
-        headers=request.user_agent.string
-    )
+    return api_200_ok_response(response=utils.get_temp_and_hum())
 
 """ set temp and hum """
 """ TODO: if file has t and h and another api call enters, override value  """
@@ -353,11 +349,7 @@ def get_lid_status() -> Response:
         headers=request.user_agent.string
     )
 
-    return utils.lid_status(
-        api_base_url=request.base_url,
-        timestamp=datetime.datetime.now(),
-        headers=request.user_agent.string
-    )
+    return api_200_ok_response(response=utils.lid_status())
 
 
 """ cooler """
