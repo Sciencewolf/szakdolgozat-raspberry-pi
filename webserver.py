@@ -82,7 +82,7 @@ def index():
 
     return render_template(
         template_name_or_list="index.html",
-        version="v2025.01.09",
+        version="v2025.02.05",
         text="Csibekeltető",
     )
 
@@ -191,29 +191,6 @@ def turn_off_white_led() -> Response:
 
     return api_200_ok_response("white led is off")
 
-""" orange led """
-
-@app.route("/on-orange-led")
-def turn_on_orange_led() -> Response:
-    log(
-        description="orange led is on",
-        api_url=request.base_url,
-        headers=request.user_agent.string
-    )
-    utils.on_orange_led()
-
-    return api_200_ok_response("orange led is on")
-
-@app.route("/off-orange-led")
-def turn_off_orange_led() -> Response:
-    log(
-        description="orange led is off",
-        api_url=request.base_url,
-        headers=request.user_agent.string
-    )
-    utils.off_orange_led()
-
-    return api_200_ok_response("orange led is off")
 
 """ yellow led """
 

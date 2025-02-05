@@ -88,24 +88,6 @@ class LED{
 
     }
 
-    static async onOrangeLed() {
-        const onOrangeLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-orange-led")
-        const response = await onOrangeLed.json()
-
-        console.log(response)
-        
-
-    }
-
-    static async offOrangeLed() {
-        const offOrangeLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/off-orange-led")
-        const response = await offOrangeLed.json()
-
-        console.log(response)
-        
-
-    }
-
     static async onColdWhiteLed() {
         const onColdWhiteLed = await fetch("https://hippo-immense-plainly.ngrok-free.app/on-cold-white-led")
         const response = await onColdWhiteLed.json()

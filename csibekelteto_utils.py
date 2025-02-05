@@ -35,7 +35,7 @@ LED_PINS: dict = {
     "red": 17,
     "green": 27,
     "white": 22,
-    "orange": 5,
+    
     "yellow": 6,
     "cold_white": 13,
     "blue": 19
@@ -53,7 +53,7 @@ class Leds:
     red = "red"
     green = "green"
     white = "white"
-    orange = "orange"
+    
     yellow = "yellow"
     cold_white = "cold_white"
     blue = "blue"
@@ -320,16 +320,6 @@ class Utils:
 
     def off_white_led(self) -> None:
         self.__stop_process("white_led")
-
-    def on_orange_led(self, mode: str=Mode.hold) -> None:
-        self.__start_process(
-            name="orange_led",
-            led=Leds.orange,
-            mode=mode
-        )
-
-    def off_orange_led(self) -> None:
-        self.__stop_process("orange_led")
 
     def on_yellow_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(

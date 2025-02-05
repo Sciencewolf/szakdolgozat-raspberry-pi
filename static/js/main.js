@@ -3,7 +3,6 @@ import {Cooler, HeatingElement, Humidifier, LED, Motor, Sensor, Health} from "./
 const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
 const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led")
 const checkboxOnOffWhiteLed = document.getElementById("checkbox-on-off-white-led")
-const checkboxOnOffOrangeLed = document.getElementById("checkbox-on-off-orange-led")
 const checkboxOnOffYellowLed = document.getElementById("checkbox-on-off-yellow-led")
 const checkboxOnOffColdWhiteLed = document.getElementById("checkbox-on-off-cold-white-led")
 const checkboxOnOffBlueLed = document.getElementById("checkbox-on-off-blue-led")
@@ -155,26 +154,6 @@ checkboxOnOffWhiteLed.addEventListener('click', async () => {
         try {
             await LED.offWhiteLed()
             changeTitle("WhiteLED is OFF")
-        } catch (error) {
-            console.log(error)
-            changeTitle("Error", 'e')
-        }
-    }
-})
-
-checkboxOnOffOrangeLed.addEventListener('click', async () => {
-    if (checkboxOnOffOrangeLed.checked) {
-        try {
-            await LED.onOrangeLed()
-            changeTitle("OrangeLED is ON")
-        } catch (error) {
-            console.log(error)
-            changeTitle("Error", 'e')
-        }
-    } else {
-        try {
-            await LED.offOrangeLed()
-            changeTitle("OrangeLED is OFF")
         } catch (error) {
             console.log(error)
             changeTitle("Error", 'e')
