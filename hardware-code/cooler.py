@@ -8,8 +8,9 @@ description:
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 import time
+from csibekelteto_utils import RELAY_PINS
 
-RELAY_GPIO_PIN = 24
+RELAY_GPIO_PIN: int = RELAY_PINS['cooler']
 
 gpio.setmode(gpio.BCM)
 gpio.setup(RELAY_GPIO_PIN, gpio.OUT)

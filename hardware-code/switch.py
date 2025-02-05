@@ -11,10 +11,11 @@ from signal import signal, SIGTERM, SIGHUP
 from datetime import datetime
 import os
 import time
+from csibekelteto_utils import LED_PINS, LEDs
 
 
 SWITCH_GPIO_PIN: int = 4
-red_led = LED(17)
+red_led = LED(LED_PINS.get(LEDs.red))
 
 GPIO.setmode(GPIO.BCM)
 

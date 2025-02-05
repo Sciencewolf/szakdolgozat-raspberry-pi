@@ -41,13 +41,19 @@ LED_PINS: dict = {
     "blue": 19
 }
 
+RELAY_PINS: dict = {
+    "cooler": 24,
+    "heating_element": 23,
+    "humidifier": 25, 
+}
+
 class Mode:
     """ Defines modes for led [blink or hold]  """
 
     blink = "blink"
     hold = "hold"
 
-class Leds:
+class LEDs:
     """ Defines led colors """
 
     red = "red"
@@ -82,7 +88,7 @@ class Utils:
 
         try:
             process = subprocess.Popen(
-                [os.path.join(self.base_dir, f"py-part/{script}")] + [led, mode],
+                [os.path.join(self.base_dir, f"hardware-code/{script}")] + [led, mode],
                 start_new_session=True  # Start in a new session
             )
             self.processes[name] = process
@@ -120,7 +126,7 @@ class Utils:
 
     def get_temp_and_hum(self) -> dict:
         result = subprocess.run(
-            [os.path.join(self.base_dir, "py-part/temp_hum_sensor.py")],
+            [os.path.join(self.base_dir, "hardware-code/temp_hum_sensor.py")],
             capture_output=True,
             text=True
         )
@@ -200,7 +206,7 @@ class Utils:
 
     def lid_status(self) -> dict:
         result = subprocess.run(
-            [os.path.join(self.base_dir, "py-part/switch.py")],
+            [os.path.join(self.base_dir, "hardware-code/switch.py")],
             capture_output=True,
             text=True
         )
@@ -208,7 +214,7 @@ class Utils:
         if result.returncode != 0:
             log(
                 reason="error at switch",
-                description="not found"
+                description=result.stderr
             )
 
             return jsonify({
@@ -294,7 +300,7 @@ class Utils:
     def on_red_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(
             name="red_led",
-            led=Leds.red,
+            led=LEDs.red,
             mode=mode
         )
 
@@ -304,7 +310,7 @@ class Utils:
     def on_green_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(
             name="green_led",
-            led=Leds.green,
+            led=LEDs.green,
             mode=mode
         )
 
@@ -314,7 +320,7 @@ class Utils:
     def on_white_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(
             name="white_led",
-            led=Leds.white,
+            led=LEDs.white,
             mode=mode
         )
 
@@ -324,7 +330,7 @@ class Utils:
     def on_yellow_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(
             name="yellow_led",
-            led=Leds.yellow,
+            led=LEDs.yellow,
             mode=mode
         )
 
@@ -334,7 +340,7 @@ class Utils:
     def on_cold_white_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(
             name="cold_white_led",
-            led=Leds.cold_white,
+            led=LEDs.cold_white,
             mode=mode
         )
 
@@ -344,7 +350,7 @@ class Utils:
     def on_blue_led(self, mode: str=Mode.hold) -> None:
         self.__start_process(
             name="blue_led",
-            led=Leds.blue,
+            led=LEDs.blue,
             mode=mode
         )
 

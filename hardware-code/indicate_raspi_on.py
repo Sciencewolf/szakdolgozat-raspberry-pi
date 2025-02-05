@@ -3,12 +3,12 @@
 from gpiozero import LED
 import time
 from signal import signal, SIGTERM, SIGHUP
-from csibekelteto_utils import LED_PINS
+from csibekelteto_utils import LED_PINS, LEDs
 
 
-led = LED(LED_PINS['cold_white'])
+led = LED(LED_PINS.get(LEDs.cold_white))
 
-SLEEP: float = 8 # sec
+SLEEP: float = 8
 
 
 def main() -> None:

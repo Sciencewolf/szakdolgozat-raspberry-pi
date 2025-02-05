@@ -1,30 +1,33 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """
-wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/heating-element-and-relay-wiring_image.png
+wiring:
 description:
 """
-
 
 import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 import time
+from csibekelteto_utils import RELAY_PINS
 
-RELAY_PIN: int = 23
+RELAY_PIN: int = RELAY_PINS.get("humidifier")
 
 gpio.setmode(gpio.BCM)
 gpio.setup(RELAY_PIN, gpio.OUT)
 
 
 def main() -> None:
+
     try:
+        for i in range(15, 0, -1):
+            print(i)
+            time.sleep(1)
+            
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
         gpio.output(RELAY_PIN, gpio.LOW)
-
-        while True:
-            time.sleep(1)
+        time.sleep(0.5)
     except Exception as ex:
         print(ex.__str__())
     finally:
@@ -35,7 +38,7 @@ def main() -> None:
 def safe_exit(signum, frame) -> None:
     """ Provides a safe shutdown of the program """
     exit(1)
-    
+
 
 if __name__ == "__main__":
     main()
