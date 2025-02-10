@@ -17,8 +17,8 @@ const vram = document.getElementById("vram")
 
 const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
 const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
-const checkboxOnOffDcMotorForward = document.getElementById("checkbox-on-off-dc-motor-forward")
-// const checkboxOnOffDcMotorBackward = document.getElementById("checkbox-on-off-dc-motor-backward")
+const checkboxOnOffEngineForward = document.getElementById("checkbox-on-off-dc-motor-forward")
+const checkboxOnOffEngineBackward = document.getElementById("checkbox-on-off-dc-motor-backward")
 const checkboxOnOffHumidifier = document.getElementById("checkbox-on-off-humidifier")
 
 const btnEndpoints = document.getElementById("btn-endpoints")
@@ -253,41 +253,41 @@ checkboxOnOffHeatingElement.addEventListener('click', async () => {
     }
 })
 
-checkboxOnOffDcMotorForward.addEventListener('click', async () => {
-    if (checkboxOnOffDcMotorForward.checked) {
-        // checkboxOnOffDcMotorBackward.disabled = true
+checkboxOnOffEngineForward.addEventListener('click', async () => {
+    if (checkboxOnOffEngineForward.checked) {
+        checkboxOnOffEngineBackward.disabled = true
         try {
-            await Motor.onDcMotorForward()
+            await Motor.onEngineForward()
         } catch (error) {
             console.log(error)
         }
     } else {
-        // checkboxOnOffDcMotorBackward.disabled = false
+        checkboxOnOffEngineBackward.disabled = false
         try {
-            await Motor.offDcMotorForward()
+            await Motor.offEngineForward()
         } catch (error) {
             console.log(error)
         }
     }
 })
 
-// checkboxOnOffDcMotorBackward.addEventListener('click', async () => {
-//     if (checkboxOnOffDcMotorBackward.checked) {
-//         checkboxOnOffDcMotorForward.disabled = true
-//         try {
-//             await Motor.onDcMotorBackward()
-//         } catch (error) {
-//             console.log(error)
-//         }
-//     } else {
-//         checkboxOnOffDcMotorForward.disabled = false
-//         try {
-//             await Motor.offDcMotorBackward()
-//         } catch (error) {
-//             console.log(error)
-//         }
-//     }
-// })
+checkboxOnOffEngineBackward.addEventListener('click', async () => {
+    if (checkboxOnOffEngineBackward.checked) {
+        checkboxOnOffEngineForward.disabled = true
+        try {
+            await Motor.onEngineBackward()
+        } catch (error) {
+            console.log(error)
+        }
+    } else {
+        checkboxOnOffEngineForward.disabled = false
+        try {
+            await Motor.offEngineBackward()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+})
 
 checkboxOnOffHumidifier.addEventListener('click', async () => {
     if (checkboxOnOffHumidifier.checked) {
@@ -314,7 +314,7 @@ shutdown.addEventListener('click', async () => {
         div.innerHTML = `Disconnected at ${new Date().toISOString().split('T')[0]} ${new Date().toTimeString().split(' ')[0]}`
         document.body.appendChild(div)
         try {
-            const shutdownRaspberryPi = await fetch("https://hippo-immense-plainly.ngrok-free.app/shutdown")
+            const shutdownRaspberryPi = await fetch("https://willing-just-penguin.ngrok-free.app/shutdown")
             const response = await shutdownRaspberryPi.json()
             console.log(response)
         } catch (err) {
@@ -325,7 +325,7 @@ shutdown.addEventListener('click', async () => {
 
 btnEndpoints.addEventListener('click', async () => {
     try {
-        const getAllAPIEndpoints = await fetch("https://hippo-immense-plainly.ngrok-free.app/endpoints")
+        const getAllAPIEndpoints = await fetch("https://willing-just-penguin.ngrok-free.app/endpoints")
         const response = await getAllAPIEndpoints.json()
         console.log(response)
 
@@ -333,7 +333,7 @@ btnEndpoints.addEventListener('click', async () => {
         btnEndpoints.style.display = 'none'
 
         for (let item of response.other) {
-            let api_url = `https://hippo-immense-plainly.ngrok-free.app${item}`
+            let api_url = `https://willing-just-penguin.ngrok-free.app${item}`
             const url = document.createElement('a')
             url.setAttribute('href', `${api_url}`)
             url.target = '_blank'

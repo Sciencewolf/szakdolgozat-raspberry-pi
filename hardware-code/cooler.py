@@ -10,7 +10,7 @@ from signal import signal, SIGTERM, SIGHUP
 import time
 from csibekelteto_utils import RELAY_PINS
 
-RELAY_GPIO_PIN: int = RELAY_PINS['cooler']
+RELAY_GPIO_PIN: int = RELAY_PINS.get('cooler')
 
 gpio.setmode(gpio.BCM)
 gpio.setup(RELAY_GPIO_PIN, gpio.OUT)

@@ -82,7 +82,7 @@ def index():
 
     return render_template(
         template_name_or_list="index.html",
-        version="v2025.02.05",
+        version="v2025.02.10",
         text="Csibekeltető",
     )
 
@@ -386,51 +386,51 @@ def turn_off_heating_element() -> Response:
 """ dc motor """
 
 @app.route("/on-dc-motor-forward", methods=['GET'])
-def turn_on_dc_motor_forward() -> Response:
+def turn_on_engine_forward() -> Response:
     log(
         description="turn on dc motor forward",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
 
-    utils.on_dc_motor_forward()
+    utils.on_engine_forward()
 
     return api_200_ok_response("dc motor forward is on")
 
 @app.route("/off-dc-motor-forward", methods=['GET'])
-def turn_off_dc_motor_forward() -> Response:
+def turn_off_engine_forward() -> Response:
     log(
         description="turn off dc motor forward",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
 
-    utils.off_dc_motor_forward()
+    utils.off_engine_forward()
 
     return api_200_ok_response("dc motor forward is off")
 
 @app.route("/on-dc-motor-backward", methods=['GET'])
-def turn_on_dc_motor_backward() -> Response:
+def turn_on_engine_backward() -> Response:
     log(
         description="turn on dc motor backward",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
 
-    utils.on_dc_motor_backward()
+    utils.on_engine_backward()
 
     return api_200_ok_response("dc motor backward is on")
 
 
 @app.route("/off-dc-motor-backward", methods=['GET'])
-def turn_off_dc_motor_backward() -> Response:
+def turn_off_engine_backward() -> Response:
     log(
         description="turn off dc motor backward",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
     
-    utils.off_dc_motor_backward()
+    utils.off_engine_backward()
 
     return api_200_ok_response("dc motor backward is off")
 

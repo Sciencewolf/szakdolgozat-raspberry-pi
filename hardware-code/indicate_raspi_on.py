@@ -6,7 +6,7 @@ from signal import signal, SIGTERM, SIGHUP
 from csibekelteto_utils import LED_PINS, LEDs
 
 
-led = LED(LED_PINS.get(LEDs.cold_white))
+led = LED(LED_PINS.get(LEDs.white))
 
 SLEEP: float = 8
 

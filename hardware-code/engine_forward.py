@@ -23,7 +23,7 @@ pwm = gpio.PWM(ENA_GPIO_PIN, 100)  # 100Hz PWM
 pwm.start(0)  # speed 0%
 
 
-def main(*args, **kwargs):
+def main():
     """ TODO: add args to set speed """
     try:
         signal(SIGTERM, safe_exit)
@@ -31,7 +31,7 @@ def main(*args, **kwargs):
 
         gpio.output(IN1_GPIO_PIN, gpio.LOW)
         gpio.output(IN2_GPIO_PIN, gpio.HIGH)
-        pwm.ChangeDutyCycle(100)  # 100% speed
+        pwm.ChangeDutyCycle(40)  # 10% speed
 
         while True:
             time.sleep(1)

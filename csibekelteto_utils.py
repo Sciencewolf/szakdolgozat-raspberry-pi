@@ -250,11 +250,11 @@ class Utils:
 
     def on_cooler(self) -> None:
         self.__start_process(name="cooler", script="cooler.py")
-        self.on_white_led()
+        self.on_cold_white_led()
 
     def off_cooler(self) -> None:
         self.__stop_process(name="cooler")
-        self.off_white_led()
+        self.off_cold_white_led()
 
     """ Heating element """
 
@@ -268,20 +268,20 @@ class Utils:
 
     """ DC Motor """
 
-    def on_dc_motor_forward(self) -> None:
-        self.__start_process(name="dc_motor_forward", script="dc_motor_forward.py")
+    def on_engine_forward(self) -> None:
+        self.__start_process(name="engine_forward", script="engine_forward.py")
         self.on_yellow_led()
 
-    def off_dc_motor_forward(self) -> None:
-        self.__stop_process("dc_motor_forward")
+    def off_engine_forward(self) -> None:
+        self.__stop_process("engine_forward")
         self.off_yellow_led()
 
-    def on_dc_motor_backward(self) -> None:
-        self.__start_process(name="dc_motor_backward", script="dc_motor_backward.py")
+    def on_engine_backward(self) -> None:
+        self.__start_process(name="engine_backward", script="engine_backward.py")
         self.on_yellow_led()
 
-    def off_dc_motor_backward(self) -> None:
-        self.__stop_process("dc_motor_backward")
+    def off_engine_backward(self) -> None:
+        self.__stop_process("engine_backward")
         self.off_yellow_led()
 
 
