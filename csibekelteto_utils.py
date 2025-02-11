@@ -177,22 +177,111 @@ class Utils:
 
 
     def is_temperature_normal(self, day: int, temp: float) -> bool:
-        temp_datas = {
-            0: 37.5
+        temp_data: dict[int, float] = {
+            1: 38.1,
+            2: 38.1,
+            3: 38.1,
+            4: 37.8,
+            5: 37.8,
+            6: 37.8,
+            7: 37.8,
+            8: 37.8,
+            9: 37.8,
+            10: 37.8,
+            11: 37.5,
+            12: 37.5,
+            13: 37.5,
+            14: 37.5,
+            15: 37.5,
+            16: 37.5,
+            17: 37.5,
+            18: 37.5,
+            19: 37.2,
+            20: 37.2,
+            21: 37.2
         }
 
-        return temp_datas[day] == temp
+        value: float | None = temp_data.get(day, None)
+
+        return value is not None and value - 0.2 <= temp <= value + 0.2 # +- 0.2 Celcius
 
     def is_humidity_normal(self, day: int, hum: float) -> bool:
-        hum_datas = {
-            0: 66.7
+        hum_data: dict[int, list[float, float]] = {
+            1: [60.0, 70.0],
+            2: [60.0, 70.0],
+            3: [60.0, 70.0],
+            4: [60.0, 70.0],
+            5: [60.0, 70.0],
+            6: [60.0, 70.0],
+            7: [60.0, 70.0],
+            8: [60.0, 70.0],
+            9: [60.0, 70.0],
+            10: [60.0, 70.0],
+            11: [60.0, 70.0],
+            12: [60.0, 70.0],
+            13: [60.0, 70.0],
+            14: [60.0, 70.0],
+            15: [60.0, 70.0],
+            16: [60.0, 70.0],
+            17: [60.0, 70.0],
+            18: [60.0, 70.0],
+            19: [75.0, 80.0],
+            20: [75.0, 80.0],
+            21: [75.0, 80.0]
         }
 
-        return hum_datas[day] == hum
+        min_value, max_value = hum_data.get(day, [None, None]) # if day is not in hum_data -> None
+
+        return min_value is not None and min_value - 1.0 <= hum <= max_value + 1.0 # +- 1.0 % 
+
+    def is_rotate_eggs(self, day: int):
+        rotate_data: dict[int, bool] = {
+            1: True,
+            2: True,
+            3: True,
+            4: True,
+            5: True,
+            6: True,
+            7: True,
+            8: True,
+            9: True,
+            10: True,
+            11: True,
+            12: True,
+            13: True,
+            14: True,
+            15: True,
+            16: True,
+            17: True,
+            18: True,
+            19: False,
+            20: False,
+            21: False
+        }
+
+        value: bool | None = rotate_data.get(day, None)
+
+        return value is not None and value
+
+    def is_lid_closed(self) -> None:
+        with open('') as file:
+            lines: list = file.readlines()
+
+            for line in lines:
+                if line.startswith('')
 
     def prepare_hatching(self) -> str | None:
-        """ before hatching eggs check if hardware is okay """
-        pass
+        if is_lid_closed():
+            self.on_heating_element()
+            self.on_cooler()
+
+        while True:
+            if is_temperature_normal():
+                self.off_heating_element()
+                self.off_cooler()
+                break
+            
+            time.sleep(10)
 
     def start_hatching(self) -> None:
         """

@@ -1,0 +1,5 @@
+{
+    "led_indication": 1,
+    "alertOnLidOpen": 1,
+    "app_alertOnLidOpen": 1
+}
