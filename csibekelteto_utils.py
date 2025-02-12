@@ -5,14 +5,10 @@ import signal
 from flask import jsonify
 import psutil
 import time
+import json
 
 
-def log(
-        reason: str = "",
-        description: str = "",
-        api_url: str = "",
-        headers: str = ""
-) -> None:
+def log(reason: str = "", description: str = "", api_url: str = "", headers: str = "") -> None:
     """ Keep logging the event's into a file """
 
     today = datetime.now().strftime("%Y-%B-%d")
@@ -73,7 +69,7 @@ class Utils:
 
     def __init__(self):
         self.base_dir: str = os.path.dirname(os.path.abspath(__file__))
-        self.lid_file_path: str = os.path.join(self.base_dir, "lid-status.txt")
+        self.lid_file_path: str = os.path.join(self.base_dir, "lid_status.txt")
         self.processes: dict = {}
         self.led_panel: dict = {}
 
@@ -116,6 +112,15 @@ class Utils:
             print(f"{name} is not running.")
 
 
+    def __update_config(self, updates: dict) -> None:
+            with open('csibekelteto_config.json', 'r+') as file:
+                data = json.load(file)
+                data.update(updates)
+                file.seek(0)
+                json.dump(data, file, indent=4)
+                file.truncate()
+
+
     def __str__(self) -> str:
         return (f"---Utils--- "
                 f"\n\tHealth: {self.health()} "
@@ -133,6 +138,8 @@ class Utils:
 
         if result.returncode != 0:
             return {
+                "temp": -1,
+                "hum": -1,
                 "status_code": 404,
                 "content": "not found response",
                 "timestamp": timestamp
@@ -148,7 +155,11 @@ class Utils:
                 "hum": hum,
                 "timestamp": timestamp
             }
-    
+
+    # TODO:
+    def get_day() -> int:
+        with open("hatching_date.txt", 'r') as file:
+            file.readline()
 
     def set_temp(self, temp: float) -> None:
         self.on_heating_element()
@@ -177,33 +188,18 @@ class Utils:
 
 
     def is_temperature_normal(self, day: int, temp: float) -> bool:
-        temp_data: dict[int, float] = {
-            1: 38.1,
-            2: 38.1,
-            3: 38.1,
-            4: 37.8,
-            5: 37.8,
-            6: 37.8,
-            7: 37.8,
-            8: 37.8,
-            9: 37.8,
-            10: 37.8,
-            11: 37.5,
-            12: 37.5,
-            13: 37.5,
-            14: 37.5,
-            15: 37.5,
-            16: 37.5,
-            17: 37.5,
-            18: 37.5,
-            19: 37.2,
-            20: 37.2,
-            21: 37.2
+        temp_data = {
+            **dict.fromkeys(range(1, 4), 38.1),
+            **dict.fromkeys(range(4, 11), 37.8),
+            **dict.fromkeys(range(11, 18), 37.5),
+            **dict.fromkeys(range(19, 22), 37.2),
         }
 
-        value: float | None = temp_data.get(day, None)
+        if temp == -1:
+            return True  # Turn off hardware
 
-        return value is not None and value - 0.2 <= temp <= value + 0.2 # +- 0.2 Celcius
+        value = temp_data.get(day)
+        return value is not None and float(str(temp).split(' ')[0]) > value
 
     def is_humidity_normal(self, day: int, hum: float) -> bool:
         hum_data: dict[int, list[float, float]] = {
@@ -230,11 +226,14 @@ class Utils:
             21: [75.0, 80.0]
         }
 
+        if hum == -1:
+            return True # return True to turning off hw
+
         min_value, max_value = hum_data.get(day, [None, None]) # if day is not in hum_data -> None
 
         return min_value is not None and min_value - 1.0 <= hum <= max_value + 1.0 # +- 1.0 % 
 
-    def is_rotate_eggs(self, day: int):
+    def is_rotate_eggs(self, day: int) -> bool:
         rotate_data: dict[int, bool] = {
             1: True,
             2: True,
@@ -263,30 +262,52 @@ class Utils:
 
         return value is not None and value
 
-    def is_lid_closed(self) -> None:
-        with open('') as file:
-            lines: list = file.readlines()
+    def is_lid_closed(self) -> bool:
+        status: str = self.lid_status().get('lid')
+        
+        return status == 'Close'
+    
 
-            for line in lines:
-                if line.startswith('')
+    def prepare_hatching(self) -> None:
+        """
+        Call this method to prepare hatching(set temperature)
+        """
 
-    def prepare_hatching(self) -> str | None:
-        if is_lid_closed():
+        if self.is_lid_closed():
             self.on_heating_element()
+            time.sleep(1)
             self.on_cooler()
+            self.__update_config({'alertOnLidOpen': 0, 'app_alertOnLidOpen': 0})
+        else:
+            self.__update_config({'alertOnLidOpen': 1, 'app_alertOnLidOpen': 1})
+            return
 
+        
         while True:
-            if is_temperature_normal():
+            current_temp: float = self.get_temp_and_hum().get('temp')
+
+            if not self.is_lid_closed():
                 self.off_heating_element()
+                time.sleep(1)
                 self.off_cooler()
+                self.__update_config({'alertOnLidOpen': 1, 'app_alertOnLidOpen': 1})
+                break
+
+            if self.is_temperature_normal(day=1, temp=current_temp):
+                self.off_heating_element()
+                time.sleep(1)
+                self.off_cooler()
+                print(current_temp)
                 break
             
+            print(current_temp)
+
             time.sleep(10)
 
+    
     def start_hatching(self) -> None:
         """
         Call this method when egg is ready to hatching.
-        TODO: check if everything is working fine
         """
         with open("hatching_date.txt", 'w') as file:
             file.write(datetime.now().__str__())
@@ -317,7 +338,6 @@ class Utils:
 
             return jsonify({
                 "status_code": 404,
-                "lid": "undefined",
                 "timestamp": datetime.now().__str__()
             })
 
@@ -467,29 +487,3 @@ class Utils:
             ["memory by app rss", app_mem_usage],
             ["memory by app vms", app_vmem_usage]
         ]
-
-    def emergency_shutdown(self) -> None:
-        """
-            1. heating element -> off
-            2. dc engine if its running -> off
-            3. humidifier if its running -> off
-            4. cooler -> off
-            5. LED if someone is running -> off
-        """
-
-        with open("emergency.txt", 'a+') as file:
-            file.write(datetime.now().__str__())
-
-
-    def last_emergency_shutdown(self) -> str:
-        with open('emergency.txt', 'r') as file:
-            return file.readlines()[-1]
-
-
-def main() -> None:
-    utils: Utils = Utils()
-    print(utils.processes)
-
-
-if __name__ == "__main__":
-    main()

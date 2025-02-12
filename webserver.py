@@ -7,7 +7,6 @@ from flask_cors import CORS
 import os
 from flask import request
 
-# if error -> export PYTHONPATH=/home/aron/szakdolgozat-raspberry-pi:$PYTHONPATH
 from csibekelteto_utils import Utils
 from csibekelteto_utils import log
 
@@ -18,7 +17,7 @@ CORS(app)
 # Get the base directory where the Flask app is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-lid_file_path = os.path.join(base_dir, "lid-status.txt")
+lid_file_path = os.path.join(base_dir, "lid_status.txt")
 
 utils: Utils = Utils()
 
@@ -97,7 +96,7 @@ def prepare_hatching() -> Response:
     )
     utils.prepare_hatching()
 
-    return api_501_not_implemented_response("/prepare-hatching not implemented yet")
+    return api_200_ok_response(response="preparing hatching")
 
 @app.route("/start-hatching", methods=['GET'])
 def start_hatching() -> Response:
@@ -108,7 +107,7 @@ def start_hatching() -> Response:
     )
     utils.start_hatching()
 
-    return api_501_not_implemented_response("/start-hatching not implemented yet")
+    return api_200_ok_response(response="hatching started")
 
 
 @app.route("/is-start-hatching", methods=['GET'])
@@ -311,7 +310,7 @@ def set_humidity() -> Response:
 
     hum: str = request.args.get("h")  # url/set-hum?h=62.5 | type: float
 
-    with open("set_temp)hum.txt", 'a+') as file:
+    with open("set_temp_hum.txt", 'a+') as file:
         file.write(f"h: {hum}\n")
 
     return api_501_not_implemented_response("/set-hum not implemented yet")
