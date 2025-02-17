@@ -18,7 +18,7 @@ def main() -> None:
 
         sensor = adafruit_ahtx0.AHTx0(i2c)
 
-        temp = "%0.1f C" % sensor.temperature
+        temp = "%0.1f °C" % sensor.temperature
         hum = "%0.1f %%" % sensor.relative_humidity
 
         # Get the directory where this script is located

@@ -154,7 +154,7 @@ class Sensor {
         
 
 
-        return [response.response.temp, response.response.hum]
+        return [response.temp, response.hum]
     }
 
     static async getLidStatus() {
@@ -165,7 +165,7 @@ class Sensor {
         
 
 
-        return response.response.lid
+        return response.lid
     }
 
 }

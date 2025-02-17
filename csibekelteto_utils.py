@@ -172,19 +172,6 @@ class Utils:
                 break
 
             time.sleep(20)
-    
-
-    def set_hum(self, hum: float) -> None:
-        self.on_humidifier()
-
-        while True:
-            _, hum, day = self.get_temp_and_hum()
-
-            if self.is_humidity_normal(day, hum):
-                self.off_humidifier()
-                break
-
-            time.sleep(20)
 
 
     def is_temperature_normal(self, day: int, temp: float) -> bool:
@@ -375,7 +362,7 @@ class Utils:
         self.__stop_process("heating_element")
         self.off_green_led()
 
-    """ DC Motor """
+    """ Engine """
 
     def on_engine_forward(self) -> None:
         self.__start_process(name="engine_forward", script="engine_forward.py")
@@ -393,6 +380,23 @@ class Utils:
         self.__stop_process("engine_backward")
         self.off_yellow_led()
 
+    def rotate_eggs(self) -> None:
+        with open('last_egg_rotation.txt', 'w') as file:
+            file.write(datetime.now().__str__())
+
+        for _ in range(3):
+            self.on_engine_forward()
+            time.sleep(2)
+            self.off_engine_forward()
+            time.sleep(2)
+            self.on_engine_backward()
+            time.sleep(2)
+            self.off_engine_backward()
+            time.sleep(5)
+
+    def get_last_eggs_rotation(self) -> None:
+        with open('last_egg_rotation.txt', 'r') as file:
+            return file.readlines()
 
     """ Humidifier """
 

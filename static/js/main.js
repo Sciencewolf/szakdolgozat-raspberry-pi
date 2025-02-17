@@ -361,7 +361,7 @@ setInterval(async () => {
     if (document.querySelector('.div-disconnected')) {
         await isAlive()
     }
-}, 2_000)
+}, 5_000)
 
 
 setInterval(async () => {
@@ -378,4 +378,4 @@ setInterval(async() => {
     if (!document.querySelector(".div-disconnected")) {
         await getHealth()
     }
-}, 2_000)
+}, 5_000)

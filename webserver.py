@@ -94,9 +94,8 @@ def prepare_hatching() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
-    utils.prepare_hatching()
 
-    return api_200_ok_response(response="preparing hatching")
+    utils.prepare_hatching()
 
 @app.route("/start-hatching", methods=['GET'])
 def start_hatching() -> Response:
@@ -105,10 +104,18 @@ def start_hatching() -> Response:
         api_url=request.base_url,
         headers=request.user_agent.string
     )
+
     utils.start_hatching()
 
-    return api_200_ok_response(response="hatching started")
+@app.route("/stop-hatching")
+def stop_hatching() -> Response:
+    log(
+        description="stop hatching",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
 
+    utils.stop_hatching()
 
 @app.route("/is-start-hatching", methods=['GET'])
 def is_start_hatching() -> Response:
@@ -279,41 +286,25 @@ def get_temperature_and_humidity_from_sensor() -> Response:
         headers=request.user_agent.string
     )
 
-    return api_200_ok_response(response=utils.get_temp_and_hum())
+    return utils.get_temp_and_hum()
 
-""" set temp and hum """
-""" TODO: if file has t and h and another api call enters, override value  """
+""" set temp """
 
 @app.route("/set-temp", methods=['GET', 'PUT'])
 def set_temperature() -> Response:
-    log(
-        description="set temperature",
-        api_url=request.base_url,
-        headers=request.user_agent.string
-    )
-
     temp: str = request.args.get("t")  # url/set-temp?t=40.1 | type: float
 
-    with open('set_temp_hum.txt', 'a+') as file:
-        file.write(f"t: {temp}\n")
-
-    return api_501_not_implemented_response("/set-temp not implemented yet")
-
-
-@app.route("/set-hum", methods=['GET', 'PUT'])
-def set_humidity() -> Response:
     log(
-        description="set humidity",
+        description=f"set temperature to {temp}",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
 
-    hum: str = request.args.get("h")  # url/set-hum?h=62.5 | type: float
 
-    with open("set_temp_hum.txt", 'a+') as file:
-        file.write(f"h: {hum}\n")
+    utils.set_temp(temp=temp)
 
-    return api_501_not_implemented_response("/set-hum not implemented yet")
+    return api_200_ok_response(response=f"temperature set to {temp}")
+
 
 """ lid/limit switch"""
 
@@ -325,7 +316,7 @@ def get_lid_status() -> Response:
         headers=request.user_agent.string
     )
 
-    return api_200_ok_response(response=utils.lid_status())
+    return utils.lid_status()
 
 
 """ cooler """
@@ -384,10 +375,10 @@ def turn_off_heating_element() -> Response:
 
 """ dc motor """
 
-@app.route("/on-dc-motor-forward", methods=['GET'])
+@app.route("/on-engine-forward", methods=['GET'])
 def turn_on_engine_forward() -> Response:
     log(
-        description="turn on dc motor forward",
+        description="turn on engine forward",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
@@ -396,10 +387,10 @@ def turn_on_engine_forward() -> Response:
 
     return api_200_ok_response("dc motor forward is on")
 
-@app.route("/off-dc-motor-forward", methods=['GET'])
+@app.route("/off-engine-forward", methods=['GET'])
 def turn_off_engine_forward() -> Response:
     log(
-        description="turn off dc motor forward",
+        description="turn off engine forward",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
@@ -408,10 +399,10 @@ def turn_off_engine_forward() -> Response:
 
     return api_200_ok_response("dc motor forward is off")
 
-@app.route("/on-dc-motor-backward", methods=['GET'])
+@app.route("/on-engine-backward", methods=['GET'])
 def turn_on_engine_backward() -> Response:
     log(
-        description="turn on dc motor backward",
+        description="turn on engine backward",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
@@ -421,10 +412,10 @@ def turn_on_engine_backward() -> Response:
     return api_200_ok_response("dc motor backward is on")
 
 
-@app.route("/off-dc-motor-backward", methods=['GET'])
+@app.route("/off-engine-backward", methods=['GET'])
 def turn_off_engine_backward() -> Response:
     log(
-        description="turn off dc motor backward",
+        description="turn off engine backward",
         api_url=request.base_url,
         headers=request.user_agent.string
     )
@@ -433,6 +424,28 @@ def turn_off_engine_backward() -> Response:
 
     return api_200_ok_response("dc motor backward is off")
 
+@app.route("/rotate-eggs", methods=['GET'])
+def rotate_eggs() -> Response:
+    log(
+        description="rotating eggs",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+
+    utils.rotate_eggs()
+
+    return api_200_ok_response(response="rotating eggs")
+
+
+@app.route("/get-last-eggs-rotation", methods=['GET'])
+def get_last_eggs_rotation(self) -> Response:
+    log(
+        description="get last eggs rotation",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+
+    return api_200_ok_response(response=utils.get_last_eggs_rotation())
 
 """ humidifier """
 
@@ -483,10 +496,7 @@ def overall() -> Response:
     )
 
     return jsonify({
-        "day": 0,
-        "updated": datetime.datetime.now().__str__(),
-        "temp": 0.0,
-        "hum": 0.0
+        "response": utils.processes
     })
 
 
@@ -507,7 +517,6 @@ def health() -> Response:
 
 @app.route("/alive", methods=['GET'])
 def alive() -> Response:
-    """ TODO: the webserver will check if maintenance or not """
     log(
         description="checking if csibekelteto is alive",
         api_url=request.base_url,
@@ -519,7 +528,6 @@ def alive() -> Response:
 
 @app.route("/shutdown")
 def shutdown() -> Response:
-    """ Make some safety check??? """
     log(
         description="turn off raspi/csibekelteto",
         api_url=request.base_url,
