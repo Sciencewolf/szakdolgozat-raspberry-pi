@@ -1,5 +1,8 @@
 # Szakdolgozat Raspberry Pi(Hardware) part
 
+## https://willing-just-penguin.ngrok-free.app/
+## https://hippo-immense-plainly.ngrok-free.app/
+
 > [!IMPORTANT]
 > LED Color Code
 
