@@ -75,7 +75,7 @@ class Utils:
 
     # __private methods
 
-    def __start_process(self, name: str, script: str="led.py", led: str="", mode: str="") -> None:
+    def start_process(self, name: str, script: str="led.py", led: str="", mode: str="") -> None:
         """Start a subprocess in a new session and track it by name."""
 
         if name in self.processes and self.processes[name].poll() is None:
@@ -93,7 +93,7 @@ class Utils:
             print(f"Failed to start process {name}: {e}")
 
 
-    def __stop_process(self, name: str) -> None:
+    def stop_process(self, name: str) -> None:
         """Stop a running subprocess by name."""
 
         if name in self.processes:
@@ -345,39 +345,39 @@ class Utils:
     """ Cooler """
 
     def on_cooler(self) -> None:
-        self.__start_process(name="cooler", script="cooler.py")
+        self.start_process(name="cooler", script="cooler.py")
         self.on_cold_white_led()
 
     def off_cooler(self) -> None:
-        self.__stop_process(name="cooler")
+        self.stop_process(name="cooler")
         self.off_cold_white_led()
 
     """ Heating element """
 
     def on_heating_element(self) -> None:
-        self.__start_process(name="heating_element", script="heating_element.py")
+        self.start_process(name="heating_element", script="heating_element.py")
         self.on_green_led()
 
     def off_heating_element(self) -> None:
-        self.__stop_process("heating_element")
+        self.stop_process("heating_element")
         self.off_green_led()
 
     """ Engine """
 
     def on_engine_forward(self) -> None:
-        self.__start_process(name="engine_forward", script="engine_forward.py")
+        self.start_process(name="engine_forward", script="engine_forward.py")
         self.on_yellow_led()
 
     def off_engine_forward(self) -> None:
-        self.__stop_process("engine_forward")
+        self.stop_process("engine_forward")
         self.off_yellow_led()
 
     def on_engine_backward(self) -> None:
-        self.__start_process(name="engine_backward", script="engine_backward.py")
+        self.start_process(name="engine_backward", script="engine_backward.py")
         self.on_yellow_led()
 
     def off_engine_backward(self) -> None:
-        self.__stop_process("engine_backward")
+        self.stop_process("engine_backward")
         self.off_yellow_led()
 
     def rotate_eggs(self) -> None:
@@ -401,74 +401,74 @@ class Utils:
     """ Humidifier """
 
     def on_humidifier(self) -> None:
-        self.__start_process(name="humidifier", script="humidifier.py")
+        self.start_process(name="humidifier", script="humidifier.py")
         self.on_cold_white_led()
 
     def off_humidifier(self) -> None:
-        self.__stop_process("humidifier")
+        self.stop_process("humidifier")
         self.off_cold_white_led()
 
     """ LED """
 
     def on_red_led(self, mode: str=Mode.hold) -> None:
-        self.__start_process(
+        self.start_process(
             name="red_led",
             led=LEDs.red,
             mode=mode
         )
 
     def off_red_led(self) -> None:
-        self.__stop_process("red_led")
+        self.stop_process("red_led")
 
     def on_green_led(self, mode: str=Mode.hold) -> None:
-        self.__start_process(
+        self.start_process(
             name="green_led",
             led=LEDs.green,
             mode=mode
         )
 
     def off_green_led(self) -> None:
-        self.__stop_process("green_led")
+        self.stop_process("green_led")
 
     def on_white_led(self, mode: str=Mode.hold) -> None:
-        self.__start_process(
+        self.start_process(
             name="white_led",
             led=LEDs.white,
             mode=mode
         )
 
     def off_white_led(self) -> None:
-        self.__stop_process("white_led")
+        self.stop_process("white_led")
 
     def on_yellow_led(self, mode: str=Mode.hold) -> None:
-        self.__start_process(
+        self.start_process(
             name="yellow_led",
             led=LEDs.yellow,
             mode=mode
         )
 
     def off_yellow_led(self) -> None:
-        self.__stop_process("yellow_led")
+        self.stop_process("yellow_led")
 
     def on_cold_white_led(self, mode: str=Mode.hold) -> None:
-        self.__start_process(
+        self.start_process(
             name="cold_white_led",
             led=LEDs.cold_white,
             mode=mode
         )
 
     def off_cold_white_led(self) -> None:
-        self.__stop_process("cold_white_led")
+        self.stop_process("cold_white_led")
 
     def on_blue_led(self, mode: str=Mode.hold) -> None:
-        self.__start_process(
+        self.start_process(
             name="blue_led",
             led=LEDs.blue,
             mode=mode
         )
 
     def off_blue_led(self) -> None:
-        self.__stop_process("blue_led")
+        self.stop_process("blue_led")
 
 
     """ Other """

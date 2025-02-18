@@ -5,8 +5,7 @@ wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketc
 description:
 """
 
-import RPi.GPIO as GPIO
-from gpiozero import LED
+import RPi.GPIO as gpio
 from signal import signal, SIGTERM, SIGHUP
 from datetime import datetime
 import os
@@ -14,16 +13,22 @@ import time
 from csibekelteto_utils import LED_PINS, LEDs
 
 
-SWITCH_GPIO_PIN: int = 4
-red_led = LED(LED_PINS.get(LEDs.red))
+SWITCH_gpio_PIN: int = 4
+red_led = LED_PINS.get(LEDs.red)
 
-GPIO.setmode(GPIO.BCM)
+gpio.setmode(gpio.BCM)
 
-GPIO.setup(SWITCH_GPIO_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+gpio.setup(SWITCH_gpio_PIN, gpio.IN, pull_up_down=gpio.PUD_UP)
+gpio.setup(red_led, gpio.OUT)
+
+pwm = gpio.PWM(red_led, 1000)
+pwm.start(0)
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
 lid_file_path = os.path.join(base_dir, "../lid_status.txt")
+
+SLEEP: float = .01
 
 
 def main() -> None:
@@ -31,10 +36,10 @@ def main() -> None:
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
-        pin_state: int = GPIO.input(SWITCH_GPIO_PIN)
+        pin_state: int = gpio.input(SWITCH_gpio_PIN)
 
         with open(lid_file_path, 'w') as file:
-            if pin_state == GPIO.LOW:
+            if pin_state == gpio.LOW:
                 file.write("lid close @ ")
                 file.write(f"{datetime.now()} \n")
                 file.write("! Close")
@@ -43,13 +48,17 @@ def main() -> None:
                 file.write(f"{datetime.now()} \n")
                 file.write("! Open")
 
-                red_led.on()
-                time.sleep(1)
-                red_led.off()
+                for duty_cycle in range(0, 101, 2):
+                    pwm.ChangeDutyCycle(duty_cycle)
+                    time.sleep(SLEEP)
+                for duty_cycle in range(100, -1, -2): 
+                    pwm.ChangeDutyCycle(duty_cycle)
+                    time.sleep(SLEEP)
+
     except Exception as ex:
         print(ex.__str__())
     finally:
-        GPIO.cleanup()
+        gpio.cleanup()
 
 
 def safe_exit(signum, frame) -> None:
