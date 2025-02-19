@@ -109,7 +109,7 @@ class LED{
 
 class Motor{
     static async onEngineForward() {
-        const onEngineForward = await fetch("https://willing-just-penguin.ngrok-free.app/on-dc-motor-forward")
+        const onEngineForward = await fetch("https://willing-just-penguin.ngrok-free.app/on-engine-forward")
         const response = await onEngineForward.json()
 
         console.log(response)
@@ -118,7 +118,7 @@ class Motor{
     }
 
     static async offEngineForward() {
-        const offEngineForward = await fetch("https://willing-just-penguin.ngrok-free.app/off-dc-motor-forward")
+        const offEngineForward = await fetch("https://willing-just-penguin.ngrok-free.app/off-engine-forward")
         const response = await offEngineForward.json()
 
         console.log(response)
@@ -127,7 +127,7 @@ class Motor{
     }
 
     static async onEngineBackward() {
-        const onEngineBackward = await fetch("https://willing-just-penguin.ngrok-free.app/on-dc-motor-backward")
+        const onEngineBackward = await fetch("https://willing-just-penguin.ngrok-free.app/on-engine-backward")
         const response = await onEngineBackward.json()
 
         console.log(response)
@@ -136,7 +136,7 @@ class Motor{
     }
 
     static async offEngineBackward() {
-        const offEngineBackward = await fetch("https://willing-just-penguin.ngrok-free.app/off-dc-motor-backward")
+        const offEngineBackward = await fetch("https://willing-just-penguin.ngrok-free.app/off-engine-backward")
         const response = await offEngineBackward.json()
 
         console.log(response)

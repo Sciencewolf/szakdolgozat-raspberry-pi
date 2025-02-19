@@ -6,6 +6,7 @@ from flask import Flask, jsonify, render_template, Response, make_response
 from flask_cors import CORS
 import os
 from flask import request
+import threading
 
 from csibekelteto_utils import Utils
 from csibekelteto_utils import log
@@ -87,16 +88,6 @@ def index():
 
 """ hatching """
 
-@app.route("/prepare-hatching")
-def prepare_hatching() -> Response:
-    log(
-        description="preparing hatching",
-        api_url=request.base_url,
-        headers=request.user_agent.string
-    )
-
-    utils.prepare_hatching()
-
 @app.route("/start-hatching", methods=['GET'])
 def start_hatching() -> Response:
     log(
@@ -105,7 +96,9 @@ def start_hatching() -> Response:
         headers=request.user_agent.string
     )
 
-    utils.start_hatching()
+    threading.Thread(target=utils.start_hatching, daemon=True).start()
+
+    return api_200_ok_response(response="hatching started")
 
 @app.route("/stop-hatching")
 def stop_hatching() -> Response:
@@ -117,10 +110,11 @@ def stop_hatching() -> Response:
 
     utils.stop_hatching()
 
-@app.route("/is-start-hatching", methods=['GET'])
-def is_start_hatching() -> Response:
-    """ TODO: check if hatching is started """
-    return api_501_not_implemented_response("/is-start-hatching not implemented yet")
+    return api_200_ok_response(response="hatching stopped")
+
+@app.route("/is-hatching", methods=['GET'])
+def is_hatching() -> Response:
+    return api_200_ok_response(response=utils.is_hatching())
 
 """ red led """
 

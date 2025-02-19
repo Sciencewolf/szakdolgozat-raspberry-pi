@@ -1,9 +1,11 @@
 from csibekelteto_utils import *
 
+utils: Utils = Utils()
+
 
 def main():
     while True:
-        pass
+        utils.start_hatching()
 
 
 

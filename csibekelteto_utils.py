@@ -72,11 +72,16 @@ class Utils:
         self.lid_file_path: str = os.path.join(self.base_dir, "lid_status.txt")
         self.processes: dict = {}
         self.led_panel: dict = {}
+        self.hatching = False
 
     # __private methods
 
     def start_process(self, name: str, script: str="led.py", led: str="", mode: str="") -> None:
         """Start a subprocess in a new session and track it by name."""
+
+        if datetime.now().hour not in range(8, 20, 1) and script == 'led.py':
+            print('led is not running between 19:00 and 8:00(night)')
+            return
 
         if name in self.processes and self.processes[name].poll() is None:
             print(f"Process {name} is already running with PID {self.processes[name].pid}.")
@@ -146,8 +151,8 @@ class Utils:
             }
 
         with open(os.path.join(self.base_dir, "temp_hum.txt"), 'r') as file:
-            temp = file.readline().strip()
-            hum = file.readline().strip()
+            temp = file.readline().strip().split(' ')[0]
+            hum = file.readline().strip().split(' ')[0]
             timestamp = file.readline().strip()
 
             return {
@@ -156,23 +161,16 @@ class Utils:
                 "timestamp": timestamp
             }
 
-    # TODO:
-    def get_day() -> int:
-        with open("hatching_date.txt", 'r') as file:
-            file.readline()
-
-    def set_temp(self, temp: float) -> None:
-        self.on_heating_element()
-
-        while True:
-            temp, _, day = self.get_temp_and_hum()
-
-            if self.is_temperature_normal(day, temp):
-                self.off_heating_element()
-                break
-
-            time.sleep(20)
-
+    def get_day(self) -> int:
+        try:
+            with open("hatching_date.txt", 'r') as file:
+                hatching_date_str = file.readline().strip()
+            
+            hatching_date = datetime.strptime(hatching_date_str, "%Y-%m-%d %H:%M:%S")
+            return (datetime.now() - hatching_date).days
+        except (FileNotFoundError, ValueError):
+            log("Error", "Invalid or missing hatching_date.txt")
+            return -1
 
     def is_temperature_normal(self, day: int, temp: float) -> bool:
         temp_data = {
@@ -185,32 +183,14 @@ class Utils:
         if temp == -1:
             return True  # Turn off hardware
 
-        value = temp_data.get(day)
-        return value is not None and float(str(temp).split(' ')[0]) > value
+        value = temp_data.get(day, None)
+        return value is not None and float(str(temp).split(' ')[0]) - 1.0 > value # -1.0C bc of hot heating element
 
     def is_humidity_normal(self, day: int, hum: float) -> bool:
-        hum_data: dict[int, list[float, float]] = {
-            1: [60.0, 70.0],
-            2: [60.0, 70.0],
-            3: [60.0, 70.0],
-            4: [60.0, 70.0],
-            5: [60.0, 70.0],
-            6: [60.0, 70.0],
-            7: [60.0, 70.0],
-            8: [60.0, 70.0],
-            9: [60.0, 70.0],
-            10: [60.0, 70.0],
-            11: [60.0, 70.0],
-            12: [60.0, 70.0],
-            13: [60.0, 70.0],
-            14: [60.0, 70.0],
-            15: [60.0, 70.0],
-            16: [60.0, 70.0],
-            17: [60.0, 70.0],
-            18: [60.0, 70.0],
-            19: [75.0, 80.0],
-            20: [75.0, 80.0],
-            21: [75.0, 80.0]
+        hum_data = {
+
+            **dict.fromkeys(range(1, 19), [60.0, 70.0]),
+            **dict.fromkeys(range(19, 22), [70.0, 80.0])
         }
 
         if hum == -1:
@@ -254,50 +234,131 @@ class Utils:
         
         return status == 'Close'
     
+    def is_hatching(self) -> bool:
+        return self.hatching
 
     def prepare_hatching(self) -> None:
         """
-        Call this method to prepare hatching(set temperature)
+        Prepare the incubator for hatching by ensuring proper temperature and humidity.
         """
-
-        if self.is_lid_closed():
-            self.on_heating_element()
-            time.sleep(1)
-            self.on_cooler()
-            self.__update_config({'alertOnLidOpen': 0, 'app_alertOnLidOpen': 0})
-        else:
-            self.__update_config({'alertOnLidOpen': 1, 'app_alertOnLidOpen': 1})
-            return
-
-        
         while True:
-            current_temp: float = self.get_temp_and_hum().get('temp')
+            current_temp = float(self.get_temp_and_hum().get('temp', -1))
+            current_hum = float(self.get_temp_and_hum().get('hum', -1))
+            current_day = self.get_day()
+            config = self.get_config()
+            target_temp = float(config.get('manual_temp', self.get_target_temp(current_day)))
+            target_hum = float(config.get('manual_hum', self.get_target_hum(current_day)))
 
             if not self.is_lid_closed():
                 self.off_heating_element()
-                time.sleep(1)
                 self.off_cooler()
+                self.off_humidifier()
                 self.__update_config({'alertOnLidOpen': 1, 'app_alertOnLidOpen': 1})
+                log("Lid Open", "Hatching preparation stopped due to lid being open.")
                 break
 
-            if self.is_temperature_normal(day=1, temp=current_temp):
+            if current_temp >= target_temp:
                 self.off_heating_element()
-                time.sleep(1)
                 self.off_cooler()
-                print(current_temp)
-                break
-            
-            print(current_temp)
+            else:
+                self.on_heating_element()
+                self.on_cooler()
 
+            if current_hum >= target_hum:
+                self.off_humidifier()
+            else:
+                self.on_humidifier()
+
+            log("Hatching Prep", f"Temp: {current_temp}, Humidity: {current_hum}, Target Temp: {target_temp}, Target Hum: {target_hum}")
             time.sleep(10)
 
-    
     def start_hatching(self) -> None:
         """
-        Call this method when egg is ready to hatching.
+        Start the hatching process by setting the hatching date and preparing the incubator.
         """
         with open("hatching_date.txt", 'w') as file:
-            file.write(datetime.now().__str__())
+            file.write(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+        log("Hatching Started", "Eggs are now in the hatching phase.")
+
+        self.hatching = True
+        
+        while True:
+            self.prepare_hatching()
+            self.rotate_eggs()
+            time.sleep(14400)  # Rotate eggs every 4 hours
+        
+    def stop_hatching(self) -> None:
+        """
+        Stop all incubation processes.
+        """
+        self.off_heating_element()
+        self.off_cooler()
+        self.off_humidifier()
+
+        self.hatching = False
+        
+        log("Hatching Stopped", "All hatching-related processes have been turned off.")
+
+    def set_temp(self, temp: float) -> None:
+        """
+        Manually set the incubator temperature and update hatching target values.
+        """
+        self.off_heating_element()
+        self.on_heating_element()
+
+        while True:
+            current_temp = float(self.get_temp_and_hum().get('temp', -1))
+            if current_temp >= temp:
+                self.off_heating_element()
+                break
+            time.sleep(10)
+        
+        self.__update_config({'manual_temp': temp})
+        log("Manual Temp Set", f"Temperature set to {temp}C")
+
+    def set_hum(self, hum: float) -> None:
+        """
+        Manually set the incubator humidity and update hatching target values.
+        """
+        self.off_humidifier()
+        self.on_humidifier()
+
+        while True:
+            current_hum = float(self.get_temp_and_hum().get('hum', -1))
+            if current_hum >= hum:
+                self.off_humidifier()
+                break
+            time.sleep(10)
+        
+        self.__update_config({'manual_hum': hum})
+        log("Manual Humidity Set", f"Humidity set to {hum}%")
+
+    def get_config(self) -> dict:
+        """ Retrieve the current configuration. """
+        try:
+            with open('csibekelteto_config.json', 'r') as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
+    def get_target_temp(self, day: int) -> float:
+        """ Retrieve the recommended temperature for the given day. """
+        temp_data = {
+            **dict.fromkeys(range(1, 4), 38.1),
+            **dict.fromkeys(range(4, 11), 37.8),
+            **dict.fromkeys(range(11, 18), 37.5),
+            **dict.fromkeys(range(19, 22), 37.2),
+        }
+        return temp_data.get(day, 37.5)
+
+    def get_target_hum(self, day: int) -> float:
+        """ Retrieve the recommended humidity for the given day. """
+        hum_data = {
+            **dict.fromkeys(range(1, 19), 65.0),
+            **dict.fromkeys(range(19, 22), 75.0)
+        }
+        return hum_data.get(day, 65.0)
 
     """ Lid """
 
@@ -401,12 +462,12 @@ class Utils:
     """ Humidifier """
 
     def on_humidifier(self) -> None:
-        self.start_process(name="humidifier", script="humidifier.py")
-        self.on_cold_white_led()
+        # self.start_process(name="humidifier", script="humidifier.py")
+        self.on_blue_led()
 
     def off_humidifier(self) -> None:
-        self.stop_process("humidifier")
-        self.off_cold_white_led()
+        # self.stop_process("humidifier")
+        self.off_blue_led()
 
     """ LED """
 
