@@ -20,7 +20,7 @@ gpio.setup(IN2_GPIO_PIN, gpio.OUT, initial=gpio.LOW)
 gpio.setup(ENA_GPIO_PIN, gpio.OUT, initial=gpio.LOW)
 
 pwm = gpio.PWM(ENA_GPIO_PIN, 100)  # 100Hz PWM
-pwm.start(0)  # speed 0%
+pwm.start(0)
 
 
 def main():
@@ -31,7 +31,7 @@ def main():
 
         gpio.output(IN1_GPIO_PIN, gpio.LOW)
         gpio.output(IN2_GPIO_PIN, gpio.HIGH)
-        pwm.ChangeDutyCycle(40)  # 10% speed
+        pwm.ChangeDutyCycle(20)  # 20% speed
 
         while True:
             time.sleep(1)

@@ -2,6 +2,7 @@ import os
 import subprocess
 from datetime import datetime
 import signal
+import threading
 from flask import jsonify
 import psutil
 import time
@@ -9,8 +10,6 @@ import json
 
 
 def log(reason: str = "", description: str = "", api_url: str = "", headers: str = "") -> None:
-    """ Keep logging the event's into a file """
-
     today = datetime.now().strftime("%Y-%B-%d")
 
     log_directory = "/home/aron/szakdolgozat-raspberry-pi/log"
@@ -25,6 +24,16 @@ def log(reason: str = "", description: str = "", api_url: str = "", headers: str
         file.write("headers: " + headers + '\n')
         file.write("timestamp: " + datetime.now().__str__() + '\n')
         file.write("--------\n")
+
+def stats(info: dict) -> None:
+    today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_entry = {"timestamp": today, "data": info}
+    
+    stats_file = '/home/aron/szakdolgozat-raspberry-pi/stats/statistics.json'
+    
+    with open(stats_file, 'a+') as file:
+        json.dump(log_entry, file)
+        file.write('\n')
 
 
 LED_PINS: dict = {
@@ -68,11 +77,14 @@ class Utils:
     """
 
     def __init__(self):
-        self.base_dir: str = os.path.dirname(os.path.abspath(__file__))
-        self.lid_file_path: str = os.path.join(self.base_dir, "lid_status.txt")
-        self.processes: dict = {}
-        self.led_panel: dict = {}
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.lid_file_path = os.path.join(self.base_dir, "lid_status.txt")
+        self.processes = {}
         self.hatching = False
+        self.heating_on = False
+        self.humidifier_on = False
+        self.cooler_on = False
+
 
     # __private methods
 
@@ -80,11 +92,17 @@ class Utils:
         """Start a subprocess in a new session and track it by name."""
 
         if datetime.now().hour not in range(8, 20, 1) and script == 'led.py':
-            print('led is not running between 19:00 and 8:00(night)')
+            log(
+                reason="LED off at night",
+                description="LED is not working at night."
+            )
             return
 
         if name in self.processes and self.processes[name].poll() is None:
-            print(f"Process {name} is already running with PID {self.processes[name].pid}.")
+            log(
+                reason="process is running",
+                description=f"Process {name} is already running with PID {self.processes[name].pid}."
+                )
             return
 
         try:
@@ -93,9 +111,15 @@ class Utils:
                 start_new_session=True  # Start in a new session
             )
             self.processes[name] = process
-            print(f"Process {name} started with PID {process.pid}.")
+            log(
+                reason="process started",
+                description=f"Process {name} started with PID {process.pid}."
+            )
         except Exception as e:
-            print(f"Failed to start process {name}: {e}")
+            log(
+                reason="process error",
+                description=f"Failed to start process {name}: {e}"
+            )
 
 
     def stop_process(self, name: str) -> None:
@@ -107,14 +131,26 @@ class Utils:
                 try:
                     os.killpg(os.getpgid(process.pid), signal.SIGTERM)  # Send SIGTERM to process group
                     process.wait()  # Wait for process to terminate
-                    print(f"Process {name} stopped.")
+                    log(
+                        reason="process stopped",
+                        description=f"Process {name} stopped."
+                    )
                 except Exception as e:
-                    print(f"Error stopping process {name}: {e}")
+                    log(
+                    reason="stop process error", 
+                    description=f"Error stopping process {name}: {e}"
+                    )
             else:
-                print(f"Process {name} has already stopped.")
+                log(
+                    reason="process is stopped previously",
+                    description=f"Process {name} has already stopped."
+                )
             del self.processes[name]  # Remove from tracking
         else:
-            print(f"{name} is not running.")
+            log(
+                reason="process does not exists",
+                description=f"{name} is not running."
+            )
 
 
     def __update_config(self, updates: dict) -> None:
@@ -135,6 +171,7 @@ class Utils:
     """ Utils method's """
 
     def get_temp_and_hum(self) -> dict:
+        """ Get current temperature and humidity from sensor. """
         result = subprocess.run(
             [os.path.join(self.base_dir, "hardware-code/temp_hum_sensor.py")],
             capture_output=True,
@@ -142,24 +179,18 @@ class Utils:
         )
 
         if result.returncode != 0:
-            return {
-                "temp": -1,
-                "hum": -1,
-                "status_code": 404,
-                "content": "not found response",
-                "timestamp": timestamp
-            }
+            return {"temp": "-1", "hum": "-1"}
 
-        with open(os.path.join(self.base_dir, "temp_hum.txt"), 'r') as file:
-            temp = file.readline().strip().split(' ')[0]
-            hum = file.readline().strip().split(' ')[0]
-            timestamp = file.readline().strip()
+        try:
+            with open(os.path.join(self.base_dir, "temp_hum.txt"), 'r') as file:
+                temp = file.readline().strip().split(' ')[0]
+                hum = file.readline().strip().split(' ')[0]
+        except FileNotFoundError:
+            return {"temp": "-1", "hum": "-1"}
 
-            return {
-                "temp": temp,
-                "hum": hum,
-                "timestamp": timestamp
-            }
+        stats({"temp": temp, "hum": hum})
+        return {"temp": float(temp), "hum": float(hum)}
+
 
     def get_day(self) -> int:
         try:
@@ -167,38 +198,20 @@ class Utils:
                 hatching_date_str = file.readline().strip()
             
             hatching_date = datetime.strptime(hatching_date_str, "%Y-%m-%d %H:%M:%S")
-            return (datetime.now() - hatching_date).days
+            return (datetime.now() - hatching_date).days + 1
         except (FileNotFoundError, ValueError):
             log("Error", "Invalid or missing hatching_date.txt")
             return -1
 
     def is_temperature_normal(self, day: int, temp: float) -> bool:
-        temp_data = {
-            **dict.fromkeys(range(1, 4), 38.1),
-            **dict.fromkeys(range(4, 11), 37.8),
-            **dict.fromkeys(range(11, 18), 37.5),
-            **dict.fromkeys(range(19, 22), 37.2),
-        }
-
-        if temp == -1:
-            return True  # Turn off hardware
-
-        value = temp_data.get(day, None)
-        return value is not None and float(str(temp).split(' ')[0]) - 1.0 > value # -1.0C bc of hot heating element
+        """Ensures temperature stays within ±0.5°C."""
+        target_temp = self.get_target_temp(day)
+        return target_temp - 0.5 <= temp <= target_temp + 0.5
 
     def is_humidity_normal(self, day: int, hum: float) -> bool:
-        hum_data = {
-
-            **dict.fromkeys(range(1, 19), [60.0, 70.0]),
-            **dict.fromkeys(range(19, 22), [70.0, 80.0])
-        }
-
-        if hum == -1:
-            return True # return True to turning off hw
-
-        min_value, max_value = hum_data.get(day, [None, None]) # if day is not in hum_data -> None
-
-        return min_value is not None and min_value - 1.0 <= hum <= max_value + 1.0 # +- 1.0 % 
+        """Ensures humidity stays within ±1%."""
+        min_hum, max_hum = self.get_target_hum(day)
+        return min_hum - 1.0 <= hum <= max_hum + 1.0
 
     def is_rotate_eggs(self, day: int) -> bool:
         rotate_data: dict[int, bool] = {
@@ -238,67 +251,79 @@ class Utils:
         return self.hatching
 
     def prepare_hatching(self) -> None:
-        """
-        Prepare the incubator for hatching by ensuring proper temperature and humidity.
-        """
-        while True:
-            current_temp = float(self.get_temp_and_hum().get('temp', -1))
-            current_hum = float(self.get_temp_and_hum().get('hum', -1))
+        while self.hatching:
+            temp_data = self.get_temp_and_hum()
             current_day = self.get_day()
-            config = self.get_config()
-            target_temp = float(config.get('manual_temp', self.get_target_temp(current_day)))
-            target_hum = float(config.get('manual_hum', self.get_target_hum(current_day)))
 
-            if not self.is_lid_closed():
+            try:
+                current_temp = temp_data["temp"]
+                current_hum = temp_data["hum"]
+            except ValueError:
+                log("Sensor Error", f"Invalid sensor data: {temp_data}")
+                time.sleep(10)
+                continue
+
+            temp_normal = self.is_temperature_normal(current_day, current_temp)
+            hum_normal = self.is_humidity_normal(current_day, current_hum)
+
+            if temp_normal:
                 self.off_heating_element()
                 self.off_cooler()
-                self.off_humidifier()
-                self.__update_config({'alertOnLidOpen': 1, 'app_alertOnLidOpen': 1})
-                log("Lid Open", "Hatching preparation stopped due to lid being open.")
-                break
-
-            if current_temp >= target_temp:
-                self.off_heating_element()
-                self.off_cooler()
+                self.heating_on = False
+                self.cooler_on = False
             else:
-                self.on_heating_element()
-                self.on_cooler()
+                if current_temp < self.get_target_temp(current_day) - 0.5:
+                    self.on_heating_element()
+                    self.on_cooler()
+                    self.heating_on = True
+                    self.cooler_on = True
+                else:
+                    self.off_heating_element()
+                    self.off_cooler()
+                    self.heating_on = False
+                    self.cooler_on = False
 
-            if current_hum >= target_hum:
-                self.off_humidifier()
-            else:
+            if not hum_normal:
                 self.on_humidifier()
+                self.humidifier_on = True
+            else:
+                self.off_humidifier()
+                self.humidifier_on = False
 
-            log("Hatching Prep", f"Temp: {current_temp}, Humidity: {current_hum}, Target Temp: {target_temp}, Target Hum: {target_hum}")
+            self.rotate_eggs()
+            log("Hatching Update", f"Day {current_day}: Temp {current_temp}C, Hum {current_hum}%")
             time.sleep(10)
 
+
+
     def start_hatching(self) -> None:
-        """
-        Start the hatching process by setting the hatching date and preparing the incubator.
-        """
+        """Starts incubation process if not already running."""
+        if self.hatching:
+            log("Hatching Already Running", "Process already running")
+            return
+
         with open("hatching_date.txt", 'w') as file:
             file.write(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-        log("Hatching Started", "Eggs are now in the hatching phase.")
-
+        log("Hatching Started", "Eggs are incubating")
         self.hatching = True
-        
-        while True:
-            self.prepare_hatching()
-            self.rotate_eggs()
-            time.sleep(14400)  # Rotate eggs every 4 hours
-        
+        self.hatching_thread = threading.Thread(target=self.prepare_hatching, daemon=True)
+        self.hatching_thread.start()
+
+
+
     def stop_hatching(self) -> None:
-        """
-        Stop all incubation processes.
-        """
+        self.hatching = False
         self.off_heating_element()
         self.off_cooler()
         self.off_humidifier()
+        self.heating_on = False
+        self.cooler_on = False
+        self.humidifier_on = False
 
-        self.hatching = False
-        
-        log("Hatching Stopped", "All hatching-related processes have been turned off.")
+        log("Hatching Stopped", "All processes stopped")
+
+
 
     def set_temp(self, temp: float) -> None:
         """
@@ -306,11 +331,14 @@ class Utils:
         """
         self.off_heating_element()
         self.on_heating_element()
+        self.off_cooler()
+        self.on_cooler()
 
         while True:
             current_temp = float(self.get_temp_and_hum().get('temp', -1))
             if current_temp >= temp:
                 self.off_heating_element()
+                self.off_cooler()
                 break
             time.sleep(10)
         
@@ -323,11 +351,14 @@ class Utils:
         """
         self.off_humidifier()
         self.on_humidifier()
+        self.off_cooler()
+        self.on_cooler()
 
         while True:
             current_hum = float(self.get_temp_and_hum().get('hum', -1))
             if current_hum >= hum:
                 self.off_humidifier()
+                self.off_cooler()
                 break
             time.sleep(10)
         
@@ -375,19 +406,21 @@ class Utils:
                 description=result.stderr
             )
 
-            return jsonify({
+            return {
                 "status_code": 404,
                 "content": "error at lid",
+                "lid": "undefined",
                 "timestamp": datetime.now().__str__()
-            })
+            }
 
         if not os.path.exists(self.lid_file_path):
             log(description="lid status file does not exists")
 
-            return jsonify({
+            return {
                 "status_code": 404,
+                "lid": "undefined",
                 "timestamp": datetime.now().__str__()
-            })
+            }
 
         with open(self.lid_file_path, 'r') as file:
             log(description="access lid status file")
@@ -396,6 +429,8 @@ class Utils:
             for line in lines:
                 if line.startswith("!"):
                     status: str = line.split(" ")[1]
+
+                    stats(info={"lid": status})
 
                     return {
                         "status_code": 200,
@@ -408,20 +443,24 @@ class Utils:
     def on_cooler(self) -> None:
         self.start_process(name="cooler", script="cooler.py")
         self.on_cold_white_led()
+        log("Cooler ON", "Cooler activated.")
 
     def off_cooler(self) -> None:
         self.stop_process(name="cooler")
         self.off_cold_white_led()
+        log("Cooler OFF", "Cooler deactivated.")
 
     """ Heating element """
 
     def on_heating_element(self) -> None:
         self.start_process(name="heating_element", script="heating_element.py")
         self.on_green_led()
+        log("Heating ON", "Heating element activated.")
 
     def off_heating_element(self) -> None:
         self.stop_process("heating_element")
         self.off_green_led()
+        log("Heating OFF", "Heating element deactivated.")
 
     """ Engine """
 
@@ -442,18 +481,19 @@ class Utils:
         self.off_yellow_led()
 
     def rotate_eggs(self) -> None:
-        with open('last_egg_rotation.txt', 'w') as file:
-            file.write(datetime.now().__str__())
-
-        for _ in range(3):
-            self.on_engine_forward()
-            time.sleep(2)
-            self.off_engine_forward()
-            time.sleep(2)
-            self.on_engine_backward()
-            time.sleep(2)
-            self.off_engine_backward()
-            time.sleep(5)
+        """Rotates eggs every 6 hours."""
+        if (datetime.now() - self.last_rotation).total_seconds() >= 6 * 3600:
+            log("Egg Rotation", "Eggs rotated")
+            for _ in range(3):
+                self.on_engine_forward()
+                time.sleep(4)
+                self.off_engine_forward()
+                time.sleep(4)
+                self.on_engine_backward()
+                time.sleep(4)
+                self.off_engine_backward()
+                time.sleep(5)
+            self.last_rotation = datetime.now()
 
     def get_last_eggs_rotation(self) -> None:
         with open('last_egg_rotation.txt', 'r') as file:
@@ -552,3 +592,9 @@ class Utils:
             ["memory by app rss", app_mem_usage],
             ["memory by app vms", app_vmem_usage]
         ]
+
+
+if __name__ == "__main__":
+    utils = Utils()
+
+    utils.rotate_eggs()

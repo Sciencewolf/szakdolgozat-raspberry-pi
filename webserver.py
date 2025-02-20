@@ -305,7 +305,7 @@ def set_temperature() -> Response:
 @app.route("/get-lid-status", methods=['GET'])
 def get_lid_status() -> Response:
     log(
-        description="get lid status [on/off]",
+        description="get lid status [Open/Close]",
         api_url=request.base_url,
         headers=request.user_agent.string
     )

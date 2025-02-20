@@ -28,14 +28,12 @@ def main():
         signal(SIGTERM, safe_exit)
         signal(SIGHUP, safe_exit)
 
-        # Stop the motor briefly before switching direction
         pwm.ChangeDutyCycle(0)
         time.sleep(0.5)
 
-        # Set GPIOs for backward movement
         gpio.output(IN1_GPIO_PIN, gpio.HIGH)
         gpio.output(IN2_GPIO_PIN, gpio.LOW)
-        pwm.ChangeDutyCycle(10)  # 10% speed
+        pwm.ChangeDutyCycle(20)  # 20% speed
 
         while True:
             time.sleep(1)
