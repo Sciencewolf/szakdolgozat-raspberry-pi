@@ -84,6 +84,8 @@ class Utils:
         self.heating_on = False
         self.humidifier_on = False
         self.cooler_on = False
+        self.last_rotation = datetime.now()
+
 
 
     # __private methods
@@ -250,65 +252,94 @@ class Utils:
     def is_hatching(self) -> bool:
         return self.hatching
 
+    def start_hatching(self) -> None:
+        if self.hatching:
+            log("Hatching Already Running", "Process already active.")
+            return
+
+        log("Hatching Start", "Launching hatching process in background.")
+        self.hatching = True 
+
+        thread = threading.Thread(target=self.prepare_hatching, daemon=True)
+        thread.start()
+
+        time.sleep(2)
+        if not thread.is_alive():
+            log("Thread Failed", "Hatching thread did not start properly.")
+        else:
+            log("Thread Running", "Hatching process started successfully.")
+
+
     def prepare_hatching(self) -> None:
-        while self.hatching:
+        log("Hatching Started", "Entering hatching loop.")
+
+        hatching_start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open("hatching_date.txt", 'w') as file:
+            file.write(hatching_start_time)
+
+        with open("hatching_status.txt", 'w') as file:
+            file.write("1")
+
+        self.on_heating_element()
+        self.on_cooler()
+        log("Prepare Hatching", "Heating and Cooler turned ON at the start.")
+
+        while self.hatching: 
             temp_data = self.get_temp_and_hum()
             current_day = self.get_day()
 
-            try:
-                current_temp = temp_data["temp"]
-                current_hum = temp_data["hum"]
-            except ValueError:
-                log("Sensor Error", f"Invalid sensor data: {temp_data}")
+            if temp_data["temp"] == -1 or temp_data["hum"] == -1:
+                log("Sensor Error", "Invalid sensor readings, retrying in 10s.")
                 time.sleep(10)
-                continue
+                continue 
 
-            temp_normal = self.is_temperature_normal(current_day, current_temp)
-            hum_normal = self.is_humidity_normal(current_day, current_hum)
+            current_temp = temp_data["temp"]
+            current_hum = temp_data["hum"]
+            target_temp = self.get_target_temp(current_day)
 
-            if temp_normal:
-                self.off_heating_element()
-                self.off_cooler()
-                self.heating_on = False
-                self.cooler_on = False
-            else:
-                if current_temp < self.get_target_temp(current_day) - 0.5:
-                    self.on_heating_element()
+            hum_range = self.get_target_hum(current_day)
+            if not isinstance(hum_range, tuple) or len(hum_range) != 2:
+                log("Humidity Error", f"Unexpected humidity format: {hum_range}")
+                hum_range = (60.0, 70.0)
+
+            min_hum, max_hum = hum_range
+
+            log("Temp Check", f"Current: {current_temp}C | Target: {target_temp}C")
+            log("Humidity Check", f"Current: {current_hum}% | Target Range: {min_hum}-{max_hum}%")
+
+            if current_temp < target_temp - 0.5:
+                log("Action", "Heating ON, Cooler stays ON.")
+                self.on_heating_element()
+                if not self.cooler_on:
                     self.on_cooler()
-                    self.heating_on = True
-                    self.cooler_on = True
-                else:
-                    self.off_heating_element()
-                    self.off_cooler()
-                    self.heating_on = False
-                    self.cooler_on = False
-
-            if not hum_normal:
-                self.on_humidifier()
-                self.humidifier_on = True
+                    self.cooler_on = True 
+            elif current_temp > target_temp + 0.5:
+                log("Action", "Cooling ON, Heating OFF.")
+                self.on_cooler()
+                self.off_heating_element()
+                self.cooler_on = True
             else:
-                self.off_humidifier()
-                self.humidifier_on = False
+                log("Temperature Stable", "Within ±0.5°C range. Keeping current state.")
+                if self.cooler_on:
+                    log("Cooler Stays ON", "Temperature is stable, cooler remains active.")
 
-            self.rotate_eggs()
-            log("Hatching Update", f"Day {current_day}: Temp {current_temp}C, Hum {current_hum}%")
+            # ✅ Keep humidifier logic separate from cooler
+            if current_hum < min_hum:
+                log("Action", "Humidifier ON (Cooler stays ON if needed).")
+                self.on_humidifier()
+            elif current_hum > max_hum:
+                log("Action", "Humidifier OFF.")
+                self.off_humidifier()
+
+            if self.is_rotate_eggs(current_day):
+                log("Egg Rotation", "Rotating eggs.")
+                self.rotate_eggs()
+
+            log("Hatching Status", f"Day {current_day}: Temp {current_temp}C, Hum {current_hum}%")
             time.sleep(10)
 
+        log("Hatching Stopped", "Exiting hatching loop.")
 
-
-    def start_hatching(self) -> None:
-        """Starts incubation process if not already running."""
-        if self.hatching:
-            log("Hatching Already Running", "Process already running")
-            return
-
-        with open("hatching_date.txt", 'w') as file:
-            file.write(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
-        log("Hatching Started", "Eggs are incubating")
-        self.hatching = True
-        self.hatching_thread = threading.Thread(target=self.prepare_hatching, daemon=True)
-        self.hatching_thread.start()
 
 
 
@@ -383,13 +414,16 @@ class Utils:
         }
         return temp_data.get(day, 37.5)
 
-    def get_target_hum(self, day: int) -> float:
-        """ Retrieve the recommended humidity for the given day. """
+    def get_target_hum(self, day: int) -> tuple[float, float]:
+        """Retrieve the recommended humidity range (min_hum, max_hum) for the given day."""
         hum_data = {
-            **dict.fromkeys(range(1, 19), 65.0),
-            **dict.fromkeys(range(19, 22), 75.0)
+            **dict.fromkeys(range(1, 19), (60.0, 70.0)),  # ✅ Always return (min, max)
+            **dict.fromkeys(range(19, 22), (70.0, 80.0))  # ✅ Tuple format
         }
-        return hum_data.get(day, 65.0)
+        return hum_data.get(day, (60.0, 70.0))  # ✅ Ensuring a tuple is always returned
+
+
+
 
     """ Lid """
 
@@ -441,9 +475,21 @@ class Utils:
     """ Cooler """
 
     def on_cooler(self) -> None:
+        log("Cooler ON", "Attempting to start cooler process.")
+
+        if "cooler" in self.processes:
+            log("Cooler Restart", "Stopping existing cooler process before restarting.")
+            self.stop_process("cooler")
+            time.sleep(1)
+
         self.start_process(name="cooler", script="cooler.py")
-        self.on_cold_white_led()
-        log("Cooler ON", "Cooler activated.")
+        time.sleep(2)
+
+        if self.processes["cooler"].poll() is None:
+            log("Cooler Running", "Cooler process is now active.")
+        else:
+            log("Cooler Failed", "Cooler process did not start properly.")
+
 
     def off_cooler(self) -> None:
         self.stop_process(name="cooler")
@@ -481,9 +527,16 @@ class Utils:
         self.off_yellow_led()
 
     def rotate_eggs(self) -> None:
-        """Rotates eggs every 6 hours."""
+        try:
+            with open("last_egg_rotation.txt", "r") as file:
+                last_rotation_str = file.readline().strip()
+                if last_rotation_str:
+                    self.last_rotation = datetime.strptime(last_rotation_str, "%Y-%m-%d %H:%M:%S")
+        except (FileNotFoundError, ValueError):
+            self.last_rotation = datetime.now()
+
         if (datetime.now() - self.last_rotation).total_seconds() >= 6 * 3600:
-            log("Egg Rotation", "Eggs rotated")
+            log("Egg Rotation", "Rotating eggs.")
             for _ in range(3):
                 self.on_engine_forward()
                 time.sleep(4)
@@ -493,7 +546,11 @@ class Utils:
                 time.sleep(4)
                 self.off_engine_backward()
                 time.sleep(5)
+
             self.last_rotation = datetime.now()
+            with open("last_egg_rotation.txt", "w") as file:
+                file.write(self.last_rotation.strftime("%Y-%m-%d %H:%M:%S"))
+
 
     def get_last_eggs_rotation(self) -> None:
         with open('last_egg_rotation.txt', 'r') as file:
