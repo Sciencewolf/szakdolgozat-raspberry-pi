@@ -112,6 +112,22 @@ def stop_hatching() -> Response:
 
     return api_200_ok_response(response="hatching stopped")
 
+@app.route("/resume-hatching", methods=["GET"])
+def resume_hatching():
+    log(
+        reason="resume hatching",
+        description="hatching is resumed after if manually stopped",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+
+    response = utils.resume_hatching()
+
+    if not response:
+        return api_404_not_found_response(response="hatching already running")
+    
+    return api_200_ok_response(response="hatching resumed")
+
 @app.route("/is-hatching", methods=['GET'])
 def is_hatching() -> Response:
     return api_200_ok_response(response=utils.is_hatching())

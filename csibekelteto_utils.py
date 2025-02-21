@@ -6,6 +6,7 @@ import threading
 from flask import jsonify
 import psutil
 import time
+from datetime import datetime, timedelta
 import json
 
 
@@ -281,10 +282,24 @@ class Utils:
             file.write("1")
 
         self.on_heating_element()
-        self.on_cooler()
+        self.on_cooler()  # Ensure cooler is ALWAYS running
+        self.cooler_on = True
+        self.heating_on = True
+        self.humidifier_on = False  # Track humidifier state
+        last_humidifier_time = 0  # Track last humidifier activation time
         log("Prepare Hatching", "Heating and Cooler turned ON at the start.")
 
-        while self.hatching: 
+        while self.hatching:
+            # **Check Lid Status**
+            if not self.is_lid_closed():
+                log("Lid Open", "Stopping all operations until lid is closed.")
+                self.off_heating_element()
+                self.off_humidifier()
+                time.sleep(5)  # Wait and check again
+                continue  # Skip this loop iteration until lid is closed
+
+            log("Lid Closed", "Resuming hatching process.")
+
             temp_data = self.get_temp_and_hum()
             current_day = self.get_day()
 
@@ -307,41 +322,63 @@ class Utils:
             log("Temp Check", f"Current: {current_temp}C | Target: {target_temp}C")
             log("Humidity Check", f"Current: {current_hum}% | Target Range: {min_hum}-{max_hum}%")
 
-            if current_temp < target_temp - 0.5:
-                log("Action", "Heating ON, Cooler stays ON.")
-                self.on_heating_element()
-                if not self.cooler_on:
-                    self.on_cooler()
-                    self.cooler_on = True 
-            elif current_temp > target_temp + 0.5:
-                log("Action", "Cooling ON, Heating OFF.")
+            # **Hysteresis-based Heating Control**
+            if current_temp < target_temp - 0.4:  # Start heating if temp is too low
+                log("Action", "Heating ON.")
+                if not self.heating_on:
+                    self.on_heating_element()
+                    self.heating_on = True
+
+            elif target_temp - 0.4 <= current_temp <= target_temp + 0.4:  # Stop heating in normal range
+                log("Action", "Temperature Normal, Heating OFF.")
+                if self.heating_on:
+                    self.off_heating_element()
+                    self.heating_on = False
+
+            if not self.cooler_on:
                 self.on_cooler()
-                self.off_heating_element()
                 self.cooler_on = True
-            else:
-                log("Temperature Stable", "Within ±0.5°C range. Keeping current state.")
-                if self.cooler_on:
-                    log("Cooler Stays ON", "Temperature is stable, cooler remains active.")
+                log("Action", "Ensuring cooler stays ON.")
 
-            # ✅ Keep humidifier logic separate from cooler
-            if current_hum < min_hum:
-                log("Action", "Humidifier ON (Cooler stays ON if needed).")
+            current_time = time.time()
+            if current_hum < min_hum and (current_time - last_humidifier_time > 30):  # Wait at least 30s before turning humidifier on again
+                log("Action", "Humidifier ON (Less frequent activation).")
                 self.on_humidifier()
-            elif current_hum > max_hum:
-                log("Action", "Humidifier OFF.")
+                self.humidifier_on = True
+                time.sleep(10)  # Run humidifier for 10 seconds
                 self.off_humidifier()
+                self.humidifier_on = False
+                last_humidifier_time = current_time  # Update last humidifier activation time
+                log("Action", "Humidifier OFF after 10s, waiting 30s before next activation.")
 
-            if self.is_rotate_eggs(current_day):
-                log("Egg Rotation", "Rotating eggs.")
-                self.rotate_eggs()
+            elif current_hum > max_hum:
+                log("Action", "Humidifier OFF due to high humidity.")
+                if self.humidifier_on:
+                    self.off_humidifier()
+                    self.humidifier_on = False
+
+            # **Check if Humidifier is Causing Fast Temperature Drop**
+            if self.humidifier_on and current_temp < target_temp - 0.6:  # If temp drops fast, turn on heating
+                log("Action", "Temperature dropping too fast due to humidifier. Turning on heating.")
+                if not self.heating_on:
+                    self.on_heating_element()
+                    self.heating_on = True
+
+            # **Extra: Use Humidifier to Cool Down Temperature**
+            if current_temp > target_temp + 1.0:
+                log("Action", "Temperature too high, using humidifier for cooling.")
+                self.on_humidifier()
+                time.sleep(10)  # Run humidifier for 10 seconds to help cool down
+                self.off_humidifier()
+                log("Action", "Humidifier OFF after cooling cycle.")
+
+            # **Egg Rotation - Now Integrated into Hatching Process**
+            self.rotate_eggs()
 
             log("Hatching Status", f"Day {current_day}: Temp {current_temp}C, Hum {current_hum}%")
             time.sleep(10)
 
         log("Hatching Stopped", "Exiting hatching loop.")
-
-
-
 
     def stop_hatching(self) -> None:
         self.hatching = False
@@ -353,6 +390,15 @@ class Utils:
         self.humidifier_on = False
 
         log("Hatching Stopped", "All processes stopped")
+
+
+    def resume_hatching(self) -> bool | None:
+        if self.hatching:
+            log("Hatching Already Running", "No action needed.")
+            return False
+        
+        log("Hatching Resumed", "Restarting hatching process.")
+        self.start_hatching()
 
 
 
@@ -475,20 +521,9 @@ class Utils:
     """ Cooler """
 
     def on_cooler(self) -> None:
-        log("Cooler ON", "Attempting to start cooler process.")
-
-        if "cooler" in self.processes:
-            log("Cooler Restart", "Stopping existing cooler process before restarting.")
-            self.stop_process("cooler")
-            time.sleep(1)
-
         self.start_process(name="cooler", script="cooler.py")
-        time.sleep(2)
-
-        if self.processes["cooler"].poll() is None:
-            log("Cooler Running", "Cooler process is now active.")
-        else:
-            log("Cooler Failed", "Cooler process did not start properly.")
+        self.on_cold_white_led()
+        log("Cooler ON", "Cooler activated")
 
 
     def off_cooler(self) -> None:
@@ -532,8 +567,12 @@ class Utils:
                 last_rotation_str = file.readline().strip()
                 if last_rotation_str:
                     self.last_rotation = datetime.strptime(last_rotation_str, "%Y-%m-%d %H:%M:%S")
-        except (FileNotFoundError, ValueError):
-            self.last_rotation = datetime.now()
+                else:
+                    log("Egg Rotation", "File exists but empty, forcing rotation now.")
+                    self.last_rotation = datetime.now() - timedelta(hours=6)  # Force immediate rotationtimedelta
+        except FileNotFoundError:
+            log("Egg Rotation", "Rotation file missing, forcing rotation now.")
+            self.last_rotation = datetime.now() - timedelta(hours=6)  # Force immediate rotation
 
         if (datetime.now() - self.last_rotation).total_seconds() >= 6 * 3600:
             log("Egg Rotation", "Rotating eggs.")
@@ -550,6 +589,8 @@ class Utils:
             self.last_rotation = datetime.now()
             with open("last_egg_rotation.txt", "w") as file:
                 file.write(self.last_rotation.strftime("%Y-%m-%d %H:%M:%S"))
+            log("Egg Rotation", "Rotation completed and timestamp updated.")
+
 
 
     def get_last_eggs_rotation(self) -> None:
@@ -649,9 +690,3 @@ class Utils:
             ["memory by app rss", app_mem_usage],
             ["memory by app vms", app_vmem_usage]
         ]
-
-
-if __name__ == "__main__":
-    utils = Utils()
-
-    utils.rotate_eggs()
