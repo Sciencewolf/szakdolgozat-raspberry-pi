@@ -80,6 +80,10 @@ class Utils:
     def __init__(self):
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.lid_file_path = os.path.join(self.base_dir, "lid_status.txt")
+        self.hatching_date_file = "/home/aron/szakdolgozat-raspberry-pi/hatching_date.txt"
+        self.last_rotation_file = "/home/aron/szakdolgozat-raspberry-pi/last_egg_rotation.txt"
+        self.hatching_status_file = "/home/aron/szakdolgozat-raspberry-pi/hatching_status.txt"
+
         self.processes = {}
         self.hatching = False
         self.heating_on = False
@@ -261,6 +265,10 @@ class Utils:
         log("Hatching Start", "Launching hatching process in background.")
         self.hatching = True 
 
+        hatching_start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open(self.hatching_date_file, 'w') as file:
+            file.write(hatching_start_time)
+
         thread = threading.Thread(target=self.prepare_hatching, daemon=True)
         thread.start()
 
@@ -274,29 +282,27 @@ class Utils:
     def prepare_hatching(self) -> None:
         log("Hatching Started", "Entering hatching loop.")
 
-        hatching_start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open("hatching_date.txt", 'w') as file:
-            file.write(hatching_start_time)
-
-        with open("hatching_status.txt", 'w') as file:
-            file.write("1")
-
+        try:
+            with open(self.hatching_status_file, 'w') as file:
+                file.write("1")
+        except Exception as e:
+            log("error at hatching status file writing")
+            
         self.on_heating_element()
-        self.on_cooler()  # Ensure cooler is ALWAYS running
+        self.on_cooler()
         self.cooler_on = True
         self.heating_on = True
-        self.humidifier_on = False  # Track humidifier state
-        last_humidifier_time = 0  # Track last humidifier activation time
+        self.humidifier_on = False 
+        last_humidifier_time = 0  
         log("Prepare Hatching", "Heating and Cooler turned ON at the start.")
 
         while self.hatching:
-            # **Check Lid Status**
             if not self.is_lid_closed():
                 log("Lid Open", "Stopping all operations until lid is closed.")
                 self.off_heating_element()
                 self.off_humidifier()
-                time.sleep(5)  # Wait and check again
-                continue  # Skip this loop iteration until lid is closed
+                time.sleep(5)
+                continue 
 
             log("Lid Closed", "Resuming hatching process.")
 
@@ -322,14 +328,13 @@ class Utils:
             log("Temp Check", f"Current: {current_temp}C | Target: {target_temp}C")
             log("Humidity Check", f"Current: {current_hum}% | Target Range: {min_hum}-{max_hum}%")
 
-            # **Hysteresis-based Heating Control**
-            if current_temp < target_temp - 0.4:  # Start heating if temp is too low
+            if current_temp < target_temp - 0.4: 
                 log("Action", "Heating ON.")
                 if not self.heating_on:
                     self.on_heating_element()
                     self.heating_on = True
 
-            elif target_temp - 0.4 <= current_temp <= target_temp + 0.4:  # Stop heating in normal range
+            elif target_temp - 0.4 <= current_temp <= target_temp + 0.4: 
                 log("Action", "Temperature Normal, Heating OFF.")
                 if self.heating_on:
                     self.off_heating_element()
@@ -341,14 +346,14 @@ class Utils:
                 log("Action", "Ensuring cooler stays ON.")
 
             current_time = time.time()
-            if current_hum < min_hum and (current_time - last_humidifier_time > 30):  # Wait at least 30s before turning humidifier on again
+            if current_hum < min_hum and (current_time - last_humidifier_time > 30):  
                 log("Action", "Humidifier ON (Less frequent activation).")
                 self.on_humidifier()
                 self.humidifier_on = True
-                time.sleep(10)  # Run humidifier for 10 seconds
+                time.sleep(10) 
                 self.off_humidifier()
                 self.humidifier_on = False
-                last_humidifier_time = current_time  # Update last humidifier activation time
+                last_humidifier_time = current_time 
                 log("Action", "Humidifier OFF after 10s, waiting 30s before next activation.")
 
             elif current_hum > max_hum:
@@ -357,22 +362,19 @@ class Utils:
                     self.off_humidifier()
                     self.humidifier_on = False
 
-            # **Check if Humidifier is Causing Fast Temperature Drop**
-            if self.humidifier_on and current_temp < target_temp - 0.6:  # If temp drops fast, turn on heating
+            if self.humidifier_on and current_temp < target_temp - 0.6:
                 log("Action", "Temperature dropping too fast due to humidifier. Turning on heating.")
                 if not self.heating_on:
                     self.on_heating_element()
                     self.heating_on = True
 
-            # **Extra: Use Humidifier to Cool Down Temperature**
             if current_temp > target_temp + 1.0:
                 log("Action", "Temperature too high, using humidifier for cooling.")
                 self.on_humidifier()
-                time.sleep(10)  # Run humidifier for 10 seconds to help cool down
+                time.sleep(10)
                 self.off_humidifier()
                 log("Action", "Humidifier OFF after cooling cycle.")
 
-            # **Egg Rotation - Now Integrated into Hatching Process**
             self.rotate_eggs()
 
             log("Hatching Status", f"Day {current_day}: Temp {current_temp}C, Hum {current_hum}%")
