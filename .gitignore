@@ -25,6 +25,7 @@ last_egg_rotation.txt
 lid_status.txt
 set_temp.txt
 error.log
+led_indication.txt
 hatching_status.txt
 /test
 /stats

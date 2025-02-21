@@ -18,8 +18,6 @@ CORS(app)
 # Get the base directory where the Flask app is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-lid_file_path = os.path.join(base_dir, "lid_status.txt")
-
 utils: Utils = Utils()
 
 
@@ -131,6 +129,17 @@ def resume_hatching():
 @app.route("/is-hatching", methods=['GET'])
 def is_hatching() -> Response:
     return api_200_ok_response(response=utils.is_hatching())
+
+
+""" led config """
+@app.route('/led-indication', methods=['GET'])
+def led_indication() -> Response:
+    val: str = request.args.get('val')
+
+    with open('/home/aron/szakdolgozat-raspberry-pi/led_indication.txt', 'w') as file:
+        file.write(f'led: {val}')
+
+    return api_200_ok_response(response=f"led is {val}")
 
 """ red led """
 

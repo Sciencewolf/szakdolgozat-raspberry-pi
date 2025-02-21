@@ -14,7 +14,7 @@ def log(reason: str = "", description: str = "", api_url: str = "", headers: str
     today = datetime.now().strftime("%Y-%B-%d")
 
     log_directory = "/home/aron/szakdolgozat-raspberry-pi/log"
-    log_file_path = f"{log_directory}/{today}-log-system.txt"
+    log_file_path = f"{log_directory}/{today}-log-system.log"
 
     os.makedirs(log_directory, exist_ok=True)
 
@@ -83,6 +83,7 @@ class Utils:
         self.hatching_date_file = "/home/aron/szakdolgozat-raspberry-pi/hatching_date.txt"
         self.last_rotation_file = "/home/aron/szakdolgozat-raspberry-pi/last_egg_rotation.txt"
         self.hatching_status_file = "/home/aron/szakdolgozat-raspberry-pi/hatching_status.txt"
+        self.led_indication_file = "/home/aron/szakdolgozat-raspberry-pi/led_indication.txt"
 
         self.processes = {}
         self.hatching = False
@@ -97,6 +98,17 @@ class Utils:
 
     def start_process(self, name: str, script: str="led.py", led: str="", mode: str="") -> None:
         """Start a subprocess in a new session and track it by name."""
+
+        if script == 'led.py':
+            with open(self.led_indication_file, 'r') as file:
+                line = file.readline()
+
+                if not str(line).endswith("on"):
+                    log(
+                        reason="LED is manually off", 
+                        description="LED is not working"
+                    )
+                    return
 
         if datetime.now().hour not in range(8, 20, 1) and script == 'led.py':
             log(
@@ -297,15 +309,6 @@ class Utils:
         log("Prepare Hatching", "Heating and Cooler turned ON at the start.")
 
         while self.hatching:
-            if not self.is_lid_closed():
-                log("Lid Open", "Stopping all operations until lid is closed.")
-                self.off_heating_element()
-                self.off_humidifier()
-                time.sleep(5)
-                continue 
-
-            log("Lid Closed", "Resuming hatching process.")
-
             temp_data = self.get_temp_and_hum()
             current_day = self.get_day()
 
@@ -328,13 +331,20 @@ class Utils:
             log("Temp Check", f"Current: {current_temp}C | Target: {target_temp}C")
             log("Humidity Check", f"Current: {current_hum}% | Target Range: {min_hum}-{max_hum}%")
 
+            if current_temp > 38.5:
+                log(reason="relay problem maybe", description="heating element not turning ogg bc of relay")
+                self.on_heating_element()
+                time.sleep(1)
+                self.off_heating_element()
+                self.heating_on = False
+                
             if current_temp < target_temp - 0.2: 
                 log("Action", "Heating ON.")
                 if not self.heating_on:
                     self.on_heating_element()
                     self.heating_on = True
 
-            elif target_temp - 0.2 <= current_temp <= target_temp + 0.2: 
+            elif target_temp - 0.7 <= current_temp <= target_temp: 
                 log("Action", "Temperature Normal, Heating OFF.")
                 if self.heating_on:
                     self.off_heating_element()
