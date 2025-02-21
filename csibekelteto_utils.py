@@ -328,13 +328,13 @@ class Utils:
             log("Temp Check", f"Current: {current_temp}C | Target: {target_temp}C")
             log("Humidity Check", f"Current: {current_hum}% | Target Range: {min_hum}-{max_hum}%")
 
-            if current_temp < target_temp - 0.4: 
+            if current_temp < target_temp - 0.2: 
                 log("Action", "Heating ON.")
                 if not self.heating_on:
                     self.on_heating_element()
                     self.heating_on = True
 
-            elif target_temp - 0.4 <= current_temp <= target_temp + 0.4: 
+            elif target_temp - 0.2 <= current_temp <= target_temp + 0.2: 
                 log("Action", "Temperature Normal, Heating OFF.")
                 if self.heating_on:
                     self.off_heating_element()
