@@ -122,7 +122,7 @@ def resume_hatching():
     response = utils.resume_hatching()
 
     if not response:
-        return api_404_not_found_response(response="hatching already running")
+        return api_200_ok_response(response="hatching already running")
     
     return api_200_ok_response(response="hatching resumed")
 
