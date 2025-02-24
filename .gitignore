@@ -26,6 +26,7 @@ lid_status.txt
 set_temp.txt
 error.log
 led_indication.txt
+filter_stats.py
 hatching_status.txt
 /test
 /stats
