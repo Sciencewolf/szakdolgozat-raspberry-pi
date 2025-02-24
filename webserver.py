@@ -159,6 +159,8 @@ def get_day() -> Response:
 def get_stats() -> Response:
     day = request.args.get("day")
 
+    return api_200_ok_response(response=utils.get_stats(day))
+
 """ red led """
 
 @app.route("/on-red-led", methods=['GET'])
