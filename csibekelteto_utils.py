@@ -307,7 +307,6 @@ class Utils:
         log("Prepare Hatching", "Heating and Cooler turned ON at the start.")
 
         while self.hatching:
-            count_repeated_offs = 0
             temp_data = self.get_temp_and_hum()
             current_day = self.get_day()
 
@@ -342,19 +341,18 @@ class Utils:
                 if not self.heating_on:
                     self.on_heating_element()
                     self.heating_on = True
-            elif target_temp - 0.7 <= current_temp <= target_temp: 
+            elif target_temp - 0.4 <= current_temp <= target_temp + 0.2: 
                 log("Action", "Temperature Normal, Heating OFF.")
 
                 if self.heating_on:
                     self.off_heating_element()
                     self.heating_on = False
 
-            if not self.cooler_on and self.count_cooler_cycle % 10 != 0:
+            if not self.cooler_on:
                 log("Action", "Ensuring cooler stays ON.")
 
                 self.on_cooler()
                 self.cooler_on = True
-                self.count_cooler_cycle += 1
 
             current_time = time.time()
             if current_hum < min_hum and (current_time - last_humidifier_time > 30):  
