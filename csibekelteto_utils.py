@@ -224,7 +224,7 @@ class Utils:
             log("Error", "Invalid or missing hatching_date.txt")
             return -1
 
-    def get_stats(day: str) -> dict:
+    def get_stats(self, day: str) -> dict:
         with open(f'/home/aron/szakdolgozat-raspberry-pi/stats/filtered_statistics_{day}.json') as file:
             return json.load(file)
 
