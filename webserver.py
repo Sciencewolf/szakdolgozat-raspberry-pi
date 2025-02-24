@@ -132,6 +132,7 @@ def is_hatching() -> Response:
 
 
 """ led config """
+
 @app.route('/led-indication', methods=['GET'])
 def led_indication() -> Response:
     val: str = request.args.get('val')
@@ -140,6 +141,23 @@ def led_indication() -> Response:
         file.write(f'led: {val}')
 
     return api_200_ok_response(response=f"led is {val}")
+
+""" get day"""
+
+@app.route("/get-day")
+def get_day() -> Response:
+    log(
+        description="get day",
+        api_url=request.base_url,
+        headers=request.user_agent.string
+    )
+
+    return api_200_ok_response(response=utils.get_day())
+
+""" get stats """
+@app.route("/get-stats")
+def get_stats() -> Response:
+    day = request.args.get("day")
 
 """ red led """
 

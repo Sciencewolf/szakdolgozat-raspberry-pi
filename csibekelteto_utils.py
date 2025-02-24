@@ -224,6 +224,10 @@ class Utils:
             log("Error", "Invalid or missing hatching_date.txt")
             return -1
 
+    def get_stats(day: str) -> dict:
+        with open(f'/home/aron/szakdolgozat-raspberry-pi/stats/filtered_statistics_{day}.json') as file:
+            return json.load(file)
+
     def is_temperature_normal(self, day: int, temp: float) -> bool:
         """Ensures temperature stays within ±0.5°C."""
         target_temp = self.get_target_temp(day)
@@ -341,7 +345,7 @@ class Utils:
                 if not self.heating_on:
                     self.on_heating_element()
                     self.heating_on = True
-            elif target_temp - 0.4 <= current_temp <= target_temp + 0.2: 
+            elif target_temp - 0.3 <= current_temp <= target_temp + 0.2: 
                 log("Action", "Temperature Normal, Heating OFF.")
 
                 if self.heating_on:
@@ -599,6 +603,9 @@ class Utils:
                 self.last_rotation = datetime.now() - timedelta(hours=6)
 
             if (datetime.now() - self.last_rotation).total_seconds() >= 6 * 3600:
+                log("Egg Rotation", "Turning off cooler before rotating eggs.")
+                self.off_cooler()
+
                 log("Egg Rotation", "Rotating eggs.")
                 for _ in range(3):
                     self.on_engine_forward()
@@ -615,6 +622,10 @@ class Utils:
                     file.write(self.last_rotation.strftime("%Y-%m-%d %H:%M:%S"))
 
                 log("Egg Rotation", "Rotation completed and timestamp updated.")
+
+                log("Egg Rotation", "Turning cooler back on.")
+                self.on_cooler() 
+
 
 
     def get_last_eggs_rotation(self) -> str:
