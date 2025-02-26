@@ -534,9 +534,7 @@ def overall() -> Response:
         headers=request.user_agent.string
     )
 
-    return jsonify({
-        "response": utils.processes
-    })
+    return api_200_ok_response(response=list(utils.processes.keys()))
 
 
 @app.route('/health', methods=['GET'])

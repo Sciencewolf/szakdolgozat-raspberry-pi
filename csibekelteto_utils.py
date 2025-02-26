@@ -307,6 +307,7 @@ class Utils:
         self.heating_on = True
         self.humidifier_on = False 
         last_humidifier_time = 0  
+        temp_below_36_triggered = False
 
         log("Prepare Hatching", "Heating and Cooler turned ON at the start.")
 
@@ -333,7 +334,8 @@ class Utils:
             log("Temp Check", f"Current: {current_temp}C | Target: {target_temp}C")
             log("Humidity Check", f"Current: {current_hum}% | Target Range: {min_hum}-{max_hum}%")
 
-            if current_temp < 36:
+            if current_temp < 36.0 and not temp_below_36_triggered:
+                log("Critical Temperature Alert", "Temperature below 36°C, turning off cooler and turning on heating.")
                 log(reason="relay problem", description="heating element not turning on")
 
                 self.off_heating_element()
@@ -341,6 +343,11 @@ class Utils:
                 time.sleep(1)
                 self.on_heating_element()
                 self.heating_on = True
+                
+                temp_below_36_triggered = True 
+
+            if current_temp >= 36.0:
+                temp_below_36_triggered = False
 
             if current_temp > target_temp + 0.5:
                 log(reason="relay problem maybe", description="heating element not turning off bc of relay")
