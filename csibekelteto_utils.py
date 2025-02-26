@@ -333,8 +333,17 @@ class Utils:
             log("Temp Check", f"Current: {current_temp}C | Target: {target_temp}C")
             log("Humidity Check", f"Current: {current_hum}% | Target Range: {min_hum}-{max_hum}%")
 
+            if current_temp < 36:
+                log(reason="relay problem", description="heating element not turning on")
+
+                self.off_heating_element()
+                self.heating_on = False
+                time.sleep(1)
+                self.on_heating_element()
+                self.heating_on = True
+
             if current_temp > target_temp + 0.5:
-                log(reason="relay problem maybe", description="heating element not turning ogg bc of relay")
+                log(reason="relay problem maybe", description="heating element not turning off bc of relay")
 
                 self.off_heating_element()
                 self.heating_on = False
@@ -345,7 +354,7 @@ class Utils:
                 if not self.heating_on:
                     self.on_heating_element()
                     self.heating_on = True
-            elif target_temp - 0.3 <= current_temp <= target_temp + 0.2: 
+            elif target_temp - 0.2 <= current_temp <= target_temp + 0.2: 
                 log("Action", "Temperature Normal, Heating OFF.")
 
                 if self.heating_on:
