@@ -477,7 +477,7 @@ def rotate_eggs() -> Response:
 
 
 @app.route("/get-last-eggs-rotation", methods=['GET'])
-def get_last_eggs_rotation(self) -> Response:
+def get_last_eggs_rotation() -> Response:
     log(
         description="get last eggs rotation",
         api_url=request.base_url,

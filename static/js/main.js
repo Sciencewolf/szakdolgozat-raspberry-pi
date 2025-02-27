@@ -314,7 +314,7 @@ shutdown.addEventListener('click', async () => {
         div.innerHTML = `Disconnected at ${new Date().toISOString().split('T')[0]} ${new Date().toTimeString().split(' ')[0]}`
         document.body.appendChild(div)
         try {
-            const shutdownRaspberryPi = await fetch("https://lenient-moving-killdeer.ngrok-free.app/shutdown")
+            const shutdownRaspberryPi = await fetch("https://harmless-toad-remarkably.ngrok-free.app/shutdown")
             const response = await shutdownRaspberryPi.json()
             console.log(response)
         } catch (err) {
@@ -325,7 +325,7 @@ shutdown.addEventListener('click', async () => {
 
 btnEndpoints.addEventListener('click', async () => {
     try {
-        const getAllAPIEndpoints = await fetch("https://lenient-moving-killdeer.ngrok-free.app/endpoints")
+        const getAllAPIEndpoints = await fetch("https://harmless-toad-remarkably.ngrok-free.app/endpoints")
         const response = await getAllAPIEndpoints.json()
         console.log(response)
 
@@ -333,7 +333,7 @@ btnEndpoints.addEventListener('click', async () => {
         btnEndpoints.style.display = 'none'
 
         for (let item of response.other) {
-            let api_url = `https://lenient-moving-killdeer.ngrok-free.app${item}`
+            let api_url = `https://harmless-toad-remarkably.ngrok-free.app/${item}`
             const url = document.createElement('a')
             url.setAttribute('href', `${api_url}`)
             url.target = '_blank'
