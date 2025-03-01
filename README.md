@@ -1,10 +1,9 @@
 # Szakdolgozat Raspberry Pi(Hardware) part
 
-# Hatching started at 2025-02-22 09:05:20
+# Hatching started at 2025-02-21 18:07:59
 
 ## https://hippo-immense-plainly.ngrok-free.app/
-## https://willing-just-penguin.ngrok-free.app/
-## https://lenient-moving-killdeer.ngrok-free.app/
+## https://harmless-toad-remarkably.ngrok-free.app/
 
 > [!IMPORTANT]
 > LED Color Code
