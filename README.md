@@ -6,9 +6,6 @@
 >  - Result: 0 hatched :(
 >  - More: https://sciencewolf.github.io/szakdolgozat/docs/#more
 
-## https://hippo-immense-plainly.ngrok-free.app/
-## https://harmless-toad-remarkably.ngrok-free.app/
-
 > [!IMPORTANT]
 > LED Color Code
 
