@@ -1,6 +1,10 @@
 # Szakdolgozat Raspberry Pi(Hardware) part
 
-# Hatching started at 2025-02-21 18:07:59
+> [!IMPORTANT]
+>  Hatching started at 2025-02-21 18:07:59
+>  Hatching ended at 2025-03-15 15:30:16
+>  Result: 0 hatched :(
+>  More: https://sciencewolf.github.io/szakdolgozat/docs/#more
 
 ## https://hippo-immense-plainly.ngrok-free.app/
 ## https://harmless-toad-remarkably.ngrok-free.app/
