@@ -137,8 +137,7 @@ def is_hatching() -> Response:
 def led_indication() -> Response:
     val: str = request.args.get('val')
 
-    with open('/home/aron/szakdolgozat-raspberry-pi/led_indication.txt', 'w') as file:
-        file.write(f'led: {val}')
+    utils.set_led_indication(val)
 
     return api_200_ok_response(response=f"led is {val}")
 
@@ -152,7 +151,7 @@ def get_day() -> Response:
         headers=request.user_agent.string
     )
 
-    return api_200_ok_response(response=utils.get_day())
+    return api_200_ok_response(response=str(utils.get_day()))
 
 """ get stats """
 @app.route("/get-stats")
@@ -313,8 +312,6 @@ def turn_off_blue_led() -> Response:
 
     return api_200_ok_response("blue led is off")
 
-
-
 """ get temp and hum """
 
 @app.route("/get-temp-hum", methods=['GET'])
@@ -325,7 +322,7 @@ def get_temperature_and_humidity_from_sensor() -> Response:
         headers=request.user_agent.string
     )
 
-    return utils.get_temp_and_hum()
+    return jsonify({utils.get_temp_and_hum()})
 
 """ set temp """
 
@@ -340,7 +337,7 @@ def set_temperature() -> Response:
     )
 
 
-    utils.set_temp(temp=temp)
+    utils.set_temp(temp=float(temp))
 
     return api_200_ok_response(response=f"temperature set to {temp}")
 
@@ -355,7 +352,7 @@ def get_lid_status() -> Response:
         headers=request.user_agent.string
     )
 
-    return utils.lid_status()
+    return jsonify(utils.lid_status())
 
 
 """ cooler """
@@ -485,31 +482,6 @@ def get_last_eggs_rotation() -> Response:
     )
 
     return api_200_ok_response(response=utils.get_last_eggs_rotation())
-
-""" humidifier """
-
-@app.route("/on-humidifier")
-def turn_on_humidifier():
-    log(
-        description="turn on humidifier",
-        api_url=request.base_url,
-        headers=request.user_agent.string
-    )
-    # utils.on_humidifier()
-
-    return api_501_not_implemented_response("/on-humidifier not implemented yet")
-
-
-@app.route("/off-humidifier")
-def turn_off_humidifier() -> Response:
-    log(
-        description="turn off humidifier",
-        api_url=request.base_url,
-        headers=request.user_agent.string
-    )
-    # utils.off_humidifier()
-
-    return api_501_not_implemented_response("/off-humidifier not implemented yet")
 
 """ other """
 

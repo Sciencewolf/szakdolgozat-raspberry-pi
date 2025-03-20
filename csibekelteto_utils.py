@@ -1,6 +1,5 @@
 import os
 import subprocess
-from datetime import datetime
 import signal
 import threading
 import psutil
@@ -87,11 +86,9 @@ class Utils:
         self.processes = {}
         self.hatching = False
         self.heating_on = False
-        self.humidifier_on = False
         self.cooler_on = False
         self.is_resume_hatching = False
         self.critic_temp = False
-        self.count_cooler_cycle = 0
         self.last_rotation = datetime.now()
 
 
@@ -186,7 +183,6 @@ class Utils:
     def __str__(self) -> str:
         return (f"---Utils--- "
                 f"\n\tHealth: {self.health()} "
-                f"\n\tLast Emergency Shutdown: {self.last_emergency_shutdown()}"
                 f"\n---Utils---")
 
     """ Utils method's """
@@ -228,6 +224,14 @@ class Utils:
         with open(f'/home/aron/szakdolgozat-raspberry-pi/stats/filtered_statistics_{day}.json') as file:
             return json.load(file)
 
+    def get_led_indication(self) -> str:
+        with open(self.led_indication_file, 'r') as file:
+            return file.readline().strip()
+
+    def set_led_indication(self, value: str) -> None:
+        with open(self.led_indication_file, 'w') as file:
+            file.write(f'led: {value}')
+
     def is_temperature_normal(self, day: int, temp: float) -> bool:
         """Ensures temperature stays within ±0.5°C."""
         target_temp = self.get_target_temp(day)
@@ -239,39 +243,14 @@ class Utils:
         return min_hum - 1.0 <= hum <= max_hum + 1.0
 
     def is_rotate_eggs(self, day: int) -> bool:
-        rotate_data: dict[int, bool] = {
-            1: True,
-            2: True,
-            3: True,
-            4: True,
-            5: True,
-            6: True,
-            7: True,
-            8: True,
-            9: True,
-            10: True,
-            11: True,
-            12: True,
-            13: True,
-            14: True,
-            15: True,
-            16: True,
-            17: True,
-            18: True,
-            19: False,
-            20: False,
-            21: False
-        }
-
-        value: bool | None = rotate_data.get(day, None)
-
-        return value is not None and value
+        return day < 19
 
     def is_lid_closed(self) -> bool:
         status: str = self.lid_status().get('lid')
         
         return status == 'Close'
-    
+
+    """ Hatching  """
     def is_hatching(self) -> bool:
         return self.hatching
 
@@ -297,7 +276,6 @@ class Utils:
         else:
             log("Thread Running", "Hatching process started successfully.")
 
-
     def prepare_hatching(self) -> None:
         log("Hatching Started", "Entering hatching loop.")
             
@@ -305,8 +283,6 @@ class Utils:
         self.on_cooler()
         self.cooler_on = True
         self.heating_on = True
-        self.humidifier_on = False 
-        last_humidifier_time = 0  
         temp_below_36_triggered = False
 
         log("Prepare Hatching", "Heating and Cooler turned ON at the start.")
@@ -374,40 +350,6 @@ class Utils:
                 self.on_cooler()
                 self.cooler_on = True
 
-            current_time = time.time()
-            if current_hum < min_hum and (current_time - last_humidifier_time > 30):  
-                log("Action", "Humidifier ON (Less frequent activation).")
-
-                self.on_humidifier()
-                self.humidifier_on = True
-                time.sleep(10) 
-                self.off_humidifier()
-                self.humidifier_on = False
-                last_humidifier_time = current_time 
-
-                log("Action", "Humidifier OFF after 10s, waiting 30s before next activation.")
-
-            elif current_hum > max_hum:
-                log("Action", "Humidifier OFF due to high humidity.")
-
-                if self.humidifier_on:
-                    self.off_humidifier()
-                    self.humidifier_on = False
-
-            if self.humidifier_on and current_temp < target_temp - 0.6:
-                log("Action", "Temperature dropping too fast due to humidifier. Turning on heating.")
-
-                if not self.heating_on:
-                    self.on_heating_element()
-                    self.heating_on = True
-
-            if current_temp > target_temp + 1.0:
-                log("Action", "Temperature too high, using humidifier for cooling.")
-                self.on_humidifier()
-                time.sleep(5)
-                self.off_humidifier()
-                log("Action", "Humidifier OFF after cooling cycle.")
-
             self.rotate_eggs()
 
             log("Hatching Status", f"Day {current_day}: Temp {current_temp}C, Hum {current_hum}%")
@@ -422,13 +364,10 @@ class Utils:
         self.off_humidifier()
         self.heating_on = False
         self.cooler_on = False
-        self.humidifier_on = False
         self.is_resume_hatching = False
         self.critic_temp = False
-        self.count_cooler_cycle = 0
 
         log("Hatching Stopped", "All processes stopped")
-
 
     def resume_hatching(self) -> bool | None:
         if self.hatching:
@@ -438,8 +377,7 @@ class Utils:
         log("Hatching Resumed", "Restarting hatching process.")
         self.is_resume_hatching = True
         self.start_hatching()
-
-
+        return self.hatching
 
     def set_temp(self, temp: float) -> None:
         """
@@ -462,41 +400,13 @@ class Utils:
         self.__update_config({'manual_temp': temp})
         log("Manual Temp Set", f"Temperature set to {temp}C")
 
-    def set_hum(self, hum: float) -> None:
-        """
-        Manually set the incubator humidity and update hatching target values.
-        """
-        self.off_humidifier()
-        self.on_humidifier()
-        self.off_cooler()
-        self.on_cooler()
-
-        while True:
-            current_hum = float(self.get_temp_and_hum().get('hum', -1))
-            if current_hum >= hum:
-                self.off_humidifier()
-                self.off_cooler()
-                break
-            time.sleep(10)
-        
-        self.__update_config({'manual_hum': hum})
-        log("Manual Humidity Set", f"Humidity set to {hum}%")
-
-    def get_config(self) -> dict:
-        """ Retrieve the current configuration. """
-        try:
-            with open('csibekelteto_config.json', 'r') as file:
-                return json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            return {}
-
     def get_target_temp(self, day: int) -> float:
         """ Retrieve the recommended temperature for the given day. """
         temp_data = {
             **dict.fromkeys(range(1, 4), 38.1),
             **dict.fromkeys(range(4, 11), 37.8),
             **dict.fromkeys(range(11, 18), 37.5),
-            **dict.fromkeys(range(19, 22), 37.2),
+            **dict.fromkeys(range(18, 22), 37.2),
         }
         return temp_data.get(day, 37.5)
 
@@ -642,22 +552,9 @@ class Utils:
                 log("Egg Rotation", "Turning cooler back on.")
                 self.on_cooler() 
 
-
-
     def get_last_eggs_rotation(self) -> str:
         with open(self.last_rotation_file, 'r') as file:
             return file.readline().strip()
-
-
-    """ Humidifier """
-
-    def on_humidifier(self) -> None:
-        # self.start_process(name="humidifier", script="humidifier.py")
-        self.on_blue_led()
-
-    def off_humidifier(self) -> None:
-        # self.stop_process("humidifier")
-        self.off_blue_led()
 
     """ LED """
 
