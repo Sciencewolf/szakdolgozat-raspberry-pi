@@ -47,8 +47,7 @@ LED_PINS: dict = {
 
 RELAY_PINS: dict = {
     "cooler": 24,
-    "heating_element": 23,
-    "humidifier": 25, 
+    "heating_element": 23
 }
 
 class Mode:
@@ -78,7 +77,7 @@ class Utils:
     def __init__(self):
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.lid_file_path = os.path.join(self.base_dir, "lid_status.txt")
-        self.hatching_date_file = "/home/aron/szakdolgozat-raspberry-pi/hatching_date.txt"
+        self.hatching_date_file = "/home/aron/szakdolgozat-raspberry-pi/hatching_date2.txt"
         self.last_rotation_file = "/home/aron/szakdolgozat-raspberry-pi/last_egg_rotation.txt"
         self.hatching_status_file = "/home/aron/szakdolgozat-raspberry-pi/hatching_status.txt"
         self.led_indication_file = "/home/aron/szakdolgozat-raspberry-pi/led_indication.txt"
@@ -211,13 +210,13 @@ class Utils:
 
     def get_day(self) -> int:
         try:
-            with open("hatching_date.txt", 'r') as file:
+            with open(self.hatching_date_file, 'r') as file:
                 hatching_date_str = file.readline().strip()
             
             hatching_date = datetime.strptime(hatching_date_str, "%Y-%m-%d %H:%M:%S")
-            return (datetime.now() - hatching_date).days + 1
+            return abs((datetime.now() - hatching_date).days + 1)
         except (FileNotFoundError, ValueError):
-            log("Error", "Invalid or missing hatching_date.txt")
+            log("Error", "Invalid or missing hatching_date2.txt")
             return -1
 
     def get_stats(self, day: str) -> dict:
@@ -361,7 +360,6 @@ class Utils:
         self.hatching = False
         self.off_heating_element()
         self.off_cooler()
-        self.off_humidifier()
         self.heating_on = False
         self.cooler_on = False
         self.is_resume_hatching = False
