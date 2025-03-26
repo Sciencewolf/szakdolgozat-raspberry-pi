@@ -1,9 +1,15 @@
 # Szakdolgozat Raspberry Pi(Hardware) part
 
 > [!IMPORTANT]
->  - Hatching started at 2025-02-21 18:07:59 
+>  - First Hatching started at 2025-02-21 18:07:59 
 >  - Hatching ended at 2025-03-15 15:30:16
 >  - Result: 0 hatched :(
+>  - More: https://sciencewolf.github.io/szakdolgozat/docs/#more
+
+> [!IMPORTANT]
+>  - Second Hatching started at 2025-03-24 14:41:02
+>  - Hatching ended at 
+>  - Result: 
 >  - More: https://sciencewolf.github.io/szakdolgozat/docs/#more
 
 > [!IMPORTANT]
@@ -18,10 +24,14 @@
 - Other: -
 
 # Hardware Wiring
-> [!WARNING]
-> Outdated version!
 
-## RGB LED and AHT20 wiring
+## All Hardware
+
+## Hardware with Relay
+
+<img src="sketches/images/all_hw_with_relay_image.png" alt="all hw with relay" />
+
+## AHT20 wiring
 
 > [!NOTE]
 > Required hardware
@@ -29,12 +39,10 @@
 - Raspberry Pi 4 model B
 - Breadboard
 - Adafruit T-Cobbler
-- 3x Resistor 330R
-- 1x RGB LED 
 - 1x Adafruit AHT20 Temperature and Humidity Sensor
-- 8x Male-Male Wire
+- 4x Male-Male Wire
 
-<img src="sketches/images/rgb-led-aht20-temp-hum-sensor-wiring_image.png" alt="RGB LED and AHT20 wiring" />
+<img src="sketches/images/aht20-temp-hum-sensor-wiring_image.png" alt="AHT20 wiring" />
 
 [//]: # (## Ultrasonic Range Sensor wiring)
 
@@ -83,7 +91,7 @@
 - Breadboard
 - Adafruit T-Cobbler (or, connect directly to ras-pi)
 - 1x 5V Fan
-- 1x Relay (2 relay module, HL-52)
+- 1x Relay (4 relay module)
 - 6x Male-Male wire
 
 <img src="sketches/images/relay-and-fan-wiring_image.png" alt="Fan with Relay wiring" />
@@ -98,7 +106,7 @@
 - Adafruit T-Cobbler (or, connect directly to ras-pi)
 - 1x Heating Element (12V, 110℃)
 - 1x 12V Adapter (12V*2A)
-- 1x Relay (2 relay module, HL-52)
+- 1x Relay (4 relay module)
 - 4x Male-Male wire
 
 <img src="sketches/images/heating-element-and-relay-wiring_image.png" alt="Heating Element with Relay wiring" />
