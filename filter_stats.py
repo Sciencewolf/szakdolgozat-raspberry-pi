@@ -6,11 +6,10 @@ import json
 
 
 def main():
-    today_json = datetime.now().strftime("%Y-%m-%d")
     today = datetime.now().strftime('%Y-%m-%d')
 
     input_filename = "/home/aron/szakdolgozat-raspberry-pi/stats/statistics.json"
-    output_filename = f"/home/aron/szakdolgozat-raspberry-pi/stats/filtered_statistics_{today_json}.json"
+    output_filename = f"/home/aron/szakdolgozat-raspberry-pi/stats/filtered_statistics_{today}.json"
 
     filtered_data = []
 
@@ -28,5 +27,14 @@ def main():
     with open(output_filename, 'w') as filtered_statistics:
         json.dump(filtered_data, filtered_statistics, indent=4)
 
+
 if __name__ == "__main__":
-    main()
+    import time
+
+    while True:
+        now = datetime.now().strftime("%H:%M")
+
+        if now == "23:59":
+            main()
+
+        time.sleep(30)

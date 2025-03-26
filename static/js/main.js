@@ -1,4 +1,4 @@
-import {Cooler, HeatingElement, Humidifier, LED, Motor, Sensor, Health} from "./utils.mjs";
+import {Cooler, HeatingElement, LED, Motor, Sensor, Health} from "./utils.mjs";
 
 const checkboxOnOffRedLed = document.getElementById("checkbox-on-off-red-led")
 const checkboxOnOffGreenLed = document.getElementById("checkbox-on-off-green-led")
@@ -19,7 +19,6 @@ const checkboxOnOffCooler = document.getElementById("checkbox-on-off-cooler")
 const checkboxOnOffHeatingElement = document.getElementById("checkbox-on-off-heating-element")
 const checkboxOnOffEngineForward = document.getElementById("checkbox-on-off-dc-motor-forward")
 const checkboxOnOffEngineBackward = document.getElementById("checkbox-on-off-dc-motor-backward")
-const checkboxOnOffHumidifier = document.getElementById("checkbox-on-off-humidifier")
 
 const btnEndpoints = document.getElementById("btn-endpoints")
 const divEndpoints = document.getElementById("div-endpoints")
@@ -289,21 +288,6 @@ checkboxOnOffEngineBackward.addEventListener('click', async () => {
     }
 })
 
-checkboxOnOffHumidifier.addEventListener('click', async () => {
-    if (checkboxOnOffHumidifier.checked) {
-        try {
-            await Humidifier.onHumidifier()
-        } catch (error) {
-            console.log(error)
-        }
-    } else {
-        try {
-            await Humidifier.offHumidifier()
-        } catch (error) {
-            console.log(error)
-        }
-    }
-})
 
 shutdown.addEventListener('click', async () => {
     if (window.confirm('Are you sure?')) {

@@ -322,7 +322,7 @@ def get_temperature_and_humidity_from_sensor() -> Response:
         headers=request.user_agent.string
     )
 
-    return jsonify({utils.get_temp_and_hum()})
+    return jsonify(utils.get_temp_and_hum())
 
 """ set temp """
 

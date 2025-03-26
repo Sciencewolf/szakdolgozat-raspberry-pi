@@ -210,26 +210,6 @@ class HeatingElement {
     }
 }
 
-class Humidifier {
-    static async onHumidifier() {
-        const onHumidifier = await fetch("https://harmless-toad-remarkably.ngrok-free.app/on-humidifier")
-        const response = await onHumidifier.json()
-
-        console.log(response)
-        
-
-    }
-
-    static async offHumidifier() {
-        const offHumidifier = await fetch("https://harmless-toad-remarkably.ngrok-free.app/off-humidifier")
-        const response = await offHumidifier.json()
-
-        console.log(response)
-        
-
-    }
-}
-
 class Health {
     static async getAll() {
         const get = await fetch("https://harmless-toad-remarkably.ngrok-free.app/health")
@@ -250,4 +230,4 @@ class Health {
     }
 }
 
-export {LED, Motor, Sensor, Cooler, HeatingElement, Humidifier, Health}
+export {LED, Motor, Sensor, Cooler, HeatingElement, Health}
