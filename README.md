@@ -7,7 +7,7 @@
 >  - More: https://sciencewolf.github.io/szakdolgozat/docs/#more
 
 > [!IMPORTANT]
->  - Second Hatching started at 2025-03-24 14:41:02
+>  - Second Hatching started at 2025-03-24 17:46:28
 >  - Hatching ended at 
 >  - Result: 
 >  - More: https://sciencewolf.github.io/szakdolgozat/docs/#more
