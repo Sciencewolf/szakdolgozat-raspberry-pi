@@ -15,15 +15,20 @@
 
 - Lid open: red
 - Heating element on: green
-- Cooler on: White
-- Humidifier on: blue
+- Cooler on: white
 - DC motor on: yellow
 - Raspi on: cold white
 - Other: -
 
+# Preparing
+
+<img src="sketches/images/hw_sys_image.png" />
+
 # Hardware Wiring
 
 ## All Hardware
+
+<img src="sketches/images/overall-wiring_image.png" alt="all hardware wiring image"/>
 
 ## Hardware with Relay
 
@@ -41,33 +46,6 @@
 - 4x Male-Male Wire
 
 <img src="sketches/images/aht20-temp-hum-sensor-wiring_image.png" alt="AHT20 wiring" />
-
-[//]: # (## Ultrasonic Range Sensor wiring)
-
-[//]: # ()
-[//]: # (> [!NOTE])
-
-[//]: # (> Required hardware)
-
-[//]: # ()
-[//]: # (- Raspberry Pi 4 model B)
-
-[//]: # (- Breadboard)
-
-[//]: # (- 1x 1k Ohm Resistor)
-
-[//]: # (- 1x 2k Ohm Resistor)
-
-[//]: # (- 1x HC-SR04 Ultrasonic Range Sensor)
-
-[//]: # (- 4x Male-Female Wire)
-
-[//]: # (- 4x Male-Male Wire)
-
-[//]: # (- 2x Jumper&#40;bridge&#41; Wire)
-
-[//]: # ()
-[//]: # (<img src="sketches/images/ultrasonic-range-sensor-wiring_image.png" alt="HC-SR04 Ultrasonic Range Sensor wiring" />)
 
 ## Limit Switch wiring
 
@@ -105,6 +83,34 @@
 - 1x Heating Element (12V, 110℃)
 - 1x 12V Adapter (12V*2A)
 - 1x Relay (4 relay module)
-- 4x Male-Male wire
+- 4x Male-Male Wire
 
 <img src="sketches/images/heating-element-and-relay-wiring_image.png" alt="Heating Element with Relay wiring" />
+
+## DC Engine wiring
+
+> [!NOTE]
+> Required hardware
+
+- Raspberry Pi 4 model B
+- Breadboard
+- Adafruit T-Cobbler (or, connect directly to ras-pi)
+- 1x DC Engine (12V, 75RPM)
+- 1x 12V Adapter (12V*1A)
+- 1x L298N Dual H-Bridge Motor Driver
+- 8x Wire
+
+<img src="sketches/images/dc-engine-wiring_image.png" alt="DC Engine wiring" />
+
+## LED Panel wiring
+
+> [!NOTE]
+> Required hardware
+
+- Raspberry Pi 4 model B
+- Breadboard
+- Adafruit T-Cobbler (or, connect directly to ras-pi)
+- 5 LED (Red, Green, White, Yellow, Cold White)
+- 7x Wire
+
+<img src="sketches/images/dc-engine-wiring_image.png" alt="DC Engine wiring" />

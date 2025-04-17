@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/rgb-led-aht20-temp-hum-sensor-wiring_image.png
+wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/aht20-temp-hum-sensor-wiring_image.png
 description:
 """
 
@@ -21,10 +21,8 @@ def main() -> None:
         temp = "%0.1f °C" % sensor.temperature
         hum = "%0.1f %%" % sensor.relative_humidity
 
-        # Get the directory where this script is located
         script_dir = '/home/aron/szakdolgozat-raspberry-pi/'
 
-        # Construct the path to the temp_hum.txt file
         temp_hum_file = os.path.join(script_dir, "temp_hum.txt")
 
         with open(temp_hum_file, 'w') as file:

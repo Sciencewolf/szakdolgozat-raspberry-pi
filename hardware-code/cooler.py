@@ -2,7 +2,6 @@
 
 """
 wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/relay-and-fan-wiring_image.png
-description:
 """
 
 import RPi.GPIO as gpio

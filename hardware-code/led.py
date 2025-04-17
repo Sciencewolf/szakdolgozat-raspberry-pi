@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/led-panel-wiring_image.png
+"""
+
 import sys
 import RPi.GPIO as gpio
 import time

@@ -3,6 +3,7 @@
 .idea
 __pycache__/
 log/
+/stats
 node_modules
 .env
 stuff/micro
@@ -16,9 +17,6 @@ update.sh
 # Else
 cred.txt
 temp_hum.txt
-asair-dht20.pdf
-log_system.txt
-refactor.txt
 lid-status.txt
 hatching_date.txt
 hatching_date2.txt
@@ -29,5 +27,3 @@ error.log
 nohup.out
 led_indication.txt
 hatching_status.txt
-/test
-/stats

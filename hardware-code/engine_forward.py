@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 """
-wiring:
-description:
+wiring: https://github.com/Sciencewolf/szakdolgozat-raspberry-pi/blob/main/sketches/images/dc-engine-wiring_image.png
 """
 
 import RPi.GPIO as gpio
