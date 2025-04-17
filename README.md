@@ -113,4 +113,4 @@
 - 5 LED (Red, Green, White, Yellow, Cold White)
 - 7x Wire
 
-<img src="sketches/images/dc-engine-wiring_image.png" alt="DC Engine wiring" />
+<img src="sketches/images/led-panel-wiring_image.png" alt="LED Panel wiring" />
