@@ -10,7 +10,7 @@
 >  - Hatching ended at 2025-04-15 10:55:33
 >  - Result: 0 kikelés, 2 viszont fejlődött
 
-> [!IMPORTANT]
+> [!NOTE]
 > LED Color Code
 
 - Lid open: red
