@@ -3,14 +3,12 @@
 > [!IMPORTANT]
 >  - First Hatching started at 2025-02-21 18:07:59 
 >  - Hatching ended at 2025-03-15 15:30:16
->  - Result: 0 hatched :(
->  - More: https://sciencewolf.github.io/szakdolgozat/docs/#more
+>  - Result: 0 kikelés
 
 > [!IMPORTANT]
 >  - Second Hatching started at 2025-03-24 17:46:28
->  - Hatching ended at 
->  - Result: 
->  - More: https://sciencewolf.github.io/szakdolgozat/docs/#more
+>  - Hatching ended at 2025-04-15 10:55:33
+>  - Result: 0 kikelés, 2 viszont fejlődött
 
 > [!IMPORTANT]
 > LED Color Code
