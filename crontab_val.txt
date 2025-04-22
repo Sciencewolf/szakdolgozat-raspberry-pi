@@ -1,0 +1,2 @@
+# @reboot export PYTHONPATH=/home/aron/szakdolgozat-raspberry-pi: && /home/aron/szakdolgozat-raspberry-pi/stuff/run.sh
+# 0 * * * * /usr/bin/python3 /home/aron/szakdolgozat-raspberryp-pi/filter_stats.py
